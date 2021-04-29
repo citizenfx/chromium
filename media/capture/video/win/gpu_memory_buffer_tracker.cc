@@ -18,7 +18,7 @@ namespace media {
 
 namespace {
 
-base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
+uint64_t CreateNV12Texture(ID3D11Device* d3d11_device,
                                           const gfx::Size& size) {
   const DXGI_FORMAT dxgi_format = DXGI_FORMAT_NV12;
   D3D11_TEXTURE2D_DESC desc = {
@@ -31,7 +31,7 @@ base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
       .Usage = D3D11_USAGE_DEFAULT,
       .BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET,
       .CPUAccessFlags = 0,
-      .MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
+      .MiscFlags = D3D11_RESOURCE_MISC_SHARED |
                    D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX};
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
@@ -40,13 +40,13 @@ base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to create D3D11 texture: "
                 << logging::SystemErrorCodeToString(hr);
-    return base::win::ScopedHandle();
+    return uint64_t();
   }
   hr = SetDebugName(d3d11_texture.Get(), "Camera_MemoryBufferTracker");
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to label D3D11 texture: "
                 << logging::SystemErrorCodeToString(hr);
-    return base::win::ScopedHandle();
+    return uint64_t();
   }
 
   Microsoft::WRL::ComPtr<IDXGIResource1> dxgi_resource;
@@ -54,15 +54,14 @@ base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
   CHECK(SUCCEEDED(hr));
 
   HANDLE texture_handle;
-  hr = dxgi_resource->CreateSharedHandle(
-      nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, nullptr,
+  hr = dxgi_resource->GetSharedHandle(
       &texture_handle);
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to create shared D3D11 texture handle: "
                 << logging::SystemErrorCodeToString(hr);
-    return base::win::ScopedHandle();
+    return 0;
   }
-  return base::win::ScopedHandle(texture_handle);
+  return uint64_t(texture_handle);
 }
 
 }  // namespace

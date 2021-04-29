@@ -113,7 +113,7 @@ SharedImageBackingD3D::ProduceDawn(SharedImageManager* manager,
 
   // Persistently open the shared handle by caching it on this backing.
   if (!external_image_) {
-    DCHECK(shared_handle_.IsValid());
+    DCHECK(shared_handle_);
 
     const viz::ResourceFormat viz_resource_format = format();
     const WGPUTextureFormat wgpu_format =
@@ -135,7 +135,8 @@ SharedImageBackingD3D::ProduceDawn(SharedImageManager* manager,
     dawn_native::d3d12::ExternalImageDescriptorDXGISharedHandle
         externalImageDesc;
     externalImageDesc.cTextureDescriptor = &texture_descriptor;
-    externalImageDesc.sharedHandle = shared_handle_.Get();
+    // CFX: broken
+    externalImageDesc.sharedHandle = HANDLE(shared_handle_);
 
     external_image_ = dawn_native::d3d12::ExternalImageDXGI::Create(
         device, &externalImageDesc);

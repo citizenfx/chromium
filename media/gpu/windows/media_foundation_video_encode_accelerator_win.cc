@@ -840,12 +840,12 @@ HRESULT MediaFoundationVideoEncodeAccelerator::PopulateInputSampleBuffer(
       return E_HANDLE;
     }
 
-    Microsoft::WRL::ComPtr<ID3D11Device1> device1;
+    Microsoft::WRL::ComPtr<ID3D11Device> device1;
     HRESULT hr = d3d_device.As(&device1);
     RETURN_ON_HR_FAILURE(hr, "Failed to query ID3D11Device1", hr);
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-    hr = device1->OpenSharedResource1(buffer_handle.dxgi_handle.Get(),
+    hr = device1->OpenSharedResource(HANDLE(buffer_handle.dxgi_handle),
                                       IID_PPV_ARGS(&texture));
     RETURN_ON_HR_FAILURE(hr, "Failed to open shared GMB D3D texture", hr);
 

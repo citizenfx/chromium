@@ -16,12 +16,6 @@ config("viz_service_implementation") {
 
 viz_component("service") {
   sources = [
-    "//cef/libcef/browser/osr/gl_output_surface_external.cc",
-    "//cef/libcef/browser/osr/gl_output_surface_external.h",
-    "//cef/libcef/browser/osr/software_output_device_proxy.cc",
-    "//cef/libcef/browser/osr/software_output_device_proxy.h",
-    "//cef/libcef/browser/osr/software_output_device_proxy.cc",
-    "//cef/libcef/browser/osr/software_output_device_proxy.h",
     "display/aggregated_frame.cc",
     "display/aggregated_frame.h",
     "display/bsp_tree.cc",
@@ -208,6 +202,8 @@ viz_component("service") {
     "transitions/transferable_resource_tracker.cc",
     "transitions/transferable_resource_tracker.h",
     "viz_service_export.h",
+    "//cef/libcef/browser/osr/gl_output_surface_external.cc",
+    "//cef/libcef/browser/osr/gl_output_surface_external.h",
     "//cef/libcef/browser/osr/software_output_device_proxy.cc",
     "//cef/libcef/browser/osr/software_output_device_proxy.h",
   ]

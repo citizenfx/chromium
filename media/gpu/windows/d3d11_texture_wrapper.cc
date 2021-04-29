@@ -279,7 +279,7 @@ void DefaultTexture2DWrapper::GpuResources::Init(
         mailbox, format, plane_size, kInvalidColorSpace,
         kTopLeft_GrSurfaceOrigin, kPremul_SkAlphaType, shared_image_usage,
         /*swap_chain=*/nullptr, std::move(gl_texture), gl_image_,
-        /*buffer_index=*/0, texture, base::win::ScopedHandle(),
+        /*buffer_index=*/0, texture, uint64_t(),
         /*dxgi_key_mutex=*/nullptr);
 
     // Caller is assumed to provide cleared d3d textures.

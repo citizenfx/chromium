@@ -188,7 +188,7 @@ gfx::GpuMemoryBufferHandle GpuMemoryBufferImplDXGI::CloneHandle() const {
 }
 
 HANDLE GpuMemoryBufferImplDXGI::GetHandle() const {
-  return dxgi_handle_.Get();
+  return HANDLE(dxgi_handle_);
 }
 
 GpuMemoryBufferImplDXGI::GpuMemoryBufferImplDXGI(

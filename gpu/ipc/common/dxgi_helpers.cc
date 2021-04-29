@@ -74,7 +74,7 @@ bool CopyDXGIBufferToShMem(
   DCHECK(d3d11_device);
   DCHECK(staging_texture);
 
-  Microsoft::WRL::ComPtr<ID3D11Device1> device1;
+  Microsoft::WRL::ComPtr<ID3D11Device> device1;
   HRESULT hr = d3d11_device->QueryInterface(IID_PPV_ARGS(&device1));
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to open D3D11_1 device. hr=" << std::hex << hr;
@@ -84,7 +84,7 @@ bool CopyDXGIBufferToShMem(
   Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 
   // Open texture on device using shared handle
-  hr = device1->OpenSharedResource1(dxgi_handle, IID_PPV_ARGS(&texture));
+  hr = device1->OpenSharedResource(dxgi_handle, IID_PPV_ARGS(&texture));
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to open shared texture. hr=" << std::hex << hr;
     return false;

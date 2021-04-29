@@ -378,7 +378,7 @@ SharedImageBackingFactoryD3D::CreateSharedImage(
     uint32_t usage) {
   // TODO: Add support for shared memory GMBs.
   DCHECK_EQ(handle.type, gfx::DXGI_SHARED_HANDLE);
-  if (!handle.dxgi_handle.IsValid()) {
+  if (!handle.dxgi_handle) {
     DLOG(ERROR) << "Invalid handle type passed to CreateSharedImage";
     return nullptr;
   }
@@ -389,7 +389,7 @@ SharedImageBackingFactoryD3D::CreateSharedImage(
     return nullptr;
   }
 
-  Microsoft::WRL::ComPtr<ID3D11Device1> d3d11_device1;
+  Microsoft::WRL::ComPtr<ID3D11Device> d3d11_device1;
   HRESULT hr = d3d11_device_.As(&d3d11_device1);
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to query for ID3D11Device1. Error: "
@@ -398,7 +398,7 @@ SharedImageBackingFactoryD3D::CreateSharedImage(
   }
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
-  hr = d3d11_device1->OpenSharedResource1(handle.dxgi_handle.Get(),
+  hr = d3d11_device1->OpenSharedResource((HANDLE)handle.dxgi_handle,
                                           IID_PPV_ARGS(&d3d11_texture));
   if (FAILED(hr)) {
     DLOG(ERROR) << "Unable to open shared resource from DXGI handle. Error: "

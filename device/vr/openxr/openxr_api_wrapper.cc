@@ -507,7 +507,8 @@ void OpenXrApiWrapper::CreateSharedMailboxes(
     }
 
     gfx::GpuMemoryBufferHandle gpu_memory_buffer_handle;
-    gpu_memory_buffer_handle.dxgi_handle.Set(shared_handle);
+    // CFX: kinda wrong
+    gpu_memory_buffer_handle.dxgi_handle = uint64_t(shared_handle);
     gpu_memory_buffer_handle.type = gfx::DXGI_SHARED_HANDLE;
 
     std::unique_ptr<gpu::GpuMemoryBufferImplDXGI> gpu_memory_buffer =

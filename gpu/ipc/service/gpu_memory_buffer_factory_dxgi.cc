@@ -107,7 +107,7 @@ bool GpuMemoryBufferFactoryDXGI::FillSharedMemoryRegionWithBufferContents(
   if (!d3d11_device)
     return false;
 
-  return CopyDXGIBufferToShMem(buffer_handle.dxgi_handle.Get(),
+  return CopyDXGIBufferToShMem(HANDLE(buffer_handle.dxgi_handle),
                                std::move(shared_memory), d3d11_device.Get(),
                                &staging_texture_);
 }

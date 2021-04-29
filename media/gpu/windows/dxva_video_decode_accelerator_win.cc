@@ -2740,7 +2740,7 @@ void DXVAVideoDecodeAccelerator::BindPictureBufferToSample(
           /*swap_chain=*/nullptr, std::move(gl_texture),
           picture_buffer->gl_image(),
           /*buffer_index=*/0, gl_image_dxgi->texture(),
-          base::win::ScopedHandle(),
+          uint64_t(),
           /*dxgi_keyed_mutex=*/nullptr);
 
       // Caller is assumed to provide cleared d3d textures.

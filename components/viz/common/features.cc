@@ -148,6 +148,10 @@ bool IsSyncWindowDestructionEnabled() {
 }
 
 bool IsUsingSkiaRenderer() {
+  // Cfx: graphics composition is currently using Viz output surfaces
+  return false;
+
+#if 0
 #if defined(OS_ANDROID)
   // We don't support KitKat. Check for it before looking at the feature flag
   // so that KitKat doesn't show up in Control or Enabled experiment group.
@@ -171,6 +175,7 @@ bool IsUsingSkiaRenderer() {
 
   return base::FeatureList::IsEnabled(kUseSkiaRenderer) ||
          features::IsUsingVulkan();
+#endif
 }
 
 #if defined(OS_ANDROID)
