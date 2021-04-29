@@ -55,7 +55,7 @@ class GPU_GLES2_EXPORT SharedImageBackingD3D
       scoped_refptr<gl::GLImage> image,
       size_t buffer_index,
       Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture,
-      base::win::ScopedHandle shared_handle,
+      uint64_t shared_handle,
       Microsoft::WRL::ComPtr<IDXGIKeyedMutex> dxgi_keyed_mutex);
 
   ~SharedImageBackingD3D() override;
@@ -119,7 +119,7 @@ class GPU_GLES2_EXPORT SharedImageBackingD3D
   // Only one component is allowed to read/write to the texture
   // at a time. keyed_mutex_acquire_key_ is incremented on every
   // Acquire/Release usage.
-  base::win::ScopedHandle shared_handle_;
+  uint64_t shared_handle_;
   Microsoft::WRL::ComPtr<IDXGIKeyedMutex> dxgi_keyed_mutex_;
   uint64_t keyed_mutex_acquire_key_ = 0;
   bool keyed_mutex_acquired_ = false;

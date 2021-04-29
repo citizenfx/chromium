@@ -756,7 +756,7 @@ bool Display::DrawAndSwap(base::TimeTicks expected_display_time) {
   if (!size_matches)
     TRACE_EVENT_INSTANT0("viz", "Size mismatch.", TRACE_EVENT_SCOPE_THREAD);
 
-  bool should_draw = have_copy_requests || (have_damage && size_matches);
+  bool should_draw = have_copy_requests || (have_damage && size_matches) || true;
   client_->DisplayWillDrawAndSwap(should_draw, &frame.render_pass_list);
 
   base::Optional<base::ElapsedTimer> draw_timer;
@@ -1079,7 +1079,7 @@ void Display::ForceImmediateDrawAndSwapIfPossible() {
 
 void Display::SetNeedsOneBeginFrame() {
   if (scheduler_)
-    scheduler_->SetNeedsOneBeginFrame(false);
+    scheduler_->SetNeedsOneBeginFrame(true);
 }
 
 void Display::RemoveOverdrawQuads(AggregatedFrame* frame) {

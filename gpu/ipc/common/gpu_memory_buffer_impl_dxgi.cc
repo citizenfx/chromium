@@ -29,7 +29,7 @@ GpuMemoryBufferImplDXGI::CreateFromHandle(
     DestructionCallback callback,
     GpuMemoryBufferManager* gpu_memory_buffer_manager,
     scoped_refptr<base::UnsafeSharedMemoryPool> pool) {
-  DCHECK(handle.dxgi_handle.IsValid());
+  //DCHECK(handle.dxgi_handle.IsValid());
   return base::WrapUnique(new GpuMemoryBufferImplDXGI(
       handle.id, size, format, std::move(callback),
       std::move(handle.dxgi_handle), gpu_memory_buffer_manager, std::move(pool),
@@ -63,8 +63,8 @@ base::OnceClosure GpuMemoryBufferImplDXGI::AllocateForTesting(
       D3D11_USAGE_DEFAULT,
       D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET,
       0,
-      D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-          D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX};
+      //D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
+          D3D11_RESOURCE_MISC_SHARED};
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
 
@@ -76,13 +76,13 @@ base::OnceClosure GpuMemoryBufferImplDXGI::AllocateForTesting(
   DCHECK(SUCCEEDED(hr));
 
   HANDLE texture_handle;
-  hr = dxgi_resource->CreateSharedHandle(
-      nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, nullptr,
+  hr = dxgi_resource->GetSharedHandle(
+      //nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, nullptr,
       &texture_handle);
   DCHECK(SUCCEEDED(hr));
 
   gfx::GpuMemoryBufferId kBufferId(1);
-  handle->dxgi_handle.Set(texture_handle);
+  handle->dxgi_handle = (uint64_t)texture_handle;
   handle->type = gfx::DXGI_SHARED_HANDLE;
   handle->id = kBufferId;
   return base::DoNothing();
@@ -170,6 +170,8 @@ gfx::GpuMemoryBufferHandle GpuMemoryBufferImplDXGI::CloneHandle() const {
   handle.id = id_;
   handle.offset = 0;
   handle.stride = stride(0);
+  handle.dxgi_handle = dxgi_handle_;
+  /*
   base::ProcessHandle process = ::GetCurrentProcess();
   HANDLE duplicated_handle;
   BOOL result =
@@ -178,6 +180,7 @@ gfx::GpuMemoryBufferHandle GpuMemoryBufferImplDXGI::CloneHandle() const {
   if (!result)
     DPLOG(ERROR) << "Failed to duplicate DXGI resource handle.";
   handle.dxgi_handle.Set(duplicated_handle);
+  */
   if (unowned_region_.IsValid()) {
     handle.region = unowned_region_.Duplicate();
   }
@@ -193,7 +196,7 @@ GpuMemoryBufferImplDXGI::GpuMemoryBufferImplDXGI(
     const gfx::Size& size,
     gfx::BufferFormat format,
     DestructionCallback callback,
-    base::win::ScopedHandle dxgi_handle,
+    uint64_t dxgi_handle,
     gpu::GpuMemoryBufferManager* gpu_memory_buffer_manager,
     scoped_refptr<base::UnsafeSharedMemoryPool> pool,
     base::UnsafeSharedMemoryRegion region)

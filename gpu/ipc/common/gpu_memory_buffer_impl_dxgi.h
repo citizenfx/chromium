@@ -58,12 +58,12 @@ class GPU_EXPORT GpuMemoryBufferImplDXGI : public GpuMemoryBufferImpl {
                           const gfx::Size& size,
                           gfx::BufferFormat format,
                           DestructionCallback callback,
-                          base::win::ScopedHandle dxgi_handle,
+                          uint64_t dxgi_handle,
                           GpuMemoryBufferManager* gpu_memory_buffer_manager,
                           scoped_refptr<base::UnsafeSharedMemoryPool> pool,
                           base::UnsafeSharedMemoryRegion region);
 
-  base::win::ScopedHandle dxgi_handle_;
+  uint64_t dxgi_handle_;
   GpuMemoryBufferManager* gpu_memory_buffer_manager_;
 
   // Used to create and store shared memory for data, copied via request to

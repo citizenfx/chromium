@@ -23,7 +23,7 @@ TracedProcessImpl* TracedProcessImpl::GetInstance() {
 }
 
 TracedProcessImpl::TracedProcessImpl() {
-  DETACH_FROM_SEQUENCE(sequence_checker_);
+  //DETACH_FROM_SEQUENCE(sequence_checker_);
 }
 
 TracedProcessImpl::~TracedProcessImpl() = default;
@@ -92,20 +92,20 @@ void TracedProcessImpl::SetTaskRunner(
 }
 
 void TracedProcessImpl::RegisterAgent(BaseAgent* agent) {
-  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+  //DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   agents_.insert(agent);
 }
 
 void TracedProcessImpl::UnregisterAgent(BaseAgent* agent) {
-  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+  //DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
   agents_.erase(agent);
 }
 
 void TracedProcessImpl::ConnectToTracingService(
     mojom::ConnectToTracingRequestPtr request,
     ConnectToTracingServiceCallback callback) {
-  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+  //DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
   // Acknowledge this message so the tracing service knows it was dispatched in
   // this process.

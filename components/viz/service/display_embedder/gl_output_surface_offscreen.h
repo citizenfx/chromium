@@ -40,8 +40,10 @@ class VIZ_SERVICE_EXPORT GLOutputSurfaceOffscreen : public GLOutputSurface {
 
   gpu::Mailbox mailbox_;
 
+ protected:
   uint32_t fbo_ = 0;
   uint32_t texture_id_ = 0;
+ private:
   gfx::Size size_;
   gfx::ColorSpace color_space_;
 

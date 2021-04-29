@@ -69,7 +69,7 @@ void TraceEventAgent::GetCategories(std::set<std::string>* category_set) {
 
 void TraceEventAgent::AddMetadataGeneratorFunction(
     MetadataGeneratorFunction generator) {
-  DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+  //DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
   metadata_generator_functions_.push_back(generator);
 
   TraceEventMetadataSource::GetInstance()->AddGeneratorFunction(generator);

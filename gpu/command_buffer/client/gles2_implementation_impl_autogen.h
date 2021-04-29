@@ -950,7 +950,7 @@ void GLES2Implementation::GetBufferParameteriv(GLenum target,
                                                GLenum pname,
                                                GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+//  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetBufferParameteriv("
                      << GLES2Util::GetStringBufferTarget(target) << ", "
                      << GLES2Util::GetStringBufferParameter(pname) << ", "
@@ -1006,7 +1006,7 @@ void GLES2Implementation::GetFramebufferAttachmentParameteriv(GLenum target,
                                                               GLenum pname,
                                                               GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+//  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG(
       "[" << GetLogPrefix() << "] glGetFramebufferAttachmentParameteriv("
           << GLES2Util::GetStringFramebufferTarget(target) << ", "
@@ -1118,7 +1118,7 @@ void GLES2Implementation::GetInteger64i_v(GLenum pname,
 }
 void GLES2Implementation::GetIntegerv(GLenum pname, GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+//  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetIntegerv("
                      << GLES2Util::GetStringGLState(pname) << ", "
                      << static_cast<const void*>(params) << ")");
@@ -1146,7 +1146,7 @@ void GLES2Implementation::GetProgramiv(GLuint program,
                                        GLenum pname,
                                        GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+////  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetProgramiv(" << program << ", "
                      << GLES2Util::GetStringProgramParameter(pname) << ", "
                      << static_cast<const void*>(params) << ")");
@@ -1201,7 +1201,7 @@ void GLES2Implementation::GetRenderbufferParameteriv(GLenum target,
                                                      GLenum pname,
                                                      GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+//  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetRenderbufferParameteriv("
                      << GLES2Util::GetStringRenderBufferTarget(target) << ", "
                      << GLES2Util::GetStringRenderBufferParameter(pname) << ", "
@@ -1260,7 +1260,7 @@ void GLES2Implementation::GetSamplerParameteriv(GLuint sampler,
                                                 GLenum pname,
                                                 GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+//  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetSamplerParameteriv("
                      << sampler << ", "
                      << GLES2Util::GetStringSamplerParameter(pname) << ", "
@@ -1290,7 +1290,7 @@ void GLES2Implementation::GetShaderiv(GLuint shader,
                                       GLenum pname,
                                       GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+////  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetShaderiv(" << shader << ", "
                      << GLES2Util::GetStringShaderParameter(pname) << ", "
                      << static_cast<const void*>(params) << ")");
@@ -1439,7 +1439,7 @@ void GLES2Implementation::GetTexParameteriv(GLenum target,
                                             GLenum pname,
                                             GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+//  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetTexParameteriv("
                      << GLES2Util::GetStringGetTexParamTarget(target) << ", "
                      << GLES2Util::GetStringTextureParameter(pname) << ", "
@@ -3161,7 +3161,7 @@ void GLES2Implementation::GetProgramInterfaceiv(GLuint program,
                                                 GLenum pname,
                                                 GLint* params) {
   GPU_CLIENT_SINGLE_THREAD_CHECK();
-  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
+//  GPU_CLIENT_VALIDATE_DESTINATION_INITALIZATION(GLint, params);
   GPU_CLIENT_LOG("[" << GetLogPrefix() << "] glGetProgramInterfaceiv("
                      << program << ", "
                      << GLES2Util::GetStringEnum(program_interface) << ", "

@@ -25,8 +25,8 @@ namespace gl {
 namespace {
 // Keys used to acquire and release the keyed mutex.  Will need to be kept in
 // sync with any other code that reads from or draws to the same DXGI handle.
-const static UINT64 KEY_BIND = 0;
-const static UINT64 KEY_RELEASE = 1;
+//const static UINT64 KEY_BIND = 0;
+//const static UINT64 KEY_RELEASE = 1;
 
 bool SupportedBindFormat(gfx::BufferFormat format) {
   switch (format) {
@@ -146,11 +146,11 @@ GLImageDXGI::BindOrCopy GLImageDXGI::ShouldBindOrCopy() {
 }
 
 bool GLImageDXGI::BindTexImage(unsigned target) {
-  if (!handle_.Get())
+  if (!handle_)
     return true;
 
   DCHECK(texture_);
-  DCHECK(keyed_mutex_);
+  //DCHECK(keyed_mutex_);
   if (!SupportedBindFormat(buffer_format_))
     return false;
 
@@ -165,12 +165,12 @@ bool GLImageDXGI::BindTexImage(unsigned target) {
   }
 
   // We don't wait, just return immediately.
-  HRESULT hrWait = keyed_mutex_->AcquireSync(KEY_BIND, 0);
+  /*HRESULT hrWait = keyed_mutex_->AcquireSync(KEY_BIND, INFINITE);
 
   if (hrWait == WAIT_TIMEOUT || hrWait == WAIT_ABANDONED || FAILED(hrWait)) {
     NOTREACHED();
     return false;
-  }
+  }*/
 
   return eglBindTexImage(gl::GLSurfaceEGL::GetHardwareDisplay(), surface_,
                          EGL_BACK_BUFFER) == EGL_TRUE;
@@ -190,7 +190,7 @@ bool GLImageDXGI::CopyTexSubImage(unsigned target,
 void GLImageDXGI::Flush() {}
 
 unsigned GLImageDXGI::GetInternalFormat() {
-  if (!handle_.Get())
+  if (!handle_)
     return GL_BGRA_EXT;
   else
     return HasAlpha(buffer_format_) ? GL_RGBA : GL_RGB;
@@ -213,13 +213,13 @@ void GLImageDXGI::OnMemoryDump(base::trace_event::ProcessMemoryDump* pmd,
                                const std::string& dump_name) {}
 
 void GLImageDXGI::ReleaseTexImage(unsigned target) {
-  if (!handle_.Get())
+  if (!handle_)
     return;
 
   DCHECK(texture_);
-  DCHECK(keyed_mutex_);
+  //DCHECK(keyed_mutex_);
 
-  keyed_mutex_->ReleaseSync(KEY_RELEASE);
+  //keyed_mutex_->ReleaseSync(KEY_RELEASE);
 
   eglReleaseTexImage(gl::GLSurfaceEGL::GetHardwareDisplay(), surface_,
                      EGL_BACK_BUFFER);
@@ -236,7 +236,7 @@ bool GLImageDXGI::ScheduleOverlayPlane(
   return false;
 }
 
-bool GLImageDXGI::InitializeHandle(base::win::ScopedHandle handle,
+bool GLImageDXGI::InitializeHandle(uint64_t handle,
                                    uint32_t level,
                                    gfx::BufferFormat format) {
   level_ = level;
@@ -250,16 +250,16 @@ bool GLImageDXGI::InitializeHandle(base::win::ScopedHandle handle,
   if (FAILED(d3d11_device.As(&d3d11_device1)))
     return false;
 
-  if (FAILED(d3d11_device1->OpenSharedResource1(handle.Get(),
-                                                IID_PPV_ARGS(&texture_)))) {
+  if (FAILED(d3d11_device1->OpenSharedResource((HANDLE)handle,
+                                               IID_PPV_ARGS(&texture_)))) {
     return false;
   }
   D3D11_TEXTURE2D_DESC desc;
   texture_->GetDesc(&desc);
   if (desc.ArraySize <= level_)
     return false;
-  if (FAILED(texture_.As(&keyed_mutex_)))
-    return false;
+  //if (FAILED(texture_.As(&keyed_mutex_)))
+  //  return false;
 
   handle_ = std::move(handle);
   return true;
@@ -273,7 +273,7 @@ void GLImageDXGI::SetTexture(
 }
 
 GLImageDXGI::~GLImageDXGI() {
-  if (handle_.Get()) {
+  if (handle_) {
     if (surface_ != EGL_NO_SURFACE) {
       eglDestroySurface(gl::GLSurfaceEGL::GetHardwareDisplay(), surface_);
     }

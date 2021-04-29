@@ -116,7 +116,7 @@ class GPU_GLES2_EXPORT SharedImageBackingFactoryD3D
       Microsoft::WRL::ComPtr<IDXGISwapChain1> swap_chain,
       size_t buffer_index,
       const Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture,
-      base::win::ScopedHandle shared_handle);
+      uint64_t shared_handle);
 
   Microsoft::WRL::ComPtr<ID3D11Device> d3d11_device_;
   DISALLOW_COPY_AND_ASSIGN(SharedImageBackingFactoryD3D);

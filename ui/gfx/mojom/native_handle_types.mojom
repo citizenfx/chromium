@@ -53,7 +53,7 @@ struct AHardwareBufferHandle {
 [EnableIf=is_win]
 struct DxgiHandle {
   // The actual buffer windows handle.
-  handle<platform> buffer_handle;
+  uint64 buffer_handle;
 
   // Shared memory copy of all the data. Valid only if requested by the
   // consumer. It is included here because DXGI GMBs are unmappable except in

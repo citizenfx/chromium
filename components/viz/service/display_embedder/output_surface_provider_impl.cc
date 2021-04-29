@@ -16,6 +16,7 @@
 #include "build/chromecast_buildflags.h"
 #include "build/chromeos_buildflags.h"
 #include "cc/base/switches.h"
+#include "cef/libcef/browser/osr/gl_output_surface_external.h"
 #include "cef/libcef/browser/osr/software_output_device_proxy.h"
 #include "components/viz/common/display/renderer_settings.h"
 #include "components/viz/common/frame_sinks/begin_frame_source.h"
@@ -204,8 +205,20 @@ std::unique_ptr<OutputSurface> OutputSurfaceProviderImpl::CreateOutputSurface(
     }
 
     if (surface_handle == gpu::kNullSurfaceHandle) {
-      output_surface = std::make_unique<GLOutputSurfaceOffscreen>(
-          std::move(context_provider));
+      mojo::ScopedAllowSyncCallForTesting allow_sync;
+      bool use_proxy_output_device = false;
+      if (display_client->UseProxyOutputDevice(&use_proxy_output_device) &&
+          use_proxy_output_device) {
+        mojom::ExternalRendererUpdaterPtr external_renderer_updater;
+        display_client->CreateExternalRendererUpdater(
+            mojo::MakeRequest(&external_renderer_updater));
+        output_surface = std::make_unique<GLOutputSurfaceExternal>(
+            std::move(context_provider), gpu_memory_buffer_manager_.get(),
+            std::move(external_renderer_updater));
+      } else {
+        output_surface = std::make_unique<GLOutputSurfaceOffscreen>(
+            std::move(context_provider));
+      }
     } else if (context_provider->ContextCapabilities().surfaceless) {
 #if defined(USE_OZONE) || defined(OS_APPLE) || defined(OS_ANDROID)
 #if defined(USE_OZONE)
@@ -245,6 +258,20 @@ OutputSurfaceProviderImpl::CreateSoftwareOutputDeviceForPlatform(
     mojom::DisplayClient* display_client) {
   if (headless_)
     return std::make_unique<SoftwareOutputDevice>();
+
+  {
+    mojo::ScopedAllowSyncCallForTesting allow_sync;
+    DCHECK(display_client);
+    bool use_proxy_output_device = false;
+    if (display_client->UseProxyOutputDevice(&use_proxy_output_device) &&
+        use_proxy_output_device) {
+      mojom::LayeredWindowUpdaterPtr layered_window_updater;
+      display_client->CreateLayeredWindowUpdater(
+          mojo::MakeRequest(&layered_window_updater));
+      return std::make_unique<SoftwareOutputDeviceProxy>(
+          std::move(layered_window_updater));
+    }
+  }
 
   {
     mojo::ScopedAllowSyncCallForTesting allow_sync;

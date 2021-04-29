@@ -1245,7 +1245,7 @@ TraceEventHandle TraceLog::AddTraceEventWithThreadIdAndTimestamps(
                                    thread_id, args)) {
     return handle;
   }
-  DCHECK(!timestamp.is_null());
+  //DCHECK(!timestamp.is_null());
 
   AutoThreadLocalBoolean thread_is_in_trace_event(&thread_is_in_trace_event_);
 

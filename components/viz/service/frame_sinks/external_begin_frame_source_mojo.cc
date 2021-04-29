@@ -22,6 +22,13 @@ ExternalBeginFrameSourceMojo::ExternalBeginFrameSourceMojo(
 }
 
 ExternalBeginFrameSourceMojo::~ExternalBeginFrameSourceMojo() {
+  if (pending_frame_callback_) {
+    BeginFrameAck nak(last_begin_frame_args_.frame_id.source_id,
+                      last_begin_frame_args_.frame_id.sequence_number,
+                      /*has_damage=*/false);
+    std::move(pending_frame_callback_).Run(nak);
+  }
+
   frame_sink_manager_->RemoveObserver(this);
   DCHECK(!display_);
 }

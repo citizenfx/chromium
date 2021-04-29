@@ -12,6 +12,7 @@ import "ui/gfx/mojom/overlay_transform.mojom";
 import "ui/gfx/mojom/transform.mojom";
 import "ui/gfx/geometry/mojom/geometry.mojom";
 import "ui/latency/mojom/latency_info.mojom";
+import "cef/libcef/browser/osr/external_renderer_updater.mojom";
 import "services/viz/privileged/mojom/compositing/layered_window_updater.mojom";
 import "services/viz/privileged/mojom/compositing/vsync_parameter_observer.mojom";
 import "services/viz/public/mojom/compositing/delegated_ink_point_renderer.mojom";
@@ -94,6 +95,9 @@ interface DisplayClient {
   // Creates a LayeredWindowUpdater implementation to draw into a layered
   // window.
   CreateLayeredWindowUpdater(pending_receiver<LayeredWindowUpdater> receiver);
+
+  // Creates a ExternalRendererUpdater
+  CreateExternalRendererUpdater(pending_receiver<ExternalRendererUpdater> receiver);
 
   // Notifies that a swap has occurred and provides information about the pixel
   // size of the swapped frame.

@@ -50,7 +50,7 @@ SharedImageBackingD3D::SharedImageBackingD3D(
     scoped_refptr<gl::GLImage> image,
     size_t buffer_index,
     Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture,
-    base::win::ScopedHandle shared_handle,
+    uint64_t shared_handle,
     Microsoft::WRL::ComPtr<IDXGIKeyedMutex> dxgi_keyed_mutex)
     : ClearTrackingSharedImageBacking(mailbox,
                                       format,
@@ -80,7 +80,6 @@ SharedImageBackingD3D::~SharedImageBackingD3D() {
   dxgi_keyed_mutex_.Reset();
   keyed_mutex_acquire_key_ = 0;
   keyed_mutex_acquired_ = false;
-  shared_handle_.Close();
 
 #if BUILDFLAG(USE_DAWN)
   external_image_ = nullptr;
@@ -217,7 +216,7 @@ void SharedImageBackingD3D::EndAccessD3D11() {
 }
 
 HANDLE SharedImageBackingD3D::GetSharedHandle() const {
-  return shared_handle_.Get();
+  return (HANDLE)shared_handle_;
 }
 
 gl::GLImage* SharedImageBackingD3D::GetGLImage() const {

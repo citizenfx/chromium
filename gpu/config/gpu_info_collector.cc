@@ -517,8 +517,8 @@ bool CollectGpuExtraInfo(gfx::GpuExtraInfo* gpu_extra_info,
           QueryEGLStringi(display, EGL_FEATURE_BUG_ANGLE, i);
       gpu_extra_info->angle_features[i].status =
           QueryEGLStringi(display, EGL_FEATURE_STATUS_ANGLE, i);
-      gpu_extra_info->angle_features[i].condition =
-          QueryEGLStringi(display, EGL_FEATURE_CONDITION_ANGLE, i);
+//      gpu_extra_info->angle_features[i].condition =
+          //QueryEGLStringi(display, EGL_FEATURE_CONDITION_ANGLE, i);
     }
   }
 
