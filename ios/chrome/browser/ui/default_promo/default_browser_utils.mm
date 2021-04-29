@@ -6,6 +6,7 @@
 
 #include "base/feature_list.h"
 #include "base/ios/ios_util.h"
+#include "base/mac/foundation_util.h"
 #include "base/metrics/field_trial.h"
 #include "ios/chrome/browser/ui/ui_feature_flags.h"
 
@@ -14,6 +15,8 @@
 #endif
 
 #import <UIKit/UIKit.h>
+
+using base::mac::ObjCCast;
 
 namespace {
 
@@ -36,8 +39,20 @@ NSString* const kLastSignificantUserEventMadeForIOS =
 NSString* const kLastSignificantUserEventAllTabs =
     @"lastSignificantUserEventAllTabs";
 
+// Key for NSUserDefaults containing an NSDate indicating the last time a user
+// interacted with ANY fullscreen promo.
+NSString* const kLastTimeUserInteractedWithFullscreenPromo =
+    @"lastTimeUserInteractedWithFullscreenPromo";
+
+// Key for NSUserDefaults containing a bool indicating if the user has
+// previously interacted with a regular fullscreen promo.
 NSString* const kUserHasInteractedWithFullscreenPromo =
     @"userHasInteractedWithFullscreenPromo";
+
+// Key for NSUserDefaults containing a bool indicating if the user has
+// previously interacted with a tailored fullscreen promo.
+NSString* const kUserHasInteractedWithTailoredFullscreenPromo =
+    @"userHasInteractedWithTailoredFullscreenPromo";
 
 NSString* const kRemindMeLaterPromoActionInteraction =
     @"remindMeLaterPromoActionInteraction";
@@ -57,6 +72,9 @@ const NSTimeInterval kLatestURLOpenForDefaultBrowser = 7 * 24 * 60 * 60;
 // Delay for the user to be reshown the fullscreen promo when the user taps on
 // the "Remind Me Later" button. 50 hours.
 const NSTimeInterval kRemindMeLaterPresentationDelay = 50 * 60 * 60;
+
+// Cool down between fullscreen promos. Currently set to 14 days.
+const NSTimeInterval kFullscreenPromoCoolDown = 14 * 24 * 60 * 60;
 
 // Helper function to clear all timestamps that occur later than 7 days ago and
 // keep it only to 10 timestamps.
@@ -96,7 +114,17 @@ NSString* NSUserDefaultKeyForType(DefaultPromoType type) {
   NOTREACHED();
   return nil;
 }
+
+// Returns the most recent event for a given promo type or nil if none.
+NSDate* MostRecentDateForType(DefaultPromoType type) {
+  NSString* key = NSUserDefaultKeyForType(type);
+  NSMutableArray<NSDate*>* pastUserEvents =
+      [[[NSUserDefaults standardUserDefaults] arrayForKey:key] mutableCopy];
+  return pastUserEvents.lastObject;
 }
+}
+
+#pragma mark - Public
 
 NSString* const kLastHTTPURLOpenTime = @"lastHTTPURLOpenTime";
 
@@ -214,16 +242,29 @@ bool HasUserInteractedWithFullscreenPromoBefore() {
       boolForKey:kUserHasInteractedWithFullscreenPromo];
 }
 
+bool HasUserInteractedWithTailoredFullscreenPromoBefore() {
+  return [[NSUserDefaults standardUserDefaults]
+      boolForKey:kUserHasInteractedWithTailoredFullscreenPromo];
+}
+
 void LogUserInteractionWithFullscreenPromo() {
-  [[NSUserDefaults standardUserDefaults]
-      setBool:YES
-       forKey:kUserHasInteractedWithFullscreenPromo];
+  NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
+  [standardDefaults setBool:YES forKey:kUserHasInteractedWithFullscreenPromo];
+  [standardDefaults setObject:[NSDate date]
+                       forKey:kLastTimeUserInteractedWithFullscreenPromo];
 
   if (IsInRemindMeLaterGroup()) {
     // Clear any possible Remind Me Later timestamp saved.
-    [[NSUserDefaults standardUserDefaults]
-        removeObjectForKey:kRemindMeLaterPromoActionInteraction];
+    [standardDefaults removeObjectForKey:kRemindMeLaterPromoActionInteraction];
   }
+}
+
+void LogUserInteractionWithTailoredFullscreenPromo() {
+  NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
+  [standardDefaults setBool:YES
+                     forKey:kUserHasInteractedWithTailoredFullscreenPromo];
+  [standardDefaults setObject:[NSDate date]
+                       forKey:kLastTimeUserInteractedWithFullscreenPromo];
 }
 
 bool IsChromeLikelyDefaultBrowser() {
@@ -241,13 +282,6 @@ bool IsChromeLikelyDefaultBrowser() {
   return true;
 }
 
-bool IsLikelyInterestedDefaultBrowserUser() {
-  return IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeGeneral) ||
-         IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeStaySafe) ||
-         IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeAllTabs) ||
-         IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeMadeForIOS);
-}
-
 bool IsLikelyInterestedDefaultBrowserUser(DefaultPromoType type) {
   if (type == DefaultPromoTypeAllTabs && !TabsTailoredPromoEnabled()) {
     return NO;
@@ -263,4 +297,48 @@ bool IsLikelyInterestedDefaultBrowserUser(DefaultPromoType type) {
       [[[NSUserDefaults standardUserDefaults] arrayForKey:key] mutableCopy];
   pastUserEvents = SanitizePastUserEvents(pastUserEvents);
   return [pastUserEvents count] > 0 && base::ios::IsRunningOnIOS14OrLater();
+}
+
+DefaultPromoType MostRecentInterestDefaultPromoType(BOOL skipAllTabsPromoType) {
+  DefaultPromoType mostRecentType = DefaultPromoTypeGeneral;
+  NSDate* mostRecentDate = [NSDate distantPast];
+  NSArray* promoTypes = @[
+    @(DefaultPromoTypeStaySafe), @(DefaultPromoTypeAllTabs),
+    @(DefaultPromoTypeMadeForIOS)
+  ];
+
+  for (NSNumber* wrappedType in promoTypes) {
+    DefaultPromoType type =
+        static_cast<DefaultPromoType>(wrappedType.unsignedIntegerValue);
+
+    // Since DefaultPromoTypeAllTabs has extra requirements (user signed in),
+    // it needs to be skipped if those are not met.
+    if (type == DefaultPromoTypeAllTabs && skipAllTabsPromoType) {
+      continue;
+    }
+    if (IsLikelyInterestedDefaultBrowserUser(type)) {
+      NSDate* interestDate = MostRecentDateForType(type);
+      if (interestDate &&
+          [interestDate laterDate:mostRecentDate] == interestDate) {
+        mostRecentDate = interestDate;
+        mostRecentType = type;
+      }
+    }
+  }
+  return mostRecentType;
+}
+
+BOOL UserInFullscreenPromoCooldown() {
+  NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
+  NSDate* lastFullscreenInteraction = ObjCCast<NSDate>([standardDefaults
+      objectForKey:kLastTimeUserInteractedWithFullscreenPromo]);
+  if (lastFullscreenInteraction) {
+    NSDate* coolDownDate =
+        [NSDate dateWithTimeIntervalSinceNow:-kFullscreenPromoCoolDown];
+    if ([coolDownDate laterDate:lastFullscreenInteraction] ==
+        lastFullscreenInteraction) {
+      return YES;
+    }
+  }
+  return NO;
 }

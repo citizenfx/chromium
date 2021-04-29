@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Aptikta nuoroda. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Galerijos vaizdai</translation>
 <translation id="1430915738399379752">Spausdinti</translation>
+<translation id="1467231725790366244">Kamera „<ph name="CAMERA" />“ atjungta.</translation>
 <translation id="1473110567575736769">3 sek. laikmatis</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Nieko neįrašyta</translation>
 <translation id="1838104802459806957">Nukreipti aukštyn</translation>
+<translation id="1851169887664797861">Pasiekiami papildomi fotoaparato valdikliai</translation>
 <translation id="1851616744363735765">PRISTABDYTA</translation>
 <translation id="1862930711583847113">Nepavyko eksportuoti „<ph name="FILE" />“</translation>
 <translation id="1899697626337024495">Nuotraukos skyra</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Fotografuokite ir filmuokite naudodami fotoaparatą.</translation>
 <translation id="2549985041256363841">Pradėti įrašymą</translation>
 <translation id="2599796128805996109">Užpakalinis fotoaparatas</translation>
+<translation id="2879583609344924966">Kamera „<ph name="CAMERA" />“ prijungta.</translation>
 <translation id="2912439424121107408">Šiame įrenginyje eksperto režimas nepalaikomas</translation>
 <translation id="2968794441791257519">Nuotraukos ir vaizdo įrašai, sukurti naudojant fotoaparatą, bus perkelti į aplanką „Atsisiuntimai“. Juos galite pasiekti Failų programoje.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Fotoaparato skyra</translation>
 <translation id="3517926952904427380">Nepavyko nufotografuoti portretinės nuotraukos</translation>
 <translation id="3569311554794739032">Ar tikrai norite pašalinti „<ph name="FILE" />“?</translation>
+<translation id="3733597664308256288">Pasiekiami papildomi fotoaparato valdikliai. Naudokite paieškos ir rodyklės dešinėn klavišus, kad juos pasiektumėte.</translation>
 <translation id="3810838688059735925">Vaizdo</translation>
 <translation id="3838931309141338733">Nuskaityti brūkšninį kodą</translation>
 <translation id="3892148308691398805">Kopijuoti tekstą</translation>
@@ -85,6 +89,7 @@ Jei atsiliepimas susijęs su vaizdo arba vaizdo įrašo kokybe, pridėkite nuotr
 <translation id="7649070708921625228">Pagalba</translation>
 <translation id="7658239707568436148">Atšaukti</translation>
 <translation id="7670511624014457267">60 KPS</translation>
+<translation id="7974782136796202581">Rodyti pastūmimo, pakreipimo ir mastelio keitimo parinktis</translation>
 <translation id="7983668134180549431">Aptiktas tekstas.</translation>
 <translation id="8067883171444229417">Leisti vaizdo įrašą</translation>
 <translation id="8120146556401698679">Pastumti, pakreipti, keisti mastelį</translation>

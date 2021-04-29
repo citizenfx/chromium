@@ -51,6 +51,9 @@ Polymer({
      */
     tetherDeviceState: Object,
 
+    /** @type {!chromeos.networkConfig.mojom.GlobalPolicy|undefined} */
+    globalPolicy: Object,
+
     /**
      * The list of eSIM network state properties for display.
      * @type {!Array<!OncMojo.NetworkStateProperties>}
@@ -200,6 +203,13 @@ Polymer({
   },
 
   /**
+   * ESimManagerListenerBehavior override
+   */
+  onAvailableEuiccListChanged() {
+    this.fetchESimPendingProfileList_();
+  },
+
+  /**
    * @param {!chromeos.cellularSetup.mojom.ESimProfileRemote} profile
    * ESimManagerListenerBehavior override
    */
@@ -228,6 +238,22 @@ Polymer({
       this.euicc_ = euicc;
       this.fetchESimPendingProfileListForEuicc_(euicc);
     });
+  },
+
+  /**
+   * Return true if esim section should be shown.
+   * @return {boolean}
+   * @private
+   */
+  shouldShowEsimSection_() {
+    if (!this.cellularDeviceState) {
+      return false;
+    }
+    const {eSimSlots} = getSimSlotCount(this.cellularDeviceState);
+    // Check both the SIM slot infos and the number of EUICCs because the former
+    // comes from Shill and the latter from Hermes, so there may be instances
+    // where one may be true while they other isn't.
+    return !!this.euicc_ && eSimSlots > 0;
   },
 
   /**
@@ -409,5 +435,57 @@ Polymer({
   /** @private */
   onCloseInstallErrorDialog_() {
     this.shouldShowInstallErrorDialog_ = false;
+  },
+
+  /**
+   * @param {!OncMojo.DeviceStateProperties|undefined} cellularDeviceState
+   * @param {!chromeos.networkConfig.mojom.GlobalPolicy} globalPolicy
+   * @return {boolean}
+   * @private
+   */
+  showAddESimButton_(cellularDeviceState, globalPolicy) {
+    assert(!!this.euicc_);
+    if (!this.deviceIsEnabled_(cellularDeviceState)) {
+      return false;
+    }
+    return globalPolicy && !globalPolicy.allowOnlyPolicyNetworksToConnect;
+  },
+
+  /**
+   * @param {!OncMojo.DeviceStateProperties|undefined} cellularDeviceState
+   * @return {boolean} True if the device is enabled.
+   * @private
+   */
+  deviceIsEnabled_(cellularDeviceState) {
+    const mojom = chromeos.networkConfig.mojom;
+    return !!cellularDeviceState &&
+        cellularDeviceState.deviceState === mojom.DeviceStateType.kEnabled;
+  },
+
+  /**
+   * @return {boolean}
+   * @private
+   */
+  isDeviceInhibited_() {
+    if (!this.cellularDeviceState) {
+      return false;
+    }
+    return OncMojo.deviceIsInhibited(this.cellularDeviceState);
+  },
+
+  /** @private */
+  onAddEsimButtonTap_() {
+    this.fire(
+        'show-cellular-setup',
+        {pageName: cellularSetup.CellularSetupPageName.ESIM_FLOW_UI});
+  },
+
+  /*
+   * Returns the add esim button. If the device does not have an EUICC, no eSIM
+   * slot, or policies prohibit users from adding a network, null is returned.
+   * @return {?CrIconButtonElement}
+   */
+  getAddEsimButton() {
+    return /** @type {?CrIconButtonElement} */ (this.$$('#addESimButton'));
   },
 });

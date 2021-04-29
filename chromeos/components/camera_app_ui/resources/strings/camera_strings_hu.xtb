@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Link észlelve. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Galériaképek</translation>
 <translation id="1430915738399379752">Nyomtatás</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> nincs csatlakoztatva.</translation>
 <translation id="1473110567575736769">Három másodperces időzítő</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 × 4</translation>
 <translation id="1664224225747386870">A kamera semmit sem rögzített</translation>
 <translation id="1838104802459806957">Billentés felfelé</translation>
+<translation id="1851169887664797861">Újabb kameravezérlők állnak rendelkezésre</translation>
 <translation id="1851616744363735765">SZÜNETEL</translation>
 <translation id="1862930711583847113">Nem lehet exportálni: <ph name="FILE" /></translation>
 <translation id="1899697626337024495">Fotó felbontása</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Fotókat és videókat készíthet a kamerával.</translation>
 <translation id="2549985041256363841">Felvétel megkezdése</translation>
 <translation id="2599796128805996109">Hátsó kamera</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> csatlakoztatva.</translation>
 <translation id="2912439424121107408">A szakértői mód nem támogatott ezen az eszközön</translation>
 <translation id="2968794441791257519">A kamerával készített fotók és videók a Letöltések mappába kerülnek. A Fájlok alkalmazásban férhet hozzájuk.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Kamera felbontása</translation>
 <translation id="3517926952904427380">Nem sikerült álló fényképet készíteni</translation>
 <translation id="3569311554794739032">Biztosan eltávolítja a következő fájlt: <ph name="FILE" />?</translation>
+<translation id="3733597664308256288">Újabb kameravezérlők állnak rendelkezésre. Megtekintésükhöz nyomja le a Keresés + Jobbra nyíl billentyűparancsot.</translation>
 <translation id="3810838688059735925">Videó</translation>
 <translation id="3838931309141338733">Vonalkód beolvasása</translation>
 <translation id="3892148308691398805">Szöveg másolása</translation>
@@ -85,6 +89,7 @@ Ha visszajelzése a kép vagy a videó minőségével kapcsolatos, kérjük, mel
 <translation id="7649070708921625228">Súgó</translation>
 <translation id="7658239707568436148">Mégse</translation>
 <translation id="7670511624014457267">60 FPS</translation>
+<translation id="7974782136796202581">Pásztázás-billentés-nagyítás beállításainak megjelenítése</translation>
 <translation id="7983668134180549431">Szöveg észlelve.</translation>
 <translation id="8067883171444229417">Videó lejátszása</translation>
 <translation id="8120146556401698679">Pásztázás, döntés, nagyítás/kicsinyítés</translation>

@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Byl zjištěn odkaz. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Obrázky v galerii</translation>
 <translation id="1430915738399379752">Tisk</translation>
+<translation id="1467231725790366244">Kamera <ph name="CAMERA" /> je odpojena.</translation>
 <translation id="1473110567575736769">3sekundový časovač</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 × 4</translation>
 <translation id="1664224225747386870">Nic nebylo zaznamenáno</translation>
 <translation id="1838104802459806957">Naklonit nahoru</translation>
+<translation id="1851169887664797861">Jsou k dispozici další ovládací prvky kamery</translation>
 <translation id="1851616744363735765">POZASTAVENO</translation>
 <translation id="1862930711583847113">Soubor <ph name="FILE" /> nelze exportovat</translation>
 <translation id="1899697626337024495">Rozlišení fotografií</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Foťte a nahrávejte videa pomocí fotoaparátu.</translation>
 <translation id="2549985041256363841">Zahájit nahrávání</translation>
 <translation id="2599796128805996109">Zadní fotoaparát</translation>
+<translation id="2879583609344924966">Kamera <ph name="CAMERA" /> je připojena.</translation>
 <translation id="2912439424121107408">Režim pro experty na tomto zařízení není podporován</translation>
 <translation id="2968794441791257519">Fotky a videa pořízená fotoaparátem se přesunou do složky stažených souborů. Najdete je v aplikaci Soubory.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Rozlišení fotoaparátu</translation>
 <translation id="3517926952904427380">Portrétovou fotku nelze pořídit</translation>
 <translation id="3569311554794739032">Opravdu soubor <ph name="FILE" /> chcete odstranit?</translation>
+<translation id="3733597664308256288">Jsou k dispozici další ovládací prvky kamery. Přejdete na ně stisknutím tlačítka Hledat a šipky vpravo.</translation>
 <translation id="3810838688059735925">Video</translation>
 <translation id="3838931309141338733">Skenovat čárový kód</translation>
 <translation id="3892148308691398805">Kopírovat text</translation>
@@ -85,6 +89,7 @@ Pokud se zpětná vazba týká kvality fotek nebo videí, připojte ukázkovou f
 <translation id="7649070708921625228">Nápověda</translation>
 <translation id="7658239707568436148">Zrušit</translation>
 <translation id="7670511624014457267">60 snímků/s</translation>
+<translation id="7974782136796202581">Zobrazit možnosti posunutí, náklonu a přiblížení</translation>
 <translation id="7983668134180549431">Byl zjištěn text.</translation>
 <translation id="8067883171444229417">Přehrát video</translation>
 <translation id="8120146556401698679">Posunutí, náklon, přiblížení</translation>

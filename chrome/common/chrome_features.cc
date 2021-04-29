@@ -256,8 +256,14 @@ const base::Feature kDesktopPWAsFlashAppNameInsteadOfOrigin{
     base::FEATURE_DISABLED_BY_DEFAULT};
 
 // Enables or disables Desktop PWAs to be auto-started on OS login.
-const base::Feature kDesktopPWAsRunOnOsLogin{"DesktopPWAsRunOnOsLogin",
-                                             base::FEATURE_DISABLED_BY_DEFAULT};
+const base::Feature kDesktopPWAsRunOnOsLogin {
+  "DesktopPWAsRunOnOsLogin",
+#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX)
+      base::FEATURE_ENABLED_BY_DEFAULT
+#else
+      base::FEATURE_DISABLED_BY_DEFAULT
+#endif
+};
 
 // Enables or disables usage of shared LevelDB instance (ModelTypeStoreService).
 // If this flag is disabled, the new Web Apps system uses its own isolated
@@ -388,6 +394,10 @@ const base::Feature kEventBasedStatusReporting{
 // Enables real-time reporting for extension request
 const base::Feature kEnterpriseRealtimeExtensionRequest{
     "EnterpriseRealtimeExtensionRequest", base::FEATURE_ENABLED_BY_DEFAULT};
+const base::FeatureParam<base::TimeDelta>
+    kEnterpiseRealtimeExtensionRequestThrottleDelay{
+        &kEnterpriseRealtimeExtensionRequest, "throttle_delay",
+        base::TimeDelta::FromMinutes(1)};
 #endif
 
 // If enabled, this feature's |kExternalInstallDefaultButtonKey| field trial

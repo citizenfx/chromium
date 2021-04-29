@@ -14,7 +14,9 @@
 #include "base/test/bind.h"
 #include "base/test/task_environment.h"
 #include "content/services/auction_worklet/auction_v8_helper.h"
+#include "content/services/auction_worklet/public/mojom/auction_worklet_service.mojom.h"
 #include "content/services/auction_worklet/trusted_bidding_signals.h"
+#include "content/services/auction_worklet/worklet_test_util.h"
 #include "mojo/public/cpp/bindings/struct_ptr.h"
 #include "net/http/http_status_code.h"
 #include "services/network/test/test_url_loader_factory.h"
@@ -74,14 +76,16 @@ class BidderWorkletTest : public testing::Test {
     interest_group_ads_.push_back(blink::mojom::InterestGroupAd::New(
         GURL("https://response.test/"), base::nullopt /* metadata */));
     auction_signals_ = "[\"auction_signals\"]";
+    null_auction_signals_ = false;
     per_buyer_signals_ = "[\"per_buyer_signals\"]";
+    null_per_buyer_signals_ = false;
     browser_signal_top_window_hostname_ = "browser_signal_top_window_hostname";
     browser_signal_seller_ = "browser_signal_seller";
     browser_signal_join_count_ = 2;
     browser_signal_bid_count_ = 3;
     browser_signal_prev_wins_.clear();
     seller_signals_ = "[\"seller_signals\"]";
-    GURL browser_signal_render_url_ = GURL("https://render_url.test");
+    browser_signal_render_url_ = GURL("https://render_url.test/");
     browser_signal_ad_render_fingerprint_ =
         "browser_signal_ad_render_fingerprint";
     browser_signal_bid_ = 1;
@@ -102,7 +106,7 @@ class BidderWorkletTest : public testing::Test {
       const std::string& javascript,
       const BidderWorklet::BidResult& expected_result) {
     SCOPED_TRACE(javascript);
-    url_loader_factory_.AddResponse(url_.spec(), javascript);
+    AddJavascriptResponse(&url_loader_factory_, url_, javascript);
     RunGenerateBidExpectingResult(expected_result);
   }
 
@@ -133,11 +137,17 @@ class BidderWorkletTest : public testing::Test {
       interest_group->ads->emplace_back(ad.Clone());
     }
     return bidder_worket->GenerateBid(
-        *interest_group, auction_signals_, per_buyer_signals_,
+        *interest_group,
+        null_auction_signals_
+            ? base::nullopt
+            : base::make_optional<std::string>(auction_signals_),
+        null_per_buyer_signals_
+            ? base::nullopt
+            : base::make_optional<std::string>(per_buyer_signals_),
         trusted_bidding_signals_keys_, trusted_bidding_signals_.get(),
         browser_signal_top_window_hostname_, browser_signal_seller_,
         browser_signal_join_count_, browser_signal_bid_count_,
-        browser_signal_prev_wins_);
+        browser_signal_prev_wins_, auction_start_time_);
   }
 
   void ExpectBidResultsEqual(const BidderWorklet::BidResult& expected_result,
@@ -158,12 +168,12 @@ class BidderWorkletTest : public testing::Test {
   }
 
   // Configures `url_loader_factory_` to return a reportWin() script with the
-  // specified Javscript. Then runs the script, expecting the provided result.
+  // specified Javascript. Then runs the script, expecting the provided result.
   void RunReportWinWithJavascriptExpectingResult(
       const std::string& javascript,
       const GURL& expected_report_url) {
     SCOPED_TRACE(javascript);
-    url_loader_factory_.AddResponse(url_.spec(), javascript);
+    AddJavascriptResponse(&url_loader_factory_, url_, javascript);
     RunReportWinExpectingResult(expected_report_url);
   }
 
@@ -174,9 +184,14 @@ class BidderWorkletTest : public testing::Test {
     ASSERT_TRUE(bidder_worket);
 
     BidderWorklet::ReportWinResult actual_result = bidder_worket->ReportWin(
-        auction_signals_, per_buyer_signals_, seller_signals_,
-        browser_signal_top_window_hostname_, interest_group_owner_,
-        interest_group_name_, browser_signal_render_url_,
+        null_auction_signals_
+            ? base::nullopt
+            : base::make_optional<std::string>(auction_signals_),
+        null_per_buyer_signals_
+            ? base::nullopt
+            : base::make_optional<std::string>(per_buyer_signals_),
+        seller_signals_, browser_signal_top_window_hostname_,
+        interest_group_owner_, interest_group_name_, browser_signal_render_url_,
         browser_signal_ad_render_fingerprint_, browser_signal_bid_);
     EXPECT_EQ(!expected_report_url.is_empty(), actual_result.success);
     EXPECT_EQ(expected_report_url, actual_result.report_url);
@@ -219,19 +234,30 @@ class BidderWorkletTest : public testing::Test {
   // An empty string means nullptr.
   std::string interest_group_user_bidding_signals_;
   std::vector<blink::mojom::InterestGroupAdPtr> interest_group_ads_;
+
   std::string auction_signals_;
+  // true to pass nullopt rather than `auction_signals_`.
+  bool null_auction_signals_ = false;
+
   std::string per_buyer_signals_;
+  // true to pass nullopt rather than `per_buyer_signals_`.
+  bool null_per_buyer_signals_ = false;
+
   std::string browser_signal_top_window_hostname_;
   std::string browser_signal_seller_;
   int browser_signal_join_count_;
   int browser_signal_bid_count_;
-  std::vector<BidderWorklet::PreviousWin> browser_signal_prev_wins_;
+  std::vector<mojo::StructPtr<mojom::PreviousWin>> browser_signal_prev_wins_;
   std::vector<std::string> trusted_bidding_signals_keys_;
   std::unique_ptr<TrustedBiddingSignals> trusted_bidding_signals_;
   std::string seller_signals_;
   GURL browser_signal_render_url_;
   std::string browser_signal_ad_render_fingerprint_;
   double browser_signal_bid_;
+
+  // Use a single constant start time. Only delta times are provided to scripts,
+  // relative to the time of the auction, so no need to vary the auction time.
+  const base::Time auction_start_time_ = base::Time::Now();
 
   // Reuseable run loop for loading the script. It's always populated after
   // creating the worklet, to cause a crash if the callback is invoked
@@ -250,20 +276,12 @@ TEST_F(BidderWorkletTest, NetworkError) {
 }
 
 TEST_F(BidderWorkletTest, CompileError) {
-  url_loader_factory_.AddResponse(url_.spec(), "Invalid Javascript");
+  AddJavascriptResponse(&url_loader_factory_, url_, "Invalid Javascript");
   EXPECT_FALSE(CreateWorklet());
 }
 
 // Test parsing of return values.
 TEST_F(BidderWorkletTest, GenerateBidResult) {
-  RunGenerateBidWithJavascriptExpectingResult(
-      R"(
-        function generateBid() {
-          return {ad: ["ad"], bid:1, render:"https://response.test/"};
-        }
-      )",
-      BidderWorklet::BidResult("[\"ad\"]", 1, GURL("https://response.test/")));
-
   // Base case. Also serves to make sure the script returned by
   // CreateBasicGenerateBidScript() does indeed work.
   RunGenerateBidWithJavascriptExpectingResult(
@@ -431,6 +449,13 @@ TEST_F(BidderWorkletTest, GenerateBidResult) {
                                                BidderWorklet::BidResult());
 }
 
+// Make sure Date() is not available when running generateBid().
+TEST_F(BidderWorkletTest, GenerateBidDateNotAvailable) {
+  RunGenerateBidWithReturnValueExpectingResult(
+      R"({ad: Date().toString(), bid:1, render:"https://response.test/"})",
+      BidderWorklet::BidResult());
+}
+
 // Checks that most input parameters are correctly passed in, and each is parsed
 // as JSON or not, depending on the parameter. Does not test `previousWins` or
 // `trustedBiddingSignals`.
@@ -587,35 +612,76 @@ TEST_F(BidderWorkletTest, GenerateBidBasicInputParameters) {
                                GURL("https://response.test/")));
 }
 
+// Test handling of null auctionSignals and perBuyerSignals to generateBid.
+TEST_F(BidderWorkletTest, GenerateBidParametersOptionalString) {
+  constexpr char kRetVal[] = R"({
+    ad: "metadata",
+    bid: (auctionSignals === null ? 10 : 0) +
+         (perBuyerSignals === null ? 2 : 1),
+    render: "https://response.test/"
+})";
+
+  SetDefaultParameters();
+  null_auction_signals_ = false;
+  null_per_buyer_signals_ = false;
+  RunGenerateBidWithReturnValueExpectingResult(
+      kRetVal, BidderWorklet::BidResult("\"metadata\"", 1,
+                                        GURL("https://response.test/")));
+
+  SetDefaultParameters();
+  null_auction_signals_ = false;
+  null_per_buyer_signals_ = true;
+  RunGenerateBidWithReturnValueExpectingResult(
+      kRetVal, BidderWorklet::BidResult("\"metadata\"", 2,
+                                        GURL("https://response.test/")));
+
+  SetDefaultParameters();
+  null_auction_signals_ = true;
+  null_per_buyer_signals_ = false;
+  RunGenerateBidWithReturnValueExpectingResult(
+      kRetVal, BidderWorklet::BidResult("\"metadata\"", 11,
+                                        GURL("https://response.test/")));
+
+  SetDefaultParameters();
+  null_auction_signals_ = true;
+  null_per_buyer_signals_ = true;
+  RunGenerateBidWithReturnValueExpectingResult(
+      kRetVal, BidderWorklet::BidResult("\"metadata\"", 12,
+                                        GURL("https://response.test/")));
+}
+
 // Utility methods to create vectors of PreviousWin. Needed because StructPtr's
 // don't allow copying.
 
-std::vector<BidderWorklet::PreviousWin> CreateWinList(
-    const BidderWorklet::PreviousWin& win1) {
-  std::vector<BidderWorklet::PreviousWin> out;
-  out.emplace_back(win1);
+std::vector<mojo::StructPtr<mojom::PreviousWin>> CreateWinList(
+    const mojo::StructPtr<mojom::PreviousWin>& win1) {
+  std::vector<mojo::StructPtr<mojom::PreviousWin>> out;
+  out.emplace_back(win1.Clone());
   return out;
 }
 
-std::vector<BidderWorklet::PreviousWin> CreateWinList(
-    const BidderWorklet::PreviousWin& win1,
-    const BidderWorklet::PreviousWin& win2) {
-  std::vector<BidderWorklet::PreviousWin> out;
-  out.emplace_back(win1);
-  out.emplace_back(win2);
+std::vector<mojo::StructPtr<mojom::PreviousWin>> CreateWinList(
+    const mojo::StructPtr<mojom::PreviousWin>& win1,
+    const mojo::StructPtr<mojom::PreviousWin>& win2) {
+  std::vector<mojo::StructPtr<mojom::PreviousWin>> out;
+  out.emplace_back(win1.Clone());
+  out.emplace_back(win2.Clone());
   return out;
 }
 
 TEST_F(BidderWorkletTest, GenerateBidPrevWins) {
-  base::Time time1;
-  ASSERT_TRUE(base::Time::FromString("Tue, 15 Nov 1994 12:00:00 GMT", &time1));
-  base::Time time2;
-  ASSERT_TRUE(base::Time::FromString("Mon, 15 Mar 2021 01:23:45 GMT", &time2));
+  base::TimeDelta delta = base::TimeDelta::FromSeconds(100);
+  base::TimeDelta tiny_delta = base::TimeDelta::FromMilliseconds(500);
 
-  auto win1 = BidderWorklet::PreviousWin{time1, R"("ad1")"};
-  auto win2 = BidderWorklet::PreviousWin{time2, R"(["ad2"])"};
+  base::Time time1 = auction_start_time_ - delta - delta;
+  base::Time time2 = auction_start_time_ - delta - tiny_delta;
+  base::Time future_time = auction_start_time_ + delta;
+
+  auto win1 = mojom::PreviousWin::New(time1, R"("ad1")");
+  auto win2 = mojom::PreviousWin::New(time2, R"(["ad2"])");
+  auto future_win = mojom::PreviousWin::New(future_time, R"("future_ad")");
   struct TestCase {
-    std::vector<BidderWorklet::PreviousWin> prev_wins;
+    std::vector<mojo::StructPtr<mojom::PreviousWin>> prev_wins;
     // Value to output as the ad data.
     const char* ad;
     // Expected output in the `ad` field of the result.
@@ -628,43 +694,38 @@ TEST_F(BidderWorkletTest, GenerateBidPrevWins) {
       },
       {
           CreateWinList(win1),
-          "browserSignals.prevWins.length",
-          "1",
+          "browserSignals.prevWins",
+          R"([[200,"ad1"]])",
       },
+      // Make sure it's passed on as an object and not a string.
       {
           CreateWinList(win1),
-          "browserSignals.prevWins[0][0].toUTCString()",
-          R"("Tue, 15 Nov 1994 12:00:00 GMT")",
+          "browserSignals.prevWins[0]",
+          R"([200,"ad1"])",
       },
+      // Test rounding.
       {
-          CreateWinList(win1),
-          "browserSignals.prevWins[0][1]",
-          R"("ad1")",
+          CreateWinList(win2),
+          "browserSignals.prevWins",
+          R"([[100,["ad2"]]])",
       },
-      {
-          CreateWinList(win1, win2),
-          "browserSignals.prevWins.length",
-          "2",
-      },
+      // Multiple previous wins.
       {
           CreateWinList(win1, win2),
-          "browserSignals.prevWins[0][0].toUTCString()",
-          R"("Tue, 15 Nov 1994 12:00:00 GMT")",
+          "browserSignals.prevWins",
+          R"([[200,"ad1"],[100,["ad2"]]])",
       },
+      // Times are trimmed at 0.
       {
-          CreateWinList(win1, win2),
-          "browserSignals.prevWins[0][1]",
-          R"("ad1")",
+          CreateWinList(future_win),
+          "browserSignals.prevWins",
+          R"([[0,"future_ad"]])",
       },
+      // Out of order times.
       {
-          CreateWinList(win1, win2),
-          "browserSignals.prevWins[1][0].toUTCString()",
-          R"("Mon, 15 Mar 2021 01:23:45 GMT")",
-      },
-      {
-          CreateWinList(win1, win2),
-          "browserSignals.prevWins[1][1][0]",
-          R"("ad2")",
+          CreateWinList(future_win, win1),
+          "browserSignals.prevWins",
+          R"([[0,"future_ad"],[200,"ad1"]])",
       },
   };
 
@@ -694,7 +755,7 @@ TEST_F(BidderWorkletTest, GenerateBidTrustedBiddingSignals) {
     }
   )";
 
-  url_loader_factory_.AddResponse(kFullSignalsUrl.spec(), kJson);
+  AddJsonResponse(&url_loader_factory_, kFullSignalsUrl, kJson);
 
   // Request with null TrustedBiddingSignals. This results
   RunGenerateBidWithReturnValueExpectingResult(
@@ -758,6 +819,12 @@ TEST_F(BidderWorkletTest, ReportWin) {
   RunReportWinWithFunctionBodyExpectingResult(
       R"(sendReportTo("https://foo.test");sendReportTo("https://foo.test"))",
       GURL());
+}
+
+// Make sure Date() is not available when running reportWin().
+TEST_F(BidderWorkletTest, ReportWinDateNotAvailable) {
+  RunReportWinWithFunctionBodyExpectingResult(
+      R"(sendReportTo("https://foo.test/" + Date().toString()))", GURL());
 }
 
 TEST_F(BidderWorkletTest, ReportWinParameters) {
@@ -843,14 +910,48 @@ TEST_F(BidderWorkletTest, ReportWinParameters) {
       GURL("https://jumboshrimp.test"));
 }
 
+// Test handling of null auctionSignals and perBuyerSignals to reportWin.
+TEST_F(BidderWorkletTest, ReportWinParametersOptionalString) {
+  constexpr char kBody[] = R"(
+    let url = "https://reporter.com/?" +
+                (auctionSignals === null  ? "aN" : "aP") +
+                (perBuyerSignals === null ? "pN" : "pP");
+    sendReportTo(url);
+  )";
+
+  SetDefaultParameters();
+  null_auction_signals_ = false;
+  null_per_buyer_signals_ = false;
+  RunReportWinWithFunctionBodyExpectingResult(
+      kBody, GURL("https://reporter.com/?aPpP"));
+
+  SetDefaultParameters();
+  null_auction_signals_ = false;
+  null_per_buyer_signals_ = true;
+  RunReportWinWithFunctionBodyExpectingResult(
+      kBody, GURL("https://reporter.com/?aPpN"));
+
+  SetDefaultParameters();
+  null_auction_signals_ = true;
+  null_per_buyer_signals_ = false;
+  RunReportWinWithFunctionBodyExpectingResult(
+      kBody, GURL("https://reporter.com/?aNpP"));
+
+  SetDefaultParameters();
+  null_auction_signals_ = true;
+  null_per_buyer_signals_ = true;
+  RunReportWinWithFunctionBodyExpectingResult(
+      kBody, GURL("https://reporter.com/?aNpN"));
+}
+
 // Subsequent runs of the same script should not affect each other. Same is true
 // for different scripts, but it follows from the single script case.
 TEST_F(BidderWorkletTest, ScriptIsolation) {
   // Use arrays so that all values are references, to catch both the case where
   // variables are persisted, and the case where what they refer to is
   // persisted, but variables are overwritten between runs.
-  url_loader_factory_.AddResponse(url_.spec(),
-                                  R"(
+  AddJavascriptResponse(&url_loader_factory_, url_,
+                        R"(
         // Globally scoped variable.
         if (!globalThis.var1)
           globalThis.var1 = [1];

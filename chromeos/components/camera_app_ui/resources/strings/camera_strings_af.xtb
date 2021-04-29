@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Skakel is bespeur. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Galeryprente</translation>
 <translation id="1430915738399379752">Druk uit</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> is uitgeprop.</translation>
 <translation id="1473110567575736769">Afteller van 3 sekondes</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Niks is opgeneem nie</translation>
 <translation id="1838104802459806957">Kantel op</translation>
+<translation id="1851169887664797861">Bykomende kamerakontroles beskikbaar</translation>
 <translation id="1851616744363735765">ONDERBREEK</translation>
 <translation id="1862930711583847113">Kan nie <ph name="FILE" /> uitvoer nie</translation>
 <translation id="1899697626337024495">Fotoresolusie</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Neem foto's en neem video's op met jou kamera.</translation>
 <translation id="2549985041256363841">Begin opname</translation>
 <translation id="2599796128805996109">Agterste kamera</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> is ingeprop.</translation>
 <translation id="2912439424121107408">Kennermodus word nie op hierdie toestel gesteun nie</translation>
 <translation id="2968794441791257519">Foto's en video's wat met die kamera geneem is, sal na die Aflaaie-vouer toe geskuif word. Jy kan in Lêers by hulle ingaan.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Kameraresolusie</translation>
 <translation id="3517926952904427380">Kan nie portretfoto neem nie</translation>
 <translation id="3569311554794739032">Wil jy regtig <ph name="FILE" /> verwyder?</translation>
+<translation id="3733597664308256288">Bykomende kamerakontroles beskikbaar. Soek + regspyl om toegang te kry.</translation>
 <translation id="3810838688059735925">Video</translation>
 <translation id="3838931309141338733">Skandeer strepieskode</translation>
 <translation id="3892148308691398805">Kopieer teks</translation>
@@ -85,6 +89,7 @@ As jou terugvoer oor prent- of videogehalte gaan, moet jy asseblief 'n voorbeeld
 <translation id="7649070708921625228">Hulp</translation>
 <translation id="7658239707568436148">Kanselleer</translation>
 <translation id="7670511624014457267">60 FPS</translation>
+<translation id="7974782136796202581">Wys beeldrol-, kantel- en zoemopsies</translation>
 <translation id="7983668134180549431">Teks is bespeur.</translation>
 <translation id="8067883171444229417">Speel video</translation>
 <translation id="8120146556401698679">Swenk-draai-zoem</translation>

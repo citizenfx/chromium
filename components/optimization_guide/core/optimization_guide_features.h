@@ -124,6 +124,14 @@ base::TimeDelta GetActiveTabsStalenessTolerance();
 // Service that should be allowed.
 size_t MaxConcurrentPageNavigationFetches();
 
+// Returns the minimum number of seconds to randomly delay before starting to
+// fetch for hints for active tabs.
+int ActiveTabsHintsFetchRandomMinDelaySecs();
+
+// Returns the maximum number of seconds to randomly delay before starting to
+// fetch for hints for active tabs.
+int ActiveTabsHintsFetchRandomMaxDelaySecs();
+
 // The amount of time host model features will be considered fresh enough
 // to be used and remain in the OptimizationGuideStore.
 base::TimeDelta StoredHostModelFeaturesFreshnessDuration();
@@ -169,6 +177,14 @@ int PredictionModelFetchRandomMinDelaySecs();
 // Returns the maximum number of seconds to randomly delay before starting to
 // fetch for prediction models and host model features.
 int PredictionModelFetchRandomMaxDelaySecs();
+
+// Returns the time to wait before retrying a failed fetch for prediction
+// models.
+base::TimeDelta PredictionModelFetchRetryDelay();
+
+// Returns the time to wait after a successful fetch of prediction models to
+// refresh models.
+base::TimeDelta PredictionModelFetchInterval();
 
 // Returns a set of external Android app packages whose predictions have been
 // approved for fetching from the remote Optimization Guide Service.

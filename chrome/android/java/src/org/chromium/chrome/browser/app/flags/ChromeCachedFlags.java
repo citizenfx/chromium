@@ -14,6 +14,7 @@ import org.chromium.chrome.browser.flags.CachedFeatureFlags;
 import org.chromium.chrome.browser.flags.CachedFieldTrialParameter;
 import org.chromium.chrome.browser.flags.ChromeFeatureList;
 import org.chromium.chrome.browser.lens.LensFeature;
+import org.chromium.chrome.browser.merchant_viewer.MerchantViewerConfig;
 import org.chromium.chrome.browser.page_annotations.PageAnnotationsServiceConfig;
 import org.chromium.chrome.browser.paint_preview.StartupPaintPreviewHelper;
 import org.chromium.chrome.browser.subscriptions.CommerceSubscriptionsServiceConfig;
@@ -67,10 +68,13 @@ public class ChromeCachedFlags {
                 ChromeFeatureList.ADAPTIVE_BUTTON_IN_TOP_TOOLBAR,
                 ChromeFeatureList.ANDROID_MANAGED_BY_MENU_ITEM,
                 ChromeFeatureList.ANDROID_PARTNER_CUSTOMIZATION_PHENOTYPE,
+                ChromeFeatureList.APP_MENU_MOBILE_SITE_OPTION,
+                ChromeFeatureList.BOOKMARK_BOTTOM_SHEET,
                 ChromeFeatureList.CCT_INCOGNITO,
                 ChromeFeatureList.CCT_INCOGNITO_AVAILABLE_TO_THIRD_PARTY,
                 ChromeFeatureList.CCT_REMOVE_REMOTE_VIEW_IDS,
                 ChromeFeatureList.CHROME_STARTUP_DELEGATE,
+                ChromeFeatureList.CLIPBOARD_SUGGESTION_CONTENT_HIDDEN,
                 ChromeFeatureList.CLOSE_TAB_SUGGESTIONS,
                 ChromeFeatureList.CRITICAL_PERSISTED_TAB_DATA,
                 ChromeFeatureList.COMMAND_LINE_ON_NON_ROOTED,
@@ -84,6 +88,7 @@ public class ChromeCachedFlags {
                 ChromeFeatureList.PAINT_PREVIEW_DEMO,
                 ChromeFeatureList.PAINT_PREVIEW_SHOW_ON_STARTUP,
                 ChromeFeatureList.PRIORITIZE_BOOTSTRAP_TASKS,
+                ChromeFeatureList.READ_LATER,
                 ChromeFeatureList.START_SURFACE_ANDROID,
                 ChromeFeatureList.SWAP_PIXEL_FORMAT_TO_FIX_CONVERT_FROM_TRANSLUCENT,
                 ChromeFeatureList.TAB_GRID_LAYOUT_ANDROID,
@@ -93,7 +98,6 @@ public class ChromeCachedFlags {
                 ChromeFeatureList.THEME_REFACTOR_ANDROID,
                 ChromeFeatureList.TOOLBAR_USE_HARDWARE_BITMAP_DRAW,
                 ChromeFeatureList.USE_CHIME_ANDROID_SDK,
-                ChromeFeatureList.READ_LATER,
                 ChromeFeatureList.OFFLINE_MEASUREMENTS_BACKGROUND_TASK);
         // clang-format on
         CachedFeatureFlags.cacheNativeFlags(featuresToCache);
@@ -110,6 +114,7 @@ public class ChromeCachedFlags {
                 LensFeature.ENABLE_LENS_CAMERA_ASSISTED_SEARCH_ON_TABLET,
                 LensFeature.SEARCH_BOX_START_VARIANT_LENS_CAMERA_ASSISTED_SEARCH,
                 LensFeature.MIN_AGSA_VERSION_LENS_CAMERA_ASSISTED_SEARCH,
+                MerchantViewerConfig.DEFAULT_TRUST_SIGNALS_MESSAGE_DELAY,
                 PageAnnotationsServiceConfig.PAGE_ANNOTATIONS_BASE_URL,
                 ReturnToChromeExperimentsUtil.TAB_SWITCHER_ON_RETURN_MS,
                 ShoppingPersistedTabData.TIME_TO_LIVE_MS,

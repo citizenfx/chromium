@@ -16,6 +16,7 @@
 #include "base/stl_util.h"
 #include "base/time/time.h"
 #include "content/services/auction_worklet/auction_v8_helper.h"
+#include "content/services/auction_worklet/public/mojom/auction_worklet_service.mojom.h"
 #include "content/services/auction_worklet/report_bindings.h"
 #include "content/services/auction_worklet/trusted_bidding_signals.h"
 #include "content/services/auction_worklet/worklet_loader.h"
@@ -28,6 +29,24 @@
 #include "v8/include/v8.h"
 
 namespace auction_worklet {
+
+namespace {
+
+bool AppendJsonValueOrNull(AuctionV8Helper* const v8_helper,
+                           v8::Local<v8::Context> context,
+                           const base::Optional<std::string>& maybe_json,
+                           std::vector<v8::Local<v8::Value>>* args) {
+  v8::Isolate* isolate = v8_helper->isolate();
+  if (maybe_json.has_value()) {
+    if (!v8_helper->AppendJsonValue(context, maybe_json.value(), args))
+      return false;
+  } else {
+    args->push_back(v8::Null(isolate));
+  }
+  return true;
+}
+
+}  // namespace
 
 BidderWorklet::BidResult::BidResult() = default;
 
@@ -64,15 +83,17 @@ BidderWorklet::~BidderWorklet() = default;
 
 BidderWorklet::BidResult BidderWorklet::GenerateBid(
     const blink::mojom::InterestGroup& interest_group,
-    const std::string& auction_signals_json,
-    const std::string& per_buyer_signals_json,
+    const base::Optional<std::string>& auction_signals_json,
+    const base::Optional<std::string>& per_buyer_signals_json,
     const std::vector<std::string>& trusted_bidding_signals_keys,
     TrustedBiddingSignals* trusted_bidding_signals,
     const std::string& browser_signal_top_window_hostname,
     const std::string& browser_signal_seller,
     int browser_signal_join_count,
     int browser_signal_bid_count,
-    const std::vector<PreviousWin>& browser_signal_prev_wins) {
+    const std::vector<mojo::StructPtr<mojom::PreviousWin>>&
+        browser_signal_prev_wins,
+    base::Time auction_start_time) {
   // Can't make a bid without any ads.
   if (!interest_group.ads)
     return BidResult();
@@ -81,7 +102,7 @@ BidderWorklet::BidResult BidderWorklet::GenerateBid(
   v8::Isolate* isolate = v8_helper_->isolate();
   // Short lived context, to avoid leaking data at global scope between either
   // repeated calls to this worklet, or to calls to any other worklet.
-  v8::Local<v8::Context> context = v8::Context::New(isolate);
+  v8::Local<v8::Context> context = v8_helper_->CreateContext();
   v8::Context::Scope context_scope(context);
 
   std::vector<v8::Local<v8::Value>> args;
@@ -119,8 +140,10 @@ BidderWorklet::BidResult BidderWorklet::GenerateBid(
 
   args.push_back(std::move(interest_group_object));
 
-  if (!v8_helper_->AppendJsonValue(context, auction_signals_json, &args) ||
-      !v8_helper_->AppendJsonValue(context, per_buyer_signals_json, &args)) {
+  if (!AppendJsonValueOrNull(v8_helper_, context, auction_signals_json,
+                             &args) ||
+      !AppendJsonValueOrNull(v8_helper_, context, per_buyer_signals_json,
+                             &args)) {
     return BidResult();
   }
 
@@ -145,10 +168,15 @@ BidderWorklet::BidResult BidderWorklet::GenerateBid(
 
   std::vector<v8::Local<v8::Value>> prev_wins_v8;
   for (const auto& prev_win : browser_signal_prev_wins) {
+    int64_t time_delta = (auction_start_time - prev_win->time).InSeconds();
+    // Don't give negative times if clock has changed since last auction win.
+    // Clock changes do mean times can be out of numerical order, despite being
+    // in chronological order.
+    if (time_delta < 0)
+      time_delta = 0;
     v8::Local<v8::Value> win_values[2];
-    if (!v8::Date::New(context, prev_win.time.ToJsTimeIgnoringNull())
-             .ToLocal(&win_values[0]) ||
-        !v8_helper_->CreateValueFromJson(context, prev_win.ad_json)
+    win_values[0] = v8::Number::New(isolate, time_delta);
+    if (!v8_helper_->CreateValueFromJson(context, prev_win->ad_json)
              .ToLocal(&win_values[1])) {
       return BidResult();
     }
@@ -202,8 +230,8 @@ BidderWorklet::BidResult BidderWorklet::GenerateBid(
 }
 
 BidderWorklet::ReportWinResult BidderWorklet::ReportWin(
-    const std::string& auction_signals_json,
-    const std::string& per_buyer_signals_json,
+    const base::Optional<std::string>& auction_signals_json,
+    const base::Optional<std::string>& per_buyer_signals_json,
     const std::string& seller_signals_json,
     const std::string& browser_signal_top_window_hostname,
     const url::Origin& browser_signal_interest_group_owner,
@@ -220,13 +248,14 @@ BidderWorklet::ReportWinResult BidderWorklet::ReportWin(
 
   // Short lived context, to avoid leaking data at global scope between either
   // repeated calls to this worklet, or to calls to any other worklet.
-  v8::Local<v8::Context> context =
-      v8::Context::New(isolate, nullptr /* extensions */, global_template);
+  v8::Local<v8::Context> context = v8_helper_->CreateContext(global_template);
   v8::Context::Scope context_scope(context);
 
   std::vector<v8::Local<v8::Value>> args;
-  if (!v8_helper_->AppendJsonValue(context, auction_signals_json, &args) ||
-      !v8_helper_->AppendJsonValue(context, per_buyer_signals_json, &args) ||
+  if (!AppendJsonValueOrNull(v8_helper_, context, auction_signals_json,
+                             &args) ||
+      !AppendJsonValueOrNull(v8_helper_, context, per_buyer_signals_json,
+                             &args) ||
       !v8_helper_->AppendJsonValue(context, seller_signals_json, &args)) {
     return ReportWinResult();
   }
@@ -249,11 +278,11 @@ BidderWorklet::ReportWinResult BidderWorklet::ReportWin(
   }
   args.push_back(browser_signals);
 
-  v8::Local<v8::Value> signals_for_winner_value;
-  if (!v8_helper_
-           ->RunScript(context, worklet_script_->Get(isolate), "reportWin",
-                       args)
-           .ToLocal(&signals_for_winner_value)) {
+  // An empty return value indicates an exception was thrown. Any other return
+  // value indicates no exception.
+  if (v8_helper_
+          ->RunScript(context, worklet_script_->Get(isolate), "reportWin", args)
+          .IsEmpty()) {
     return ReportWinResult();
   }
 

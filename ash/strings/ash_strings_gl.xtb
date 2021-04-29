@@ -179,7 +179,7 @@ Para comezar, podes probar o seguinte.</translation>
 <translation id="2408955596600435184">Introduce o PIN</translation>
 <translation id="2412593942846481727">Hai unha actualización dispoñible</translation>
 <translation id="2427507373259914951">Clic co botón esquerdo do rato</translation>
-<translation id="2429753432712299108">O dispositivo Bluetooth "<ph name="DEVICE_NAME" />" quere recibir permiso para sincronizarse. Antes de aceptalo, confirma que se mostra esta clave de paso nese dispositivo: <ph name="PASSKEY" /></translation>
+<translation id="2429753432712299108">O dispositivo Bluetooth "<ph name="DEVICE_NAME" />" quere recibir permiso para sincronizarse. Antes de aceptalo, confirma que se mostra esta clave de acceso nese dispositivo: <ph name="PASSKEY" /></translation>
 <translation id="2435457462613246316">Mostrar contrasinal</translation>
 <translation id="2450205753526923158">Modo de captura de pantalla</translation>
 <translation id="2473177541599297363">Confirmar resolución</translation>
@@ -577,7 +577,7 @@ Todos os usuarios deben pechar sesión para poder continuar.</translation>
 <translation id="5876666360658629066">Escribe o código parental</translation>
 <translation id="5881540930187678962">Configurar O meu teléfono máis tarde</translation>
 <translation id="5895138241574237353">Reiniciar</translation>
-<translation id="589817443623831496">Escaneo de puntos</translation>
+<translation id="589817443623831496">Exploración por posición</translation>
 <translation id="5901316534475909376">Maiúsculas+Esc</translation>
 <translation id="5909862606227538307">Escritorio inactivo.</translation>
 <translation id="5911909173233110115"><ph name="USERNAME" /> (<ph name="MAIL" />)</translation>

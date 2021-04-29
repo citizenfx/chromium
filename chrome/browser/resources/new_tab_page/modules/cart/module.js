@@ -48,6 +48,9 @@ class ChromeCartModuleElement extends mixinBehaviors
         reflectToAttribute: true,
       },
 
+      /** @type {boolean} */
+      showDiscountConsent: Boolean,
+
       /** @private {boolean} */
       showLeftScrollButton_: Boolean,
 
@@ -69,6 +72,12 @@ class ChromeCartModuleElement extends mixinBehaviors
         type: Object,
         value: null,
       },
+
+      /** @private {string} */
+      confirmDiscountConsentString_: String,
+
+      /** @private {string} */
+      discountConsentIconSrc_: String,
     };
   }
 
@@ -303,9 +312,18 @@ class ChromeCartModuleElement extends mixinBehaviors
     const scrollOffset = Math.max(
         leftScrollShadow ? leftScrollShadow.offsetWidth : 0,
         rightScrollShadow ? rightScrollShadow.offsetWidth : 0);
+    let leftPosition = carts[index].offsetLeft - scrollOffset;
+    // TODO(crbug.com/1198632): This could make a left scroll jump over cart
+    // items.
+    if (index === 0) {
+      const consentCard = this.shadowRoot.getElementById('consentCard');
+      if (consentCard) {
+        leftPosition -= consentCard.offsetWidth;
+      }
+    }
     this.$.cartCarousel.scrollTo({
       top: 0,
-      left: carts[index].offsetLeft - scrollOffset,
+      left: leftPosition,
       behavior: this.scrollBehavior,
     });
   }
@@ -332,27 +350,53 @@ class ChromeCartModuleElement extends mixinBehaviors
     ChromeCartProxy.getInstance().handler.onCartItemClicked(index);
     this.dispatchEvent(new Event('usage', {bubbles: true, composed: true}));
   }
+
+  /** @private */
+  onDisallowDiscount_() {
+    this.showDiscountConsent = false;
+    this.confirmDiscountConsentString_ =
+        loadTimeData.getString('modulesCartDiscountConsentRejectConfirmation');
+    $$(this, '#confirmDiscountConsentToast').show();
+    ChromeCartProxy.getInstance().handler.onDiscountConsentAcknowledged(false);
+  }
+
+  /** @private */
+  onAllowDiscount_() {
+    this.showDiscountConsent = false;
+    this.confirmDiscountConsentString_ =
+        loadTimeData.getString('modulesCartDiscountConsentAcceptConfirmation');
+    $$(this, '#confirmDiscountConsentToast').show();
+    ChromeCartProxy.getInstance().handler.onDiscountConsentAcknowledged(true);
+  }
+
+  /** @private */
+  onConfirmDiscountConsentClick_() {
+    $$(this, '#confirmDiscountConsentToast').hide();
+  }
 }
 
 customElements.define(ChromeCartModuleElement.is, ChromeCartModuleElement);
 
 /** @return {!Promise<?HTMLElement>} */
 async function createCartElement() {
-  const {visible} =
+  const {welcomeVisible} =
       await ChromeCartProxy.getInstance().handler.getWarmWelcomeVisible();
   const {carts} =
       await ChromeCartProxy.getInstance().handler.getMerchantCarts();
+  const {consentVisible} = await ChromeCartProxy.getInstance()
+                               .handler.getDiscountConsentCardVisible();
   ChromeCartProxy.getInstance().handler.onModuleCreated(carts.length);
   if (carts.length === 0) {
     return null;
   }
   const element = new ChromeCartModuleElement();
-  if (visible) {
+  if (welcomeVisible) {
     element.headerChipText = loadTimeData.getString('modulesCartHeaderNew');
     element.headerDescriptionText =
         loadTimeData.getString('modulesCartWarmWelcome');
   }
   element.cartItems = carts;
+  element.showDiscountConsent = consentVisible;
   return element;
 }
 

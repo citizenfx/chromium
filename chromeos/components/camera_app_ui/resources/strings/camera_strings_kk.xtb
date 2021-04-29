@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Сілтеме анықталды. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Галерея суреттері</translation>
 <translation id="1430915738399379752">Басып шығару</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> ажыратылды.</translation>
 <translation id="1473110567575736769">3 секундтық таймер</translation>
 <translation id="1620510694547887537">Камера</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Ештеңе жазылмады.</translation>
 <translation id="1838104802459806957">Жоғары қарай еңкейту</translation>
+<translation id="1851169887664797861">Камераның қосымша басқару элементтері қолжетімді.</translation>
 <translation id="1851616744363735765">КІДІРТІЛДІ</translation>
 <translation id="1862930711583847113"><ph name="FILE" /> файлы экспортталмады.</translation>
 <translation id="1899697626337024495">Фотосурет ажыратымдылығы</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Камерамен фотосуретке және бейнеге түсіруге болады.</translation>
 <translation id="2549985041256363841">Бейнеге түсіруді бастау</translation>
 <translation id="2599796128805996109">Артқы камера</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> жалғанды.</translation>
 <translation id="2912439424121107408">Бұл құрылғыда сарапшы режимі жұмыс істемейді.</translation>
 <translation id="2968794441791257519">Камерамен түсірілген фотосуреттер мен бейнелер "Жүктеп алынғандар" қалтасына тасымалданады. Оларға "Файлдар" қалтасынан кіре аласыз.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Камера ажыратымдылығы</translation>
 <translation id="3517926952904427380">Портреттік суретке түсіру мүмкін болмады.</translation>
 <translation id="3569311554794739032"><ph name="FILE" /> файлын шынымен өшіргіңіз келе ме?</translation>
+<translation id="3733597664308256288">Камераның қосымша басқару элементтері қолжетімді. Оларға өту үшін Search + оң жаққа бағыттауыш перне тіркесімін пайдаланыңыз.</translation>
 <translation id="3810838688059735925">Бейне</translation>
 <translation id="3838931309141338733">Сканерлеу штрих коды</translation>
 <translation id="3892148308691398805">Мәтінді көшіру</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">Анықтама</translation>
 <translation id="7658239707568436148">Бас тарту</translation>
 <translation id="7670511624014457267">60 кадр/сек</translation>
+<translation id="7974782136796202581">Панорама/еңкейту/масштабтау опцияларын көрсету</translation>
 <translation id="7983668134180549431">Мәтін анықталды.</translation>
 <translation id="8067883171444229417">Бейнені ойнату</translation>
 <translation id="8120146556401698679">Панорама, қисайту, масштабтау</translation>

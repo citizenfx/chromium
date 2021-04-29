@@ -50,6 +50,7 @@ public class CachedFeatureFlags {
             put(ChromeFeatureList.ADAPTIVE_BUTTON_IN_TOP_TOOLBAR, false);
             put(ChromeFeatureList.ANDROID_MANAGED_BY_MENU_ITEM, true);
             put(ChromeFeatureList.ANDROID_PARTNER_CUSTOMIZATION_PHENOTYPE, true);
+            put(ChromeFeatureList.BOOKMARK_BOTTOM_SHEET, false);
             put(ChromeFeatureList.CHROME_STARTUP_DELEGATE, false);
             put(ChromeFeatureList.CONDITIONAL_TAB_STRIP_ANDROID, false);
             put(ChromeFeatureList.LENS_CAMERA_ASSISTED_SEARCH, false);
@@ -84,6 +85,8 @@ public class CachedFeatureFlags {
             put(ChromeFeatureList.OFFLINE_MEASUREMENTS_BACKGROUND_TASK, false);
             put(ChromeFeatureList.CCT_INCOGNITO, true);
             put(ChromeFeatureList.EXPERIMENTS_FOR_AGSA, true);
+            put(ChromeFeatureList.APP_MENU_MOBILE_SITE_OPTION, false);
+            put(ChromeFeatureList.CLIPBOARD_SUGGESTION_CONTENT_HIDDEN, false);
         }
     };
 

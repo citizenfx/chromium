@@ -145,6 +145,11 @@
     "expiry_milestone": 93
   },
   {
+    "name": "app-menu-mobile-site-option",
+    "owners": [ "gangwu" ],
+    "expiry_milestone": 96
+  },
+  {
     "name": "app-service-adaptive-icon",
     "owners": [ "//components/services/app_service/OWNERS" ],
     "expiry_milestone": 93
@@ -485,6 +490,11 @@
   {
     "name": "bluetooth-wbs-dogfood",
     "owners": [ "hychao" ],
+    "expiry_milestone": 95
+  },
+  {
+    "name": "bookmark-bottom-sheet",
+    "owners": [ "xingliu" ],
     "expiry_milestone": 95
   },
   {
@@ -1928,11 +1938,6 @@
     "expiry_milestone": 90
   },
   {
-    "name": "enable-incognito-mode-availability-ios",
-    "owners": [ "tinazwang", "sebsg" ],
-    "expiry_milestone": 92
-  },
-  {
     "name": "enable-incognito-shortcut-on-desktop",
     "owners": [ "rhalavati", "chrome-privacy-core@google.com" ],
     "expiry_milestone": 92
@@ -2690,7 +2695,7 @@
   {
     "name": "enable-webrtc-pipewire-capturer",
     "owners": [ "tomas.popela@gmail.com" ],
-    "expiry_milestone": 90
+    "expiry_milestone": 100
   },
   {
     "name": "enable-webrtc-remote-event-log",
@@ -3497,6 +3502,11 @@
     // aren't easily understood. It is primarily used by support to help
     // individual users get cast working.
     "expiry_milestone": -1
+  },
+  {
+    "name": "media-session-webrtc",
+    "owners": [ "steimel", "media-dev" ],
+    "expiry_milestone": 100
   },
   {
     "name": "memlog",
@@ -5267,6 +5277,11 @@
     "expiry_milestone": 93
   },
   {
+    "name": "vm-status-page",
+    "owners": [ "lxj", "joelhockey", "timloh" ],
+    "expiry_milestone": 94
+  },
+  {
     "name": "voice-button-in-top-toolbar",
     "owners": [ "jds", "chrome-language" ],
     "expiry_milestone": 93
@@ -5366,6 +5381,11 @@
     // the particular hardware. Useful to debug user issues or multiple runtimes
     // with a single headset.
     "expiry_milestone": -1
+  },
+  {
+    "name": "wifi-sync-allow-deletes",
+    "owners": [ "jonmann", "cros-system-services@google.com" ],
+    "expiry_milestone": 97
   },
   {
     "name": "wifi-sync-android",

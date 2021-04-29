@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Линк је откривен. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Слике у галерији</translation>
 <translation id="1430915738399379752">Штампај</translation>
+<translation id="1467231725790366244">Камера <ph name="CAMERA" /> је искључена.</translation>
 <translation id="1473110567575736769">Тајмер за 3 секунде</translation>
 <translation id="1620510694547887537">Камера</translation>
 <translation id="1627744224761163218">4×4</translation>
 <translation id="1664224225747386870">Ништа није снимљено</translation>
 <translation id="1838104802459806957">Нагињање нагоре</translation>
+<translation id="1851169887664797861">Доступне су додатне контроле за камеру</translation>
 <translation id="1851616744363735765">ПАУЗИРАНО</translation>
 <translation id="1862930711583847113">Извоз датотеке <ph name="FILE" /> није успео</translation>
 <translation id="1899697626337024495">Резолуција слике</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Снимајте слике и видео снимке помоћу камере.</translation>
 <translation id="2549985041256363841">Започни снимање</translation>
 <translation id="2599796128805996109">Задња камера</translation>
+<translation id="2879583609344924966">Камера <ph name="CAMERA" /> је прикључена.</translation>
 <translation id="2912439424121107408">Режим за стручњаке није подржан на овом уређају</translation>
 <translation id="2968794441791257519">Слике и видео снимци који су снимљени помоћу камере ће се преместити у директоријум Преузимања. Можете да им приступите у Датотекама.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Резолуција камере</translation>
 <translation id="3517926952904427380">Снимање усправне слике није успело</translation>
 <translation id="3569311554794739032">Желите ли стварно да уклоните датотеку <ph name="FILE" />?</translation>
+<translation id="3733597664308256288">Доступне су додатне контроле за камеру. Ако желите да им приступите, користите тастер за претрагу + стрелицу надесно.</translation>
 <translation id="3810838688059735925">Видео</translation>
 <translation id="3838931309141338733">Скенирај бар-код</translation>
 <translation id="3892148308691398805">Копирај текст</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">Помоћ</translation>
 <translation id="7658239707568436148">Откажи</translation>
 <translation id="7670511624014457267">60 кадр/с</translation>
+<translation id="7974782136796202581">Прикажи опције за померање, нагињање и зумирање</translation>
 <translation id="7983668134180549431">Текст је откривен.</translation>
 <translation id="8067883171444229417">Пусти видео</translation>
 <translation id="8120146556401698679">Померање, нагињање, зумирање</translation>

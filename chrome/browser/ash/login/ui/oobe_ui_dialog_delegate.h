@@ -17,7 +17,9 @@
 #include "chrome/browser/ui/ash/keyboard/chrome_keyboard_controller_client.h"
 #include "chrome/browser/ui/ash/login_screen_client.h"
 #include "chrome/browser/ui/chrome_web_modal_dialog_manager_delegate.h"
+#include "chrome/browser/ui/webui/chromeos/login/oobe_ui.h"
 #include "components/web_modal/web_contents_modal_dialog_host.h"
+#include "ui/views/view.h"
 #include "ui/views/view_observer.h"
 #include "ui/web_dialogs/web_dialog_delegate.h"
 
@@ -30,7 +32,6 @@ class Accelerator;
 }
 
 namespace views {
-class View;
 class WebDialogView;
 class Widget;
 }  // namespace views
@@ -40,7 +41,6 @@ namespace chromeos {
 class CaptivePortalDialogDelegate;
 class LayoutWidgetDelegateView;
 class LoginDisplayHostMojo;
-class OobeUI;
 class OobeWebDialogView;
 
 // This class manages the behavior of the Oobe UI dialog.
@@ -53,6 +53,7 @@ class OobeWebDialogView;
 class OobeUIDialogDelegate : public ui::WebDialogDelegate,
                              public ChromeKeyboardControllerClient::Observer,
                              public CaptivePortalWindowProxy::Observer,
+                             public OobeUI::Observer,
                              public views::ViewObserver,
                              public ash::SystemTrayObserver {
  public:
@@ -113,6 +114,7 @@ class OobeUIDialogDelegate : public ui::WebDialogDelegate,
 
   // views::ViewObserver:
   void OnViewBoundsChanged(views::View* observed_view) override;
+  void OnViewIsDeleting(views::View* observed_view) override;
 
   // ChromeKeyboardControllerClient::Observer:
   void OnKeyboardVisibilityChanged(bool visible) override;
@@ -120,6 +122,11 @@ class OobeUIDialogDelegate : public ui::WebDialogDelegate,
   // CaptivePortalWindowProxy::Observer:
   void OnBeforeCaptivePortalShown() override;
   void OnAfterCaptivePortalHidden() override;
+
+  // OobeUI::Observer:
+  void OnCurrentScreenChanged(OobeScreenId current_screen,
+                              OobeScreenId new_screen) override;
+  void OnDestroyingOobeUI() override;
 
   // ash::SystemTrayObserver:
   void OnFocusLeavingSystemTray(bool reverse) override;
@@ -136,12 +143,15 @@ class OobeUIDialogDelegate : public ui::WebDialogDelegate,
   // Reference to dialog view stored in widget_.
   OobeWebDialogView* dialog_view_ = nullptr;
 
+  base::ScopedObservation<views::View, views::ViewObserver> view_observer_{
+      this};
   base::ScopedObservation<ChromeKeyboardControllerClient,
                           ChromeKeyboardControllerClient::Observer>
       keyboard_observer_{this};
   base::ScopedObservation<CaptivePortalWindowProxy,
                           CaptivePortalWindowProxy::Observer>
       captive_portal_observer_{this};
+  base::ScopedObservation<OobeUI, OobeUI::Observer> oobe_ui_observer_{this};
 
   std::unique_ptr<
       base::ScopedObservation<LoginScreenClient,

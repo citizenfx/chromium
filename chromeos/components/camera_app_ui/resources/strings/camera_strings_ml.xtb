@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">ലിങ്ക് തിരിച്ചറിഞ്ഞു. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">ഗാലറി ചിത്രങ്ങൾ</translation>
 <translation id="1430915738399379752">അച്ചടിക്കുക</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> അൺപ്ലഗ് ചെയ്‌തിരിക്കുന്നു.</translation>
 <translation id="1473110567575736769">3 സെക്കൻഡ് ടൈമർ</translation>
 <translation id="1620510694547887537">ക്യാമറ</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">ഒന്നും റെക്കോർഡ് ചെയ്‌തില്ല</translation>
 <translation id="1838104802459806957">മുകളിലേക്ക് ടിൽറ്റ് ചെയ്യുക</translation>
+<translation id="1851169887664797861">അധിക ക്യാമറാ നിയന്ത്രണങ്ങൾ ലഭ്യമാണ്</translation>
 <translation id="1851616744363735765">താൽക്കാലികമായി നിർത്തി</translation>
 <translation id="1862930711583847113"><ph name="FILE" /> എക്‌സ്‌പോർട്ട് ചെയ്യാനായില്ല</translation>
 <translation id="1899697626337024495">ഫോട്ടോ റെസല്യൂഷൻ</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">നിങ്ങളുടെ ക്യാമറ ഉപയോഗിച്ച് ചിത്രങ്ങൾ എടുക്കുക, വീഡിയോകൾ റെക്കോർഡ് ചെയ്യുക.</translation>
 <translation id="2549985041256363841">റെക്കോർഡിംഗ് ആരംഭിക്കൂ</translation>
 <translation id="2599796128805996109">പിൻ ക്യാമറ</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> പ്ലഗ്-ഇൻ ചെയ്‌തിരിക്കുന്നു.</translation>
 <translation id="2912439424121107408">വിദഗ്‌ദ്ധ മോഡ് ഈ ഉപകരണത്തിൽ പിന്തുണയ്‌ക്കുന്നില്ല</translation>
 <translation id="2968794441791257519">ക്യാമറ ഉപയോഗിച്ച് എടുത്ത ഫോട്ടോകളും വീഡിയോകളും 'ഡൗൺലോഡുകൾ' ഫോൾഡറിലേക്ക് നീക്കും. നിങ്ങൾക്ക് അവ Files-ൽ ആക്‌സസ് ചെയ്യാനാവും.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">ക്യാമറ റെസല്യൂഷൻ</translation>
 <translation id="3517926952904427380">പോർട്രെയ്റ്റ് ഫോട്ടോ എടുക്കാനായില്ല</translation>
 <translation id="3569311554794739032">"<ph name="FILE" />" നീക്കംചെയ്യണമെന്ന് തീർച്ചയാണോ?</translation>
+<translation id="3733597664308256288">അധിക ക്യാമറാ നിയന്ത്രണങ്ങൾ ലഭ്യമാണ്. ആക്‌സസ് ചെയ്യാൻ തിരയൽ + വലത്തേയ്ക്കുള്ള അമ്പടയാളം അമർത്തുക.</translation>
 <translation id="3810838688059735925">വീഡിയോ</translation>
 <translation id="3838931309141338733">ബാർകോഡ് സ്‌കാൻ ചെയ്യുക</translation>
 <translation id="3892148308691398805">ടെക്‌സ്‌റ്റ് പകർത്തുക</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">സഹായം</translation>
 <translation id="7658239707568436148">റദ്ദാക്കൂ</translation>
 <translation id="7670511624014457267">60 FPS</translation>
+<translation id="7974782136796202581">പാൻ/ടിൽറ്റ്/സൂം ഓപ്ഷനുകൾ കാണിക്കുക</translation>
 <translation id="7983668134180549431">ടെക്‌സ്റ്റ് തിരിച്ചറിഞ്ഞു.</translation>
 <translation id="8067883171444229417">വീഡിയോ പ്ലേ ചെയ്യുക</translation>
 <translation id="8120146556401698679">പാൻ ടിൽറ്റ് സൂം</translation>

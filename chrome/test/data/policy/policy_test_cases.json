@@ -1438,6 +1438,37 @@
     ]
   },
 
+  "SharedArrayBufferUnrestrictedAccessAllowed": {
+    "os": ["win", "linux", "mac", "chromeos"],
+    "policy_pref_mapping_tests": [
+      {
+        "policies": { "SharedArrayBufferUnrestrictedAccessAllowed": false },
+        "prefs": {
+          "profile.shared_array_buffer_unrestricted_access_allowed": {
+            "value": false
+          }
+        }
+      },
+      {
+        "policies": { "SharedArrayBufferUnrestrictedAccessAllowed": true },
+        "prefs": {
+          "profile.shared_array_buffer_unrestricted_access_allowed": {
+            "value": true
+          }
+        }
+      },
+      {
+        "policies": {},
+        "prefs": {
+          "profile.shared_array_buffer_unrestricted_access_allowed": {
+            "value": false,
+            "expect_default": true
+          }
+        }
+      }
+    ]
+  },
+
   "WebDriverOverridesIncompatiblePolicies": {
     "note": "This policy has been removed since Chrome 79."
   },
@@ -8216,12 +8247,12 @@
     "os": ["win", "linux", "mac", "chromeos"],
     "policy_pref_mapping_tests": [
       {
-        "policies": { "DefaultFileHandlingGuardSetting": 1 },
-        "prefs": { "profile.managed_default_content_settings.file_handling_guard": { "value": 1 } }
-      },
-      {
         "policies": { "DefaultFileHandlingGuardSetting": 2 },
         "prefs": { "profile.managed_default_content_settings.file_handling_guard": { "value": 2 } }
+      },
+      {
+        "policies": { "DefaultFileHandlingGuardSetting": 3 },
+        "prefs": { "profile.managed_default_content_settings.file_handling_guard": { "value": 3 } }
       }
     ]
   },
@@ -8242,6 +8273,15 @@
       {
         "policies": {"FileHandlingBlockedForUrls": ["[*.]google.com"]},
         "prefs": { "profile.managed_file_handling_blocked_for_urls": {} }
+      }
+    ]
+  },
+  "LensCameraAssistedSearchEnabled" : {
+    "os": ["android"],
+    "policy_pref_mapping_tests": [
+      {
+        "policies": { "LensCameraAssistedSearchEnabled": true },
+        "prefs": { "policy.lens_camera_assisted_search_enabled": { "location": "local_state" } }
       }
     ]
   },
@@ -8645,6 +8685,18 @@
       {
         "policies": { "PdfAnnotationsEnabled": true },
         "prefs": { "pdf.enable_annotations": {} }
+      }
+    ]
+  },
+  "ExplicitlyAllowedNetworkPorts": {
+    "os": ["win", "linux", "mac", "chromeos", "android"],
+    "policy_pref_mapping_test": [
+      {
+        "policies": { "ExplicitlyAllowedNetworkPorts": "554,10080" },
+        "prefs": {
+          "net.explicitly_allowed_network_ports": "10080",
+          "location": "local_state"
+        }
       }
     ]
   }

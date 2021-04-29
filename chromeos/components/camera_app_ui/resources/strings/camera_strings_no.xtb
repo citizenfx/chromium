@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Oppdaget link. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Galleribilder</translation>
 <translation id="1430915738399379752">Skriv ut</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> er koblet fra.</translation>
 <translation id="1473110567575736769">Tre sekunders nedtelling</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Ingenting er tatt opp</translation>
 <translation id="1838104802459806957">Vipp opp</translation>
+<translation id="1851169887664797861">Flere kamerakontroller er tilgjengelige</translation>
 <translation id="1851616744363735765">SATT PÅ PAUSE</translation>
 <translation id="1862930711583847113">Kan ikke eksportere <ph name="FILE" /></translation>
 <translation id="1899697626337024495">Bildeoppløsning</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Ta bilder og ta opp video med kameraet.</translation>
 <translation id="2549985041256363841">Start opptak</translation>
 <translation id="2599796128805996109">Bakre kamera</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> er koblet til.</translation>
 <translation id="2912439424121107408">Ekspertmodus støttes ikke på denne enheten</translation>
 <translation id="2968794441791257519">Bilder og videoer som er tatt med kameraet, flyttes til mappen Nedlastinger. Du har tilgang til dem i Filer.
 
@@ -37,6 +40,7 @@ Apper med lagringstillatelser har tilgang til bildene og videoene dine.</transla
 <translation id="3259149966178251584">Kameraoppløsning</translation>
 <translation id="3517926952904427380">Kunne ikke ta bilde i stående format</translation>
 <translation id="3569311554794739032">Er du sikker på at du vil fjerne <ph name="FILE" />?</translation>
+<translation id="3733597664308256288">Flere kamerakontroller er tilgjengelige. Trykk på søketasten + høyrepil for å se dem.</translation>
 <translation id="3810838688059735925">Video</translation>
 <translation id="3838931309141338733">Skann strekkoden</translation>
 <translation id="3892148308691398805">Kopiér teksten</translation>
@@ -85,6 +89,7 @@ Hvis tilbakemeldingen din gjelder bilde- eller videokvalitet, ber vi deg legge v
 <translation id="7649070708921625228">Hjelp</translation>
 <translation id="7658239707568436148">Avbryt</translation>
 <translation id="7670511624014457267">60 bilder per sekund</translation>
+<translation id="7974782136796202581">Vis alternativer for panorering, vipping og zooming</translation>
 <translation id="7983668134180549431">Oppdaget tekst.</translation>
 <translation id="8067883171444229417">Spill av videoen</translation>
 <translation id="8120146556401698679">Panorering, vipping, zooming</translation>

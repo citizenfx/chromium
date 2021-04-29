@@ -12,6 +12,7 @@
 #include "base/callback.h"
 #include "base/files/file_path.h"
 #include "base/files/file_util.h"
+#include "base/metrics/histogram_macros.h"
 #include "base/strings/string_piece.h"
 #include "base/strings/string_split.h"
 #include "base/strings/string_util.h"
@@ -40,11 +41,17 @@ constexpr size_t kMaxFileSize = 1024 * 1024;
 
 std::string ReadNsswitch() {
   std::string file;
-  if (!base::ReadFileToStringWithMaxSize(base::FilePath(kNsswitchPath), &file,
-                                         kMaxFileSize))
-    return "";
+  bool result = base::ReadFileToStringWithMaxSize(base::FilePath(kNsswitchPath),
+                                                  &file, kMaxFileSize);
+  UMA_HISTOGRAM_BOOLEAN("Net.DNS.DnsConfig.Nsswitch.Read",
+                        result || file.size() == kMaxFileSize);
+  UMA_HISTOGRAM_BOOLEAN("Net.DNS.DnsConfig.Nsswitch.TooLarge",
+                        !result && file.size() == kMaxFileSize);
 
-  return file;
+  if (result)
+    return file;
+
+  return "";
 }
 
 base::StringPiece SkipRestOfLine(base::StringPiece text) {
@@ -86,9 +93,9 @@ base::StringPiece FindDatabase(base::StringPiece text,
 
 NsswitchReader::ServiceAction TokenizeAction(base::StringPiece action_column) {
   DCHECK(!action_column.empty());
+  DCHECK_EQ(action_column.find(']'), base::StringPiece::npos);
   DCHECK_EQ(action_column.find_first_of(base::kWhitespaceASCII),
             base::StringPiece::npos);
-  DCHECK_EQ(action_column.find_first_of("[]"), base::StringPiece::npos);
 
   NsswitchReader::ServiceAction result = {/*negated=*/false,
                                           NsswitchReader::Status::kUnknown,
@@ -127,8 +134,9 @@ NsswitchReader::ServiceAction TokenizeAction(base::StringPiece action_column) {
 
 std::vector<NsswitchReader::ServiceAction> TokenizeActions(
     base::StringPiece actions) {
-  DCHECK_EQ(actions.find_first_of("[]"), base::StringPiece::npos);
   DCHECK(!actions.empty());
+  DCHECK_NE(actions.front(), '[');
+  DCHECK_EQ(actions.find(']'), base::StringPiece::npos);
   DCHECK(!base::IsAsciiWhitespace(actions.front()));
 
   std::vector<NsswitchReader::ServiceAction> result;
@@ -148,7 +156,7 @@ NsswitchReader::ServiceSpecification TokenizeService(
   DCHECK(!service_column.empty());
   DCHECK_EQ(service_column.find_first_of(base::kWhitespaceASCII),
             base::StringPiece::npos);
-  DCHECK_EQ(service_column.find_first_of("[]"), base::StringPiece::npos);
+  DCHECK_NE(service_column.front(), '[');
 
   if (base::EqualsCaseInsensitiveASCII(service_column, "files")) {
     return NsswitchReader::ServiceSpecification(
@@ -196,6 +204,42 @@ NsswitchReader::ServiceSpecification TokenizeService(
       NsswitchReader::Service::kUnknown);
 }
 
+// Returns the actions string without brackets. `out_num_bytes` returns number
+// of bytes in the actions including brackets and trailing whitespace.
+base::StringPiece GetActionsStringAndRemoveBrackets(base::StringPiece database,
+                                                    size_t& out_num_bytes) {
+  DCHECK(!database.empty());
+  DCHECK_EQ(database.front(), '[');
+
+  size_t action_end = database.find(']');
+
+  base::StringPiece actions;
+  if (action_end == base::StringPiece::npos) {
+    actions = database.substr(1);
+    out_num_bytes = database.size();
+  } else {
+    actions = database.substr(1, action_end - 1);
+    out_num_bytes = action_end;
+  }
+
+  // Ignore repeated '[' at start of `actions`.
+  actions =
+      base::TrimWhitespaceASCII(actions, base::TrimPositions::TRIM_LEADING);
+  while (!actions.empty() && actions.front() == '[') {
+    actions = base::TrimWhitespaceASCII(actions.substr(1),
+                                        base::TrimPositions::TRIM_LEADING);
+  }
+
+  // Include any trailing ']' and whitespace in `out_num_bytes`.
+  while (out_num_bytes < database.size() &&
+         (database[out_num_bytes] == ']' ||
+          base::IsAsciiWhitespace(database[out_num_bytes]))) {
+    ++out_num_bytes;
+  }
+
+  return actions;
+}
+
 std::vector<NsswitchReader::ServiceSpecification> TokenizeDatabase(
     base::StringPiece database) {
   std::vector<NsswitchReader::ServiceSpecification> tokenized;
@@ -215,18 +259,15 @@ std::vector<NsswitchReader::ServiceSpecification> TokenizeDatabase(
         tokenized.emplace_back(NsswitchReader::Service::kUnknown);
       }
 
-      size_t action_end = database.find_first_of("]");
+      size_t num_actions_bytes = 0;
+      base::StringPiece actions =
+          GetActionsStringAndRemoveBrackets(database, num_actions_bytes);
 
-      base::StringPiece actions;
-      if (action_end == base::StringPiece::npos) {
-        actions = database.substr(1);
+      if (num_actions_bytes == database.size()) {
         database = "";
       } else {
-        actions = database.substr(1, action_end - 1);
-        database = database.substr(action_end + 1);
+        database = database.substr(num_actions_bytes);
       }
-      actions =
-          base::TrimWhitespaceASCII(actions, base::TrimPositions::TRIM_LEADING);
 
       if (!actions.empty()) {
         std::vector<NsswitchReader::ServiceAction> tokenized_actions =
@@ -297,6 +338,8 @@ NsswitchReader::ReadAndParseHosts() {
     return GetDefaultHosts();
 
   base::StringPiece hosts = FindDatabase(file, "hosts:");
+  UMA_HISTOGRAM_BOOLEAN("Net.DNS.DnsConfig.Nsswitch.HostsFound",
+                        !hosts.empty());
   if (hosts.empty())
     return GetDefaultHosts();
 

@@ -39,7 +39,7 @@ namespace chromeos {
 
 enum class ConnectCallbackMode { ON_STARTED, ON_COMPLETED };
 
-class CellularESimConnectionHandler;
+class CellularConnectionHandler;
 class NetworkStateHandler;
 class NetworkConfigurationHandler;
 class ManagedNetworkConfigurationHandler;
@@ -120,6 +120,10 @@ class COMPONENT_EXPORT(CHROMEOS_NETWORK) NetworkConnectionHandler {
   // Error occurred while trying to perform an operation with an eSIM profile.
   static const char kErrorESimProfileIssue[];
 
+  // Failed due to a connection attempt to a cellular network with a locked SIM.
+  // The SIM must be unlocked before a connection can succeed.
+  static const char kErrorSimLocked[];
+
   class COMPONENT_EXPORT(CHROMEOS_NETWORK) TetherDelegate {
    public:
     using StringErrorCallback =
@@ -184,20 +188,20 @@ class COMPONENT_EXPORT(CHROMEOS_NETWORK) NetworkConnectionHandler {
       base::OnceClosure success_callback,
       network_handler::ErrorCallback error_callback) = 0;
 
-  // Note: |cellular_esim_connection_handler| is null when the associated flag
+  // Note: |cellular_connection_handler| is null when the associated flag
   // is disabled.
   virtual void Init(
       NetworkStateHandler* network_state_handler,
       NetworkConfigurationHandler* network_configuration_handler,
       ManagedNetworkConfigurationHandler* managed_network_configuration_handler,
-      CellularESimConnectionHandler* cellular_esim_connection_handler) = 0;
+      CellularConnectionHandler* cellular_connection_handler) = 0;
 
   // Construct and initialize an instance for testing.
   static std::unique_ptr<NetworkConnectionHandler> InitializeForTesting(
       NetworkStateHandler* network_state_handler,
       NetworkConfigurationHandler* network_configuration_handler,
       ManagedNetworkConfigurationHandler* managed_network_configuration_handler,
-      CellularESimConnectionHandler* cellular_esim_connection_handler);
+      CellularConnectionHandler* cellular_connection_handler);
 
  protected:
   NetworkConnectionHandler();

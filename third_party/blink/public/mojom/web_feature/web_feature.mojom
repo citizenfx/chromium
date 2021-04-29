@@ -3187,6 +3187,9 @@ enum WebFeature {
   kElementGetInnerHTML = 3874,
   kFileHandlingLaunch = 3875,
   kSameOriginDocumentsWithDifferentCOOPStatus = 3876,
+  kHTMLMediaElementSetSinkId = 3877,
+  kPostMessageFromSecureToSecure = 3882,
+  kPostMessageFromInsecureToInsecure = 3883,
 
   // Add new features immediately above this line. Don't change assigned
   // numbers of any item, and don't reuse removed slots.

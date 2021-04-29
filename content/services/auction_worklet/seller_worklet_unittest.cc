@@ -14,6 +14,8 @@
 #include "base/test/task_environment.h"
 #include "base/time/time.h"
 #include "content/services/auction_worklet/auction_v8_helper.h"
+#include "content/services/auction_worklet/public/mojom/auction_worklet_service.mojom.h"
+#include "content/services/auction_worklet/worklet_test_util.h"
 #include "net/http/http_status_code.h"
 #include "services/network/test/test_url_loader_factory.h"
 #include "testing/gtest/include/gtest/gtest.h"
@@ -26,7 +28,8 @@ namespace {
 // Allows using scoreAd() arguments, arbitrary values, incorrect types, etc.
 std::string CreateScoreAdScript(const std::string& raw_return_value) {
   constexpr char kSellAdScript[] = R"(
-    function scoreAd(adMetadata, bid, auctionConfig, browserSignals) {
+    function scoreAd(adMetadata, bid, auctionConfig, trustedScoringSignals,
+        browserSignals) {
       return %s;
     }
   )";
@@ -68,11 +71,10 @@ class SellerWorkletTest : public testing::Test {
   void SetDefaultParameters() {
     ad_metadata_ = "[1]";
     bid_ = 1;
-    auction_config_ = "[1]";
+    auction_config_ = blink::mojom::AuctionAdConfig::New();
     browser_signal_top_window_hostname_ = "top_window_hostname";
     browser_signal_interest_group_owner_ =
         url::Origin::Create(GURL("https://foo.test/"));
-    browser_signal_interest_group_name_ = "interest_group_name";
     browser_signal_ad_render_fingerprint_ = "ad_render_fingerprint";
     browser_signal_bidding_duration_ = base::TimeDelta();
     browser_signal_render_url_ = GURL("https://render.url.test/");
@@ -81,33 +83,32 @@ class SellerWorkletTest : public testing::Test {
 
   // Configures `url_loader_factory_` to return a script with the specified
   // return line, expecting the provided result.
-  void RunScoreBidWithReturnValueExpectingResult(
+  void RunScoreAdWithReturnValueExpectingResult(
       const std::string& raw_return_value,
       double expected_score) {
-    RunScoreBidWithJavascriptExpectingResult(
+    RunScoreAdWithJavascriptExpectingResult(
         CreateScoreAdScript(raw_return_value), expected_score);
   }
 
   // Configures `url_loader_factory_` to return the provided script, and then
   // runs its generate_bid() function. Then runs the script, expecting the
   // provided result.
-  void RunScoreBidWithJavascriptExpectingResult(const std::string& javascript,
-                                                double expected_score) {
+  void RunScoreAdWithJavascriptExpectingResult(const std::string& javascript,
+                                               double expected_score) {
     SCOPED_TRACE(javascript);
-    url_loader_factory_.AddResponse(url_.spec(), javascript);
-    RunScoreBidExpectingResult(expected_score);
+    AddJavascriptResponse(&url_loader_factory_, url_, javascript);
+    RunScoreAdExpectingResult(expected_score);
   }
 
   // Loads and runs a scode_ad() script, expecting the supplied result.
-  void RunScoreBidExpectingResult(double expected_score) {
+  void RunScoreAdExpectingResult(double expected_score) {
     auto seller_worket = CreateWorklet();
     ASSERT_TRUE(seller_worket);
 
     SellerWorklet::ScoreResult actual_result =
-        seller_worket->ScoreAd(ad_metadata_, bid_, auction_config_,
+        seller_worket->ScoreAd(ad_metadata_, bid_, *auction_config_,
                                browser_signal_top_window_hostname_,
                                browser_signal_interest_group_owner_,
-                               browser_signal_interest_group_name_,
                                browser_signal_ad_render_fingerprint_,
                                browser_signal_bidding_duration_);
     EXPECT_EQ(expected_score > 0, actual_result.success);
@@ -121,18 +122,18 @@ class SellerWorkletTest : public testing::Test {
       const std::string& raw_return_value,
       const std::string& extra_code,
       const SellerWorklet::Report& expected_report) {
-    RunScoreBidWithJavascriptExpectingResult(
+    RunReportResultWithJavascriptExpectingResult(
         CreateReportToScript(raw_return_value, extra_code), expected_report);
   }
 
   // Configures `url_loader_factory_` to return the provided script, and then
   // runs its report_result() function. Then runs the script, expecting the
   // provided result.
-  void RunScoreBidWithJavascriptExpectingResult(
+  void RunReportResultWithJavascriptExpectingResult(
       const std::string& javascript,
       const SellerWorklet::Report& expected_report) {
     SCOPED_TRACE(javascript);
-    url_loader_factory_.AddResponse(url_.spec(), javascript);
+    AddJavascriptResponse(&url_loader_factory_, url_, javascript);
     RunReportResultExpectingResult(expected_report);
   }
 
@@ -143,9 +144,8 @@ class SellerWorkletTest : public testing::Test {
     ASSERT_TRUE(seller_worket);
 
     SellerWorklet::Report actual_result = seller_worket->ReportResult(
-        auction_config_, browser_signal_top_window_hostname_,
-        browser_signal_interest_group_owner_,
-        browser_signal_interest_group_name_, browser_signal_render_url_,
+        *auction_config_, browser_signal_top_window_hostname_,
+        browser_signal_interest_group_owner_, browser_signal_render_url_,
         browser_signal_ad_render_fingerprint_, bid_,
         browser_signal_desireability_);
     EXPECT_EQ(expected_report.success, actual_result.success);
@@ -188,10 +188,9 @@ class SellerWorkletTest : public testing::Test {
   // This is a browser signal for report_result(), but a direct parameter for
   // score_bid().
   double bid_;
-  std::string auction_config_;
+  blink::mojom::AuctionAdConfigPtr auction_config_;
   std::string browser_signal_top_window_hostname_;
   url::Origin browser_signal_interest_group_owner_;
-  std::string browser_signal_interest_group_name_;
   std::string browser_signal_ad_render_fingerprint_;
   base::TimeDelta browser_signal_bidding_duration_;
   GURL browser_signal_render_url_;
@@ -214,7 +213,7 @@ TEST_F(SellerWorkletTest, NetworkError) {
 }
 
 TEST_F(SellerWorkletTest, CompileError) {
-  url_loader_factory_.AddResponse(url_.spec(), "Invalid Javascript");
+  AddJavascriptResponse(&url_loader_factory_, url_, "Invalid Javascript");
   EXPECT_FALSE(CreateWorklet());
 }
 
@@ -222,25 +221,29 @@ TEST_F(SellerWorkletTest, CompileError) {
 TEST_F(SellerWorkletTest, ScoreAd) {
   // Base case. Also serves to make sure the script returned by
   // CreateBasicSellAdScript() does indeed work.
-  RunScoreBidWithJavascriptExpectingResult(CreateBasicSellAdScript(), 1);
+  RunScoreAdWithJavascriptExpectingResult(CreateBasicSellAdScript(), 1);
 
-  RunScoreBidWithReturnValueExpectingResult("3", 3);
-  RunScoreBidWithReturnValueExpectingResult("0.5", 0.5);
-  RunScoreBidWithReturnValueExpectingResult("0", 0);
-  RunScoreBidWithReturnValueExpectingResult("-10", 0);
+  RunScoreAdWithReturnValueExpectingResult("3", 3);
+  RunScoreAdWithReturnValueExpectingResult("0.5", 0.5);
+  RunScoreAdWithReturnValueExpectingResult("0", 0);
+  RunScoreAdWithReturnValueExpectingResult("-10", 0);
 
   // No return value.
-  RunScoreBidWithReturnValueExpectingResult("", 0);
+  RunScoreAdWithReturnValueExpectingResult("", 0);
 
   // Wrong return type / invalid values.
-  RunScoreBidWithReturnValueExpectingResult("[15]", 0);
-  RunScoreBidWithReturnValueExpectingResult("1/0", 0);
-  RunScoreBidWithReturnValueExpectingResult("0/0", 0);
-  RunScoreBidWithReturnValueExpectingResult("-1/0", 0);
-  RunScoreBidWithReturnValueExpectingResult("true", 0);
+  RunScoreAdWithReturnValueExpectingResult("[15]", 0);
+  RunScoreAdWithReturnValueExpectingResult("1/0", 0);
+  RunScoreAdWithReturnValueExpectingResult("0/0", 0);
+  RunScoreAdWithReturnValueExpectingResult("-1/0", 0);
+  RunScoreAdWithReturnValueExpectingResult("true", 0);
 
   // Throw exception.
-  RunScoreBidWithReturnValueExpectingResult("shrimp", 0);
+  RunScoreAdWithReturnValueExpectingResult("shrimp", 0);
+}
+
+TEST_F(SellerWorkletTest, ScoreAdDateNotAvailable) {
+  RunScoreAdWithReturnValueExpectingResult("Date.parse(Date().toString())", 0);
 }
 
 // Checks that input parameters are correctly passed in.
@@ -259,19 +262,9 @@ TEST_F(SellerWorkletTest, ScoreAdParameters) {
           &ad_metadata_,
       },
       {
-          "auctionConfig",
-          true /* is_json */,
-          &auction_config_,
-      },
-      {
           "browserSignals.topWindowHostname",
           false /* is_json */,
           &browser_signal_top_window_hostname_,
-      },
-      {
-          "browserSignals.interestGroupName",
-          false /* is_json */,
-          &browser_signal_interest_group_name_,
       },
       {
           "browserSignals.adRenderFingerprint",
@@ -284,17 +277,17 @@ TEST_F(SellerWorkletTest, ScoreAdParameters) {
     SCOPED_TRACE(test_case.name);
 
     *test_case.value_ptr = "foo";
-    RunScoreBidWithReturnValueExpectingResult(
+    RunScoreAdWithReturnValueExpectingResult(
         base::StringPrintf(R"(%s == "foo" ? 1 : 2)", test_case.name),
         test_case.is_json ? 0 : 1);
 
     *test_case.value_ptr = R"("foo")";
-    RunScoreBidWithReturnValueExpectingResult(
+    RunScoreAdWithReturnValueExpectingResult(
         base::StringPrintf(R"(%s == "foo" ? 1 : 2)", test_case.name),
         test_case.is_json ? 1 : 2);
 
     *test_case.value_ptr = "[1]";
-    RunScoreBidWithReturnValueExpectingResult(
+    RunScoreAdWithReturnValueExpectingResult(
         base::StringPrintf(R"(%s[0] == 1 ? 4 : %s=="[1]" ? 3 : 0)",
                            test_case.name, test_case.name),
         test_case.is_json ? 4 : 3);
@@ -303,37 +296,53 @@ TEST_F(SellerWorkletTest, ScoreAdParameters) {
 
   browser_signal_interest_group_owner_ =
       url::Origin::Create(GURL("https://foo.test/"));
-  RunScoreBidWithReturnValueExpectingResult(
+  RunScoreAdWithReturnValueExpectingResult(
       R"(browserSignals.interestGroupOwner == "https://foo.test" ? 2 : 0)", 2);
 
   browser_signal_interest_group_owner_ =
       url::Origin::Create(GURL("https://[::1]:40000/"));
-  RunScoreBidWithReturnValueExpectingResult(
+  RunScoreAdWithReturnValueExpectingResult(
       R"(browserSignals.interestGroupOwner == "https://[::1]:40000" ? 3 : 0)",
       3);
   SetDefaultParameters();
 
   // Test bid parameter.
   bid_ = 5;
-  RunScoreBidWithReturnValueExpectingResult(base::StringPrintf("bid"), 5);
+  RunScoreAdWithReturnValueExpectingResult(base::StringPrintf("bid"), 5);
   bid_ = 0.5;
-  RunScoreBidWithReturnValueExpectingResult(base::StringPrintf("bid"), 0.5);
+  RunScoreAdWithReturnValueExpectingResult(base::StringPrintf("bid"), 0.5);
   bid_ = -1;
-  RunScoreBidWithReturnValueExpectingResult(base::StringPrintf("bid"), 0);
+  RunScoreAdWithReturnValueExpectingResult(base::StringPrintf("bid"), 0);
   SetDefaultParameters();
 
   // Test browserSignals.bidding_duration_msec.
   browser_signal_bidding_duration_ = base::TimeDelta();
-  RunScoreBidWithReturnValueExpectingResult(
+  RunScoreAdWithReturnValueExpectingResult(
       base::StringPrintf("browserSignals.biddingDurationMsec"), 0);
   browser_signal_bidding_duration_ = base::TimeDelta::FromMilliseconds(100);
-  RunScoreBidWithReturnValueExpectingResult(
+  RunScoreAdWithReturnValueExpectingResult(
       base::StringPrintf("browserSignals.biddingDurationMsec"), 100);
 
   // Make sure that submillisecond resolution is not available.
   browser_signal_bidding_duration_ = base::TimeDelta::FromMicroseconds(2400);
-  RunScoreBidWithReturnValueExpectingResult(
+  RunScoreAdWithReturnValueExpectingResult(
       base::StringPrintf("browserSignals.biddingDurationMsec"), 2);
+}
+
+// Test that auction config gets into scoreAd. More detailed handling of
+// (shared) construction of actual object is in ReportResultAuctionConfigParam,
+// as that worklet is easier to get things out of.
+TEST_F(SellerWorkletTest, ScoreAdAuctionConfigParam) {
+  // Default value, no URL
+  RunScoreAdWithReturnValueExpectingResult(
+      "auctionConfig.decisionLogicUrl.length", 0);
+
+  std::string url = "https://example.com/auction.js";
+  auction_config_ = blink::mojom::AuctionAdConfig::New();
+  auction_config_->seller = url::Origin::Create(GURL("https://example.com"));
+  auction_config_->decision_logic_url = GURL(url);
+  RunScoreAdWithReturnValueExpectingResult(
+      "auctionConfig.decisionLogicUrl.length", url.length());
 }
 
 // Tests parsing of return values.
@@ -358,7 +367,7 @@ TEST_F(SellerWorkletTest, ReportResult) {
 }
 
 // Tests reporting URLs.
-TEST_F(SellerWorkletTest, ReportResultsendReportTo) {
+TEST_F(SellerWorkletTest, ReportResultSendReportTo) {
   RunReportResultCreatedScriptExpectingResult(
       "1", R"(sendReportTo("https://foo.test"))",
       SellerWorklet::Report("1", GURL("https://foo.test/")));
@@ -387,6 +396,12 @@ TEST_F(SellerWorkletTest, ReportResultsendReportTo) {
                                               SellerWorklet::Report());
 }
 
+TEST_F(SellerWorkletTest, ReportResultDateNotAvailable) {
+  RunReportResultCreatedScriptExpectingResult(
+      "1", R"(sendReportTo("https://foo.test/" + Date().toString()))",
+      SellerWorklet::Report());
+}
+
 TEST_F(SellerWorkletTest, ReportResultParameters) {
   // Parameters that are C++ strings, including JSON strings.
   const struct StringTestCase {
@@ -397,19 +412,9 @@ TEST_F(SellerWorkletTest, ReportResultParameters) {
     std::string* value_ptr;
   } kStringTestCases[] = {
       {
-          "auctionConfig",
-          true /* is_json */,
-          &auction_config_,
-      },
-      {
           "browserSignals.topWindowHostname",
           false /* is_json */,
           &browser_signal_top_window_hostname_,
-      },
-      {
-          "browserSignals.interestGroupName",
-          false /* is_json */,
-          &browser_signal_interest_group_name_,
       },
       {
           "browserSignals.adRenderFingerprint",
@@ -484,14 +489,68 @@ TEST_F(SellerWorkletTest, ReportResultParameters) {
   SetDefaultParameters();
 }
 
+TEST_F(SellerWorkletTest, ReportResultAuctionConfigParam) {
+  // Empty AuctionAdConfig, with nothing filled in.
+  RunReportResultCreatedScriptExpectingResult(
+      "auctionConfig", std::string() /* extra_code */,
+      SellerWorklet::Report(R"({"seller":"null","decisionLogicUrl":""})",
+                            GURL()));
+
+  // Everything filled in.
+  auction_config_ = blink::mojom::AuctionAdConfig::New();
+  auction_config_->seller = url::Origin::Create(GURL("https://example.com"));
+  auction_config_->decision_logic_url = GURL("https://example.com/auction.js");
+  auction_config_->interest_group_buyers =
+      blink::mojom::InterestGroupBuyers::NewAllBuyers(
+          blink::mojom::AllBuyers::New());
+  auction_config_->auction_signals = R"({"is_auction_signals": true})";
+  auction_config_->seller_signals = R"({"is_seller_signals": true})";
+  base::flat_map<url::Origin, std::string> per_buyer_signals;
+  per_buyer_signals[url::Origin::Create(GURL("https://a.com"))] =
+      R"({"signals_a": "A"})";
+  per_buyer_signals[url::Origin::Create(GURL("https://b.com"))] =
+      R"({"signals_b": "B"})";
+  auction_config_->per_buyer_signals = std::move(per_buyer_signals);
+
+  const char kExpectedJson[] =
+      R"({"seller":"https://example.com",)"
+      R"("decisionLogicUrl":"https://example.com/auction.js",)"
+      R"("interestGroupBuyers":"*",)"
+      R"("auctionSignals":{"is_auction_signals":true},)"
+      R"("sellerSignals":{"is_seller_signals":true},)"
+      R"("perBuyerSignals":{"a.com":{"signals_a":"A"},)"
+      R"("b.com":{"signals_b":"B"}}})";
+  RunReportResultCreatedScriptExpectingResult(
+      "auctionConfig", std::string() /* extra_code */,
+      SellerWorklet::Report(kExpectedJson, GURL()));
+
+  // Array option for interest_group_buyers. Everything else optional
+  // unpopulated.
+  std::vector<url::Origin> buyers;
+  buyers.push_back(url::Origin::Create(GURL("https://buyer1.com")));
+  buyers.push_back(url::Origin::Create(GURL("https://another-buyer.com")));
+  auction_config_ = blink::mojom::AuctionAdConfig::New();
+  auction_config_->seller = url::Origin::Create(GURL("https://example.com"));
+  auction_config_->decision_logic_url = GURL("https://example.com/auction.js");
+  auction_config_->interest_group_buyers =
+      blink::mojom::InterestGroupBuyers::NewBuyers(std::move(buyers));
+  const char kExpectedJson2[] =
+      R"({"seller":"https://example.com",)"
+      R"("decisionLogicUrl":"https://example.com/auction.js",)"
+      R"("interestGroupBuyers":["buyer1.com","another-buyer.com"]})";
+  RunReportResultCreatedScriptExpectingResult(
+      "auctionConfig", std::string() /* extra_code */,
+      SellerWorklet::Report(kExpectedJson2, GURL()));
+}
+
 // Subsequent runs of the same script should not affect each other. Same is true
 // for different scripts, but it follows from the single script case.
 TEST_F(SellerWorkletTest, ScriptIsolation) {
   // Use arrays so that all values are references, to catch both the case where
   // variables are persisted, and the case where what they refer to is
   // persisted, but variables are overwritten between runs.
-  url_loader_factory_.AddResponse(url_.spec(),
-                                  R"(
+  AddJavascriptResponse(&url_loader_factory_, url_,
+                        R"(
         // Globally scoped variable.
         if (!globalThis.var1)
           globalThis.var1 = [1];
@@ -516,10 +575,9 @@ TEST_F(SellerWorkletTest, ScriptIsolation) {
     // other.
     for (int j = 0; j < 2; ++j) {
       SellerWorklet::ScoreResult score_result =
-          seller_worket->ScoreAd(ad_metadata_, bid_, auction_config_,
+          seller_worket->ScoreAd(ad_metadata_, bid_, *auction_config_,
                                  browser_signal_top_window_hostname_,
                                  browser_signal_interest_group_owner_,
-                                 browser_signal_interest_group_name_,
                                  browser_signal_ad_render_fingerprint_,
                                  browser_signal_bidding_duration_);
       EXPECT_TRUE(score_result.success);
@@ -528,9 +586,8 @@ TEST_F(SellerWorkletTest, ScriptIsolation) {
 
     for (int j = 0; j < 2; ++j) {
       SellerWorklet::Report report = seller_worket->ReportResult(
-          auction_config_, browser_signal_top_window_hostname_,
-          browser_signal_interest_group_owner_,
-          browser_signal_interest_group_name_, browser_signal_render_url_,
+          *auction_config_, browser_signal_top_window_hostname_,
+          browser_signal_interest_group_owner_, browser_signal_render_url_,
           browser_signal_ad_render_fingerprint_, bid_,
           browser_signal_desireability_);
       EXPECT_TRUE(report.success);

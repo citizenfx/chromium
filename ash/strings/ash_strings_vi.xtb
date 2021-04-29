@@ -21,7 +21,7 @@ Dưới đây là một số việc bạn có thể thử để bắt đầu.</t
 <translation id="1104621072296271835">Các thiết bị của bạn hoạt động hiệu quả hơn khi kết nối với nhau</translation>
 <translation id="1119348796022671382">Chế độ màu theo giao diện dùng các màu trích xuất từ hình nền để tạo màu nhẹ nhàng cho giao diện.</translation>
 <translation id="112308213915226829">Tự động ẩn kệ</translation>
-<translation id="1153356358378277386">Thiết bị được ghép nối</translation>
+<translation id="1153356358378277386">Thiết bị đã ghép nối</translation>
 <translation id="1165712434476988950">Bạn cần phải khởi động lại thiết bị để áp dụng bản cập nhật.</translation>
 <translation id="1175572348579024023">Cuộn</translation>
 <translation id="1178581264944972037">Tạm dừng</translation>
@@ -180,7 +180,7 @@ Dưới đây là một số việc bạn có thể thử để bắt đầu.</t
 <translation id="2412593942846481727">Đã có bản cập nhật</translation>
 <translation id="2427507373259914951">Nhấp chuột trái</translation>
 <translation id="2429753432712299108">Thiết bị Bluetooth "<ph name="DEVICE_NAME" />" muốn được phép ghép nối. Trước khi chấp nhận, vui lòng xác nhận rằng mã xác nhận này đã hiển thị trên thiết bị đó: <ph name="PASSKEY" /></translation>
-<translation id="2435457462613246316">Hiển thị mật khẩu</translation>
+<translation id="2435457462613246316">Hiện mật khẩu</translation>
 <translation id="2450205753526923158">Chế độ chụp ảnh màn hình</translation>
 <translation id="2473177541599297363">Xác nhận độ phân giải</translation>
 <translation id="2475982808118771221">Đã xảy ra lôi</translation>
@@ -414,7 +414,7 @@ Dưới đây là một số việc bạn có thể thử để bắt đầu.</t
 <translation id="4430019312045809116">Âm lượng</translation>
 <translation id="4445159312344259901">Đăng nhập để mở khóa</translation>
 <translation id="4449692009715125625">{NUM_NOTIFICATIONS,plural, =1{1 thông báo quan trọng}other{# thông báo quan trọng}}</translation>
-<translation id="4450893287417543264">Không hiển thị lại</translation>
+<translation id="4450893287417543264">Không hiện lại</translation>
 <translation id="445864333228800152">Xin chào!</translation>
 <translation id="4458688154122353284">Dừng ghi màn hình</translation>
 <translation id="4467143075433126295">Nhấn và giữ phím [Esc] để thoát khỏi chế độ toàn màn hình</translation>
@@ -615,7 +615,7 @@ Dưới đây là một số việc bạn có thể thử để bắt đầu.</t
 <translation id="612734058257491180">Bạn không thể dùng Trợ lý Google trong phiên khách.</translation>
 <translation id="6137566720514957455">Mở hộp thoại xóa tài khoản cho <ph name="USER_EMAIL_ADDRESS" /></translation>
 <translation id="6154006699632741460">Không hỗ trợ thiết bị ngoại vi</translation>
-<translation id="615957422585914272">Hiển thị bàn phím ảo</translation>
+<translation id="615957422585914272">Hiện bàn phím ảo</translation>
 <translation id="6165508094623778733">Tìm hiểu thêm</translation>
 <translation id="6179832488876878285">Bạn có thể ghim các tệp quan trọng của mình ở đây. Hãy mở ứng dụng Files để bắt đầu.</translation>
 <translation id="622484624075952240">Xuống</translation>

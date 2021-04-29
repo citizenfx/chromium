@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Link je otkriven. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Slike iz Galerije</translation>
 <translation id="1430915738399379752">Štampaj</translation>
+<translation id="1467231725790366244">Kamera <ph name="CAMERA" /> je isključena iz uređaja.</translation>
 <translation id="1473110567575736769">Tajmer za 3 sekunde</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Nije snimljeno ništa</translation>
 <translation id="1838104802459806957">Nagni gore</translation>
+<translation id="1851169887664797861">Dostupne su dodatne kontrole kamere</translation>
 <translation id="1851616744363735765">PAUZIRANO</translation>
 <translation id="1862930711583847113">Nije moguće izvesti fajl <ph name="FILE" /></translation>
 <translation id="1899697626337024495">Rezolucija fotografije</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Snimajte fotografije i videozapise kamerom.</translation>
 <translation id="2549985041256363841">Započni snimanje</translation>
 <translation id="2599796128805996109">Zadnja kamera</translation>
+<translation id="2879583609344924966">Kamera <ph name="CAMERA" /> je priključena.</translation>
 <translation id="2912439424121107408">Način rada za stručnjake nije podržan na ovom uređaju</translation>
 <translation id="2968794441791257519">Fotografije i videozapisi snimljeni kamerom premjestit će se u folder Preuzimanja. Možete im pristupiti u aplikaciji Files.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Rezolucija kamere</translation>
 <translation id="3517926952904427380">Snimanje uspravne fotografije nije uspjelo</translation>
 <translation id="3569311554794739032">Želite li zaista ukloniti fajl <ph name="FILE" />?</translation>
+<translation id="3733597664308256288">Dostupne su dodatne kontrole kamere. Da im pristupite, pritisnite Pretraživanje + strelicu udesno.</translation>
 <translation id="3810838688059735925">Videozapis</translation>
 <translation id="3838931309141338733">Skeniraj bar kôd</translation>
 <translation id="3892148308691398805">Kopiraj tekst</translation>
@@ -85,6 +89,7 @@ Ako se vaše povratne informacije odnose na kvalitet slike ili videozapisa, pril
 <translation id="7649070708921625228">Pomoć</translation>
 <translation id="7658239707568436148">Otkaži</translation>
 <translation id="7670511624014457267">60 fps</translation>
+<translation id="7974782136796202581">Prikaži opcije pomicanja/naginjanja/zumiranja</translation>
 <translation id="7983668134180549431">Tekst je otkriven.</translation>
 <translation id="8067883171444229417">Reproduciraj videozapis</translation>
 <translation id="8120146556401698679">Pomicanje, naginjanje, zumiranje</translation>

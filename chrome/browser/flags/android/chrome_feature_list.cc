@@ -138,8 +138,10 @@ const base::Feature* kFeaturesExposedToJava[] = {
     &kAssistantIntentPageUrl,
     &kAssistantIntentTranslateInfo,
     &kAppLaunchpad,
+    &kAppMenuMobileSiteOption,
     &kBackgroundThreadPool,
     &kBentoOffline,
+    &kBookmarkBottomSheet,
     &kCastDeviceFilter,
     &kCloseTabSuggestions,
     &kCriticalPersistedTabData,
@@ -164,6 +166,7 @@ const base::Feature* kFeaturesExposedToJava[] = {
     &kChromeStartupDelegate,
     &kChromeSurveyNextAndroid,
     &kCommandLineOnNonRooted,
+    &kCommerceMerchantViewer,
     &kConditionalTabStripAndroid,
     &kContentSuggestionsScrollToLoad,
     &kContextMenuEnableLensShoppingAllowlist,
@@ -278,6 +281,7 @@ const base::Feature* kFeaturesExposedToJava[] = {
     &offline_pages::kOfflinePagesLivePageSharingFeature,
     &offline_pages::kPrefetchingOfflinePagesFeature,
     &omnibox::kAdaptiveSuggestionsCount,
+    &omnibox::kClipboardSuggestionContentHidden,
     &omnibox::kCompactSuggestions,
     &omnibox::kHideVisitsFromCct,
     &omnibox::kMostVisitedTiles,
@@ -361,6 +365,9 @@ const base::Feature kAssistantIntentTranslateInfo{
 const base::Feature kAppLaunchpad{"AppLaunchpad",
                                   base::FEATURE_DISABLED_BY_DEFAULT};
 
+const base::Feature kAppMenuMobileSiteOption{"AppMenuMobileSiteOption",
+                                             base::FEATURE_DISABLED_BY_DEFAULT};
+
 const base::Feature kBackgroundTaskComponentUpdate{
     "BackgroundTaskComponentUpdate", base::FEATURE_DISABLED_BY_DEFAULT};
 
@@ -369,6 +376,9 @@ const base::Feature kBackgroundThreadPool{"BackgroundThreadPool",
 
 const base::Feature kBentoOffline{"BentoOffline",
                                   base::FEATURE_DISABLED_BY_DEFAULT};
+
+const base::Feature kBookmarkBottomSheet{"BookmarkBottomSheet",
+                                         base::FEATURE_DISABLED_BY_DEFAULT};
 
 const base::Feature kConditionalTabStripAndroid{
     "ConditionalTabStripAndroid", base::FEATURE_DISABLED_BY_DEFAULT};
@@ -441,6 +451,9 @@ const base::Feature kChromeSurveyNextAndroid{"ChromeSurveyNextAndroid",
                                              base::FEATURE_DISABLED_BY_DEFAULT};
 
 const base::Feature kCommandLineOnNonRooted{"CommandLineOnNonRooted",
+                                            base::FEATURE_DISABLED_BY_DEFAULT};
+
+const base::Feature kCommerceMerchantViewer{"CommerceMerchantViewer",
                                             base::FEATURE_DISABLED_BY_DEFAULT};
 
 const base::Feature kContentSuggestionsScrollToLoad{

@@ -546,23 +546,25 @@ const char kMultiWindowOpenInNewWindowHistogram[] =
 // TODO(crbug.com/1173160): Split and move to the StartSurfaceSceneAgent after
 // refactoring the scene states.
 - (void)handleShowStartSurfaceIfNecessary {
+  if (!ShouldShowStartSurfaceForSceneState(self.sceneState)) {
+    return;
+  }
+
   // Do not show the Start Surface no matter whether it is enabled or not when
   // the Tab grid is active by design.
   if (self.mainCoordinator.isTabGridActive) {
     return;
   }
 
+  // If there is no active tab, a NTP will be added, and since there is no
+  // recent tab, there is not need to mark |modifytVisibleNTPForStartSurface|.
   // Keep showing the last active NTP tab no matter whether the Start Surface is
   // enabled or not by design.
   // Note that currentWebState could only be nullptr when the Tab grid is active
   // for now.
   web::WebState* currentWebState =
-      self.currentInterface.browser->GetWebStateList()->GetActiveWebState();
-  if (IsURLNtp(currentWebState->GetVisibleURL())) {
-    return;
-  }
-
-  if (!ShouldShowStartSurfaceForSceneState(self.sceneState)) {
+      self.mainInterface.browser->GetWebStateList()->GetActiveWebState();
+  if (!currentWebState || IsURLNtp(currentWebState->GetVisibleURL())) {
     return;
   }
 
@@ -874,6 +876,12 @@ const char kMultiWindowOpenInNewWindowHistogram[] =
     [self setCurrentInterfaceForMode:ApplicationMode::NORMAL];
   }
 
+  // Call this right after |setCurrentInterfaceForMode:| to ensure the
+  // currentInterface is set in case a new tab needs to be opened. Since this is
+  // synchronous with |setActivePage:| above, then the user should not see the
+  // last tab if the Start Surface is opened.
+  [self handleShowStartSurfaceIfNecessary];
+
   // Figure out what UI to show initially.
 
   if (self.mainCoordinator.isTabGridActive) {
@@ -914,23 +922,54 @@ const char kMultiWindowOpenInNewWindowHistogram[] =
   }
   if (!firstRun && !self.sceneState.appState.isInSafeMode &&
       postOpeningAction == NO_ACTION &&
-      !self.sceneState.appState.postCrashLaunch) {
+      !self.sceneState.appState.postCrashLaunch &&
+      !IsChromeLikelyDefaultBrowser() && !UserInFullscreenPromoCooldown()) {
     // Show the Default Browser promo UI if the user's past behavior fits
     // the categorization of potentially interested users or if the user is
     // signed in. Do not show if it is determined that Chrome is already the
-    // default browser or if the user has already seen the promo UI.
-    // If the user was in the experiment group that showed the Remind Me Later
-    // button and tapped on it, then show the promo again if now is the right
-    // time.
-    BOOL isEligibleUser = IsLikelyInterestedDefaultBrowserUser() ||
-                          ios::GetChromeBrowserProvider()
-                              ->GetChromeIdentityService()
-                              ->HasIdentities();
+    // default browser (checked in the if enclosing this comment) or if the user
+    // has already seen the promo UI. If the user was in the experiment group
+    // that showed the Remind Me Later button and tapped on it, then show the
+    // promo again if now is the right time.
 
-    if ((!IsChromeLikelyDefaultBrowser() &&
-         !HasUserInteractedWithFullscreenPromoBefore() && isEligibleUser) ||
+    AuthenticationService* authenticationService =
+        AuthenticationServiceFactory::GetForBrowserState(
+            self.sceneState.appState.mainBrowserState);
+    DCHECK(authenticationService);
+    DCHECK(authenticationService->initialized());
+    BOOL isSignedIn = authenticationService->IsAuthenticated();
+
+    // Tailored promos take priority over general promo.
+    BOOL isMadeForIOSPromoEligible =
+        IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeMadeForIOS);
+    BOOL isAllTabsPromoEligible =
+        IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeAllTabs) &&
+        isSignedIn;
+    BOOL isStaySafePromoEligible =
+        IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeStaySafe);
+
+    BOOL isTailoredPromoEligibleUser =
+        !HasUserInteractedWithTailoredFullscreenPromoBefore() &&
+        (isMadeForIOSPromoEligible || isAllTabsPromoEligible ||
+         isStaySafePromoEligible);
+    if (isTailoredPromoEligibleUser) {
+      self.sceneState.appState.shouldShowDefaultBrowserPromo = YES;
+      self.sceneState.appState.defaultBrowserPromoTypeToShow =
+          MostRecentInterestDefaultPromoType(!isSignedIn);
+      DCHECK(self.sceneState.appState.defaultBrowserPromoTypeToShow !=
+             DefaultPromoTypeGeneral);
+      return;
+    }
+
+    BOOL isGeneralPromoEligibleUser =
+        !HasUserInteractedWithFullscreenPromoBefore() &&
+        (IsLikelyInterestedDefaultBrowserUser(DefaultPromoTypeGeneral) ||
+         isSignedIn);
+    if (isGeneralPromoEligibleUser ||
         ShouldShowRemindMeLaterDefaultBrowserFullscreenPromo()) {
       self.sceneState.appState.shouldShowDefaultBrowserPromo = YES;
+      self.sceneState.appState.defaultBrowserPromoTypeToShow =
+          DefaultPromoTypeGeneral;
     }
   }
 }

@@ -313,7 +313,7 @@ const base::Feature kExoPointerLock{"ExoPointerLock",
 
 // Enable or disable bubble showing when an application gains any UI lock.
 const base::Feature kExoLockNotification{"ExoLockNotification",
-                                         base::FEATURE_ENABLED_BY_DEFAULT};
+                                         base::FEATURE_DISABLED_BY_DEFAULT};
 
 // Enables policy that controls feature to allow Family Link accounts on school
 // owned devices.
@@ -500,6 +500,11 @@ const base::Feature kMediaAppVideoControls{"MediaAppVideoControls",
 const base::Feature kMultilingualTyping{"MultilingualTyping",
                                         base::FEATURE_DISABLED_BY_DEFAULT};
 
+// Enables support for specific enabled web apps to be treated as note-taking
+// apps on Chrome OS.
+const base::Feature kNoteTakingForEnabledWebApps{
+    "NoteTakingForEnabledWebApps", base::FEATURE_ENABLED_BY_DEFAULT};
+
 // Controls whether to enable on-device grammar check service.
 const base::Feature kOnDeviceGrammarCheck{"OnDeviceGrammarCheck",
                                           base::FEATURE_DISABLED_BY_DEFAULT};
@@ -520,7 +525,7 @@ const base::Feature kPinSetupForFamilyLink{"PinSetupForFamilyLink",
 
 // Hides shelf in immersive mode and allows esc hold to exit.
 const base::Feature kPluginVmFullscreen{"PluginVmFullscreen",
-                                        base::FEATURE_ENABLED_BY_DEFAULT};
+                                        base::FEATURE_DISABLED_BY_DEFAULT};
 
 // Controls whether the camera permissions should be shown in the Plugin
 // VM app settings.
@@ -708,6 +713,10 @@ const base::Feature kVirtualKeyboardMultipaste{
 const base::Feature kVmCameraMicIndicatorsAndNotifications{
     "VmCameraMicIndicatorsAndNotifications", base::FEATURE_ENABLED_BY_DEFAULT};
 
+// Enable or disable the chrome://vm page
+const base::Feature kVmStatusPage{"VmStatusPage",
+                                  base::FEATURE_ENABLED_BY_DEFAULT};
+
 // Controls whether to allow enabling wake on WiFi features in shill.
 const base::Feature kWakeOnWifiAllowed{"WakeOnWifiAllowed",
                                        base::FEATURE_DISABLED_BY_DEFAULT};
@@ -715,6 +724,12 @@ const base::Feature kWakeOnWifiAllowed{"WakeOnWifiAllowed",
 // Enable new wallpaper experience in WebUI inside system settings.
 const base::Feature kWallpaperWebUI{"WallpaperWebUI",
                                     base::FEATURE_DISABLED_BY_DEFAULT};
+
+// Controls whether to enable the syncing of deletes of Wi-Fi configurations.
+// This controls both sending delete events to the Chrome Sync server and
+// applying incoming deletes.
+const base::Feature kWifiSyncAllowDeletes{"WifiSyncAllowDeletes",
+                                          base::FEATURE_DISABLED_BY_DEFAULT};
 
 // Controls whether to enable syncing of Wi-Fi configurations between
 // ChromeOS and a connected Android phone.

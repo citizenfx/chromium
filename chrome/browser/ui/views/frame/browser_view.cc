@@ -3556,6 +3556,8 @@ void BrowserView::ShowAvatarBubbleFromAvatarButton(
 }
 
 void BrowserView::MaybeShowProfileSwitchIPH() {
+  if (GetGuestSession() || GetIncognito())
+    return;
   AvatarToolbarButton* avatar_button =
       toolbar_button_provider_
           ? toolbar_button_provider_->GetAvatarToolbarButton()

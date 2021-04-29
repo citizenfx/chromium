@@ -2998,6 +2998,11 @@ const char kIsolateOrigins[] = "site_isolation.isolate_origins";
 const char kSitePerProcess[] = "site_isolation.site_per_process";
 
 #if !defined(OS_ANDROID)
+// Boolean to allow SharedArrayBuffer in non-crossOriginIsolated contexts.
+// TODO(crbug.com/1144104) Remove when migration to COOP+COEP is complete.
+const char kSharedArrayBufferUnrestrictedAccessAllowed[] =
+    "profile.shared_array_buffer_unrestricted_access_allowed";
+
 // Boolean that specifies whether media (audio/video) autoplay is allowed.
 const char kAutoplayAllowed[] = "media.autoplay_allowed";
 
@@ -3204,6 +3209,12 @@ const char kCartModuleHidden[] = "cart_module_hidden";
 // cart module.
 const char kCartModuleWelcomeSurfaceShownTimes[] =
     "cart_module_welcome_surface_shown_times";
+// Boolean pref indicating whether user has reacted to the consent for
+// rule-based discount in cart module.
+const char kCartDiscountAcknowledged[] = "cart_discount_acknowledged";
+// Boolean pref indicating whether user has enabled rule-based discount in cart
+// module.
+const char kCartDiscountEnabled[] = "cart_discount_enabled";
 #endif
 
 #if defined(OS_ANDROID)
@@ -3223,5 +3234,10 @@ const char kFetchKeepaliveDurationOnShutdown[] =
 // or not.
 const char kPdfAnnotationsEnabled[] = "pdf.enable_annotations";
 #endif
+
+// A comma-separated list of ports on which outgoing connections will be
+// permitted even if they would otherwise be blocked.
+const char kExplicitlyAllowedNetworkPorts[] =
+    "net.explicitly_allowed_network_ports";
 
 }  // namespace prefs

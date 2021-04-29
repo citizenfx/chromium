@@ -83,17 +83,6 @@ Polymer({
     },
 
     /**
-     * Whether the network item is a cellular one and is of an esim
-     * pending profile.
-     */
-    isESimPendingProfile_: {
-      type: Boolean,
-      reflectToAttribute: true,
-      value: false,
-      computed: 'computeIsESimPendingProfile_(item, item.customItemType)',
-    },
-
-    /**
      * The cached ConnectionState for the network.
      * @type {!chromeos.networkConfig.mojom.ConnectionStateType|undefined}
      */
@@ -118,6 +107,9 @@ Polymer({
      */
     deviceState: Object,
 
+    /** @private {?chromeos.networkConfig.mojom.ManagedProperties|undefined} */
+    managedProperties_: Object,
+
     /**
      * Subtitle for item.
      * @private {string}
@@ -135,11 +127,67 @@ Polymer({
       }
     },
 
+    /**
+     * Indicates the network item is a pSIM network not yet activated but
+     * eligible for activation.
+     * @private
+     */
+    isPSimPendingActivationNetwork_: {
+      type: Boolean,
+      reflectToAttribute: true,
+      value: false,
+      computed: 'computeIsPSimPendingActivationNetwork_(managedProperties_)',
+    },
+
+    /**
+     * Indicates the network item is a pSIM network that is not activated nor
+     * available to be activated.
+     * @private
+     */
+    isPSimUnavailableNetwork_: {
+      type: Boolean,
+      reflectToAttribute: true,
+      value: false,
+      computed: 'computeIsPSimUnavailableNetwork_(managedProperties_)',
+    },
+
+    /**
+     * Indicates the network item is a pSIM network currently activating.
+     * @private
+     */
+    isPSimActivatingNetwork_: {
+      type: Boolean,
+      reflectToAttribute: true,
+      value: false,
+      computed: 'computeIsPSimActivatingNetwork_(networkState.*)',
+    },
+
+    /**
+     * Whether the network item is a cellular one and is of an esim
+     * pending profile.
+     * @private
+     */
+    isESimPendingProfile_: {
+      type: Boolean,
+      reflectToAttribute: true,
+      value: false,
+      computed: 'computeIsESimPendingProfile_(item, item.customItemType)',
+    },
+
     /**@private {boolean} */
     isCellularUnlockDialogOpen_: {
       type: Boolean,
       value: false,
     },
+  },
+
+  /** @private {?chromeos.networkConfig.mojom.CrosNetworkConfigRemote} */
+  networkConfig_: null,
+
+  /** @override */
+  created() {
+    this.networkConfig_ = network_config.MojoInterfaceProviderImpl.getInstance()
+                              .getMojoServiceRemote();
   },
 
   /** @override */
@@ -209,8 +257,21 @@ Polymer({
   /** @private */
   networkStateChanged_() {
     if (!this.networkState) {
+      this.managedProperties_ = undefined;
       return;
     }
+
+    // Temporarily place fetching managedProperties behind this flag so OOBE
+    // tests pass. TODO(crbug.com/1196507) Remove this check.
+    if (this.isUpdatedCellularUiEnabled_) {
+      this.networkConfig_.getManagedProperties(this.networkState.guid)
+          .then((response) => {
+            this.managedProperties_ = response.result;
+          });
+    } else {
+      this.managedProperties_ = undefined;
+    }
+
     const connectionState = this.networkState.connectionState;
     if (connectionState === this.connectionState_) {
       return;
@@ -475,6 +536,9 @@ Polymer({
       if (this.isCellularNetworkScanning_()) {
         return this.i18n('networkListItemScanning');
       }
+      if (this.isPSimUnavailableNetwork_) {
+        return this.i18n('networkListItemUnavailableSimNetwork');
+      }
     }
 
     const connectionState = this.networkState.connectionState;
@@ -499,7 +563,10 @@ Polymer({
         this.networkState.type === mojom.NetworkType.kCellular &&
         this.networkState.typeState.cellular.simLocked &&
         this.isUpdatedCellularUiEnabled_) {
-      return 'locked';
+      return 'warning';
+    }
+    if (this.isPSimUnavailableNetwork_) {
+      return 'warning';
     }
     return 'cr-secondary-text';
   },
@@ -527,6 +594,9 @@ Polymer({
    * @private
    */
   isSubpageButtonVisible_(networkState, showButtons, disabled_) {
+    if (this.isPSimPendingActivationNetwork_ || this.isPSimActivatingNetwork_) {
+      return true;
+    }
     return !!networkState && showButtons && !disabled_ &&
         !this.shouldShowUnlockButton_();
   },
@@ -577,7 +647,7 @@ Polymer({
     }
     if (this.isSubpageButtonVisible_(
             this.networkState, this.showButtons, this.disabled_) &&
-        this.$$('#subpage-button') === this.shadowRoot.activeElement) {
+        this.$$('#subpageButton') === this.shadowRoot.activeElement) {
       this.fireShowDetails_(event);
     } else if (this.isESimPendingProfile_) {
       this.onInstallButtonClick_(event);
@@ -585,6 +655,10 @@ Polymer({
       this.onUnlockButtonClick_();
     } else if (this.item && this.item.hasOwnProperty('customItemName')) {
       this.fire('custom-item-selected', this.item);
+    } else if (
+        this.isPSimPendingActivationNetwork_ ||
+        this.isPSimUnavailableNetwork_ || this.isPSimActivatingNetwork_) {
+      this.fireShowDetails_(event);
     } else {
       this.fire('selected', this.item);
       this.focusRequested_ = true;
@@ -671,6 +745,106 @@ Polymer({
     return !!this.item && this.item.hasOwnProperty('customItemType') &&
         this.item.customItemType ===
         NetworkList.CustomItemType.ESIM_INSTALLING_PROFILE;
+  },
+
+  /**
+   * @param {?chromeos.networkConfig.mojom.ManagedCellularProperties|undefined}
+   *     cellularProperties
+   * @return {boolean}
+   * @private
+   */
+  isUnactivatedPSimNetwork_(cellularProperties) {
+    if (!cellularProperties || cellularProperties.eid) {
+      return false;
+    }
+    return cellularProperties.activationState ===
+        chromeos.networkConfig.mojom.ActivationStateType.kNotActivated;
+  },
+
+  /**
+   * @param {?chromeos.networkConfig.mojom.ManagedCellularProperties|undefined}
+   *     cellularProperties
+   * @return {boolean}
+   * @private
+   */
+  hasPaymentPortalInfo_(cellularProperties) {
+    if (!cellularProperties) {
+      return false;
+    }
+    return !!(
+        cellularProperties.paymentPortal &&
+        cellularProperties.paymentPortal.url);
+  },
+
+  /**
+   * @param {?chromeos.networkConfig.mojom.ManagedProperties|undefined}
+   *     managedProperties
+   * @return {boolean}
+   * @private
+   */
+  computeIsPSimPendingActivationNetwork_(managedProperties) {
+    if (!this.isUpdatedCellularUiEnabled_) {
+      return false;
+    }
+    if (!managedProperties) {
+      return false;
+    }
+    const cellularProperties = managedProperties.typeProperties.cellular;
+    return this.isUnactivatedPSimNetwork_(cellularProperties) &&
+        this.hasPaymentPortalInfo_(cellularProperties);
+  },
+
+  /**
+   * @return {string}
+   * @private
+   */
+  getActivateBtnA11yLabel_() {
+    return this.i18n('networkListItemActivateA11yLabel', this.getItemName_());
+  },
+
+  /**
+   * @param {!Event} event
+   * @private
+   */
+  onActivateButtonClick_(event) {
+    this.fire(
+        'show-cellular-setup',
+        {pageName: cellularSetup.CellularSetupPageName.PSIM_FLOW_UI});
+    event.stopPropagation();
+  },
+
+  /**
+   * @param {?chromeos.networkConfig.mojom.ManagedProperties|undefined}
+   *     managedProperties
+   * @return {boolean}
+   * @private
+   */
+  computeIsPSimUnavailableNetwork_(managedProperties) {
+    if (!this.isUpdatedCellularUiEnabled_) {
+      return false;
+    }
+    if (!managedProperties) {
+      return false;
+    }
+    const cellularProperties = managedProperties.typeProperties.cellular;
+    return this.isUnactivatedPSimNetwork_(cellularProperties) &&
+        !this.hasPaymentPortalInfo_(cellularProperties);
+  },
+
+  /**
+   * @return {boolean}
+   * @private
+   */
+  computeIsPSimActivatingNetwork_() {
+    if (!this.isUpdatedCellularUiEnabled_) {
+      return false;
+    }
+    if (!this.networkState || !this.networkState.typeState.cellular ||
+        this.networkState.typeState.cellular.eid) {
+      return false;
+    }
+    return this.networkState.typeState.cellular.activationState ===
+        chromeos.networkConfig.mojom.ActivationStateType.kActivating;
   },
 
   /**

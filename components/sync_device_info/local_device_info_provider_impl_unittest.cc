@@ -19,6 +19,7 @@ const char kLocalDeviceGuid[] = "foo";
 const char kLocalDeviceClientName[] = "bar";
 const char kLocalDeviceManufacturerName[] = "manufacturer";
 const char kLocalDeviceModelName[] = "model";
+const char kLocalFullHardwareClass[] = "test_full_hardware_class";
 
 const char kSharingVapidFCMRegistrationToken[] = "test_vapid_fcm_token";
 const char kSharingVapidP256dh[] = "test_vapid_p256_dh";
@@ -59,6 +60,7 @@ class MockDeviceInfoSyncClient : public DeviceInfoSyncClient {
               GetInterestedDataTypes,
               (),
               (const override));
+  MOCK_METHOD(bool, IsUmaEnabledOnCrOSDevice, (), (const override));
 
  private:
   DISALLOW_COPY_AND_ASSIGN(MockDeviceInfoSyncClient);
@@ -84,6 +86,7 @@ class LocalDeviceInfoProviderImplTest : public testing::Test {
   void InitializeProvider(const std::string& guid) {
     provider_->Initialize(guid, kLocalDeviceClientName,
                           kLocalDeviceManufacturerName, kLocalDeviceModelName,
+                          kLocalFullHardwareClass,
                           /*device_info_restored_from_store=*/nullptr);
   }
 
@@ -101,6 +104,43 @@ class LocalDeviceInfoProviderImplTest : public testing::Test {
   std::unique_ptr<LocalDeviceInfoProviderImpl> provider_;
 };
 
+#if BUILDFLAG(IS_CHROMEOS_ASH)
+TEST_F(LocalDeviceInfoProviderImplTest, UmaToggleFullHardwareClass) {
+  InitializeProvider(kLocalDeviceGuid);
+
+  // Tests that |full_hardware_class| maintains correct values on toggling UMA
+  // from ON -> OFF, OFF -> ON
+  ON_CALL(device_info_sync_client_, IsUmaEnabledOnCrOSDevice)
+      .WillByDefault(Return(true));
+  EXPECT_EQ(provider_->GetLocalDeviceInfo()->full_hardware_class(),
+            kLocalFullHardwareClass);
+
+  ON_CALL(device_info_sync_client_, IsUmaEnabledOnCrOSDevice)
+      .WillByDefault(Return(false));
+  EXPECT_EQ(provider_->GetLocalDeviceInfo()->full_hardware_class(), "");
+
+  ON_CALL(device_info_sync_client_, IsUmaEnabledOnCrOSDevice)
+      .WillByDefault(Return(true));
+  EXPECT_EQ(provider_->GetLocalDeviceInfo()->full_hardware_class(),
+            kLocalFullHardwareClass);
+}
+#else   // NOT BUILDFLAG(IS_CHROMEOS_ASH)
+TEST_F(LocalDeviceInfoProviderImplTest,
+       UmaEnabledNonChromeOSHardwareClassEmpty) {
+  // Tests that the |full_hardware_class| doesn't get updated when on
+  // non-chromeos device. IsUmaEnabledOnCrOSDevice() returns false on non-cros.
+  ON_CALL(device_info_sync_client_, IsUmaEnabledOnCrOSDevice)
+      .WillByDefault(Return(false));
+
+  InitializeProvider(kLocalDeviceGuid);
+
+  const DeviceInfo* local_device_info = provider_->GetLocalDeviceInfo();
+
+  // |kLocalFullHardwareClass| is reset after retrieving |local_device_info|
+  EXPECT_EQ(local_device_info->full_hardware_class(), "");
+}
+#endif  // BUILDFLAG(IS_CHROMEOS_ASH)
+
 TEST_F(LocalDeviceInfoProviderImplTest, GetLocalDeviceInfo) {
   ASSERT_EQ(nullptr, provider_->GetLocalDeviceInfo());
 
@@ -108,6 +148,7 @@ TEST_F(LocalDeviceInfoProviderImplTest, GetLocalDeviceInfo) {
 
   const DeviceInfo* local_device_info = provider_->GetLocalDeviceInfo();
   ASSERT_NE(nullptr, local_device_info);
+  EXPECT_EQ("", local_device_info->full_hardware_class());
   EXPECT_EQ(std::string(kLocalDeviceGuid), local_device_info->guid());
   EXPECT_EQ(kLocalDeviceClientName, local_device_info->client_name());
   EXPECT_EQ(kLocalDeviceManufacturerName,
@@ -227,16 +268,18 @@ TEST_F(LocalDeviceInfoProviderImplTest, ShouldKeepStoredInvalidationFields) {
   auto device_info_restored_from_store = std::make_unique<DeviceInfo>(
       kLocalDeviceGuid, "name", "chrome_version", "user_agent",
       sync_pb::SyncEnums_DeviceType_TYPE_LINUX, "device_id", "manufacturer",
-      "model", base::Time(), base::TimeDelta::FromDays(1),
+      "model", "full_hardware_class", base::Time(),
+      base::TimeDelta::FromDays(1),
       /*send_tab_to_self_receiving_enabled=*/true,
       /*sharing_info=*/base::nullopt, paask_info, kFCMRegistrationToken,
       kInterestedDataTypes);
 
-  // |kFCMRegistrationToken|, |kInterestedDataTypes|, and |paask_info| should be
-  // taken from |device_info_restored_from_store| when
-  // |device_info_sync_client_| returns nullopt.
+  // |kFCMRegistrationToken|, |kInterestedDataTypes|,
+  // and |paask_info| should be taken from |device_info_restored_from_store|
+  // when |device_info_sync_client_| returns nullopt.
   provider_->Initialize(kLocalDeviceGuid, kLocalDeviceClientName,
                         kLocalDeviceManufacturerName, kLocalDeviceModelName,
+                        kLocalFullHardwareClass,
                         std::move(device_info_restored_from_store));
 
   EXPECT_CALL(device_info_sync_client_, GetFCMRegistrationToken())

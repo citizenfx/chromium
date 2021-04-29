@@ -28,6 +28,10 @@ reviews. Googlers can read more about this at go/gwsq-gerrit.
       summary="dangerous download warning bypass"/>
   <variant name="DatabaseInterstitialBypass"
       summary="Safe Browsing database interstitial bypass"/>
+  <variant name="ExtensionAllowlistInstallBypass"
+      summary="extension allowlist install bypass"/>
+  <variant name="NonAllowlistedExtensionReEnabled"
+      summary="non allowlisted extension re-enabled"/>
   <variant name="PasswordReuseModalBypass"
       summary="password reuse modal warning bypass"/>
   <variant name="RealTimeInterstitialBypass"
@@ -310,6 +314,17 @@ reviews. Googlers can read more about this at go/gwsq-gerrit.
   </summary>
 </histogram>
 
+<histogram name="SafeBrowsing.DeepScan.Download.TooManyRequests.Duration"
+    units="ms" expires_after="2022-02-01">
+  <owner>domfc@chromium.org</owner>
+  <owner>webprotect-team@google.com</owner>
+  <summary>
+    This records the deep scanning duration of a user download request with a
+    TooManyRequests result. It is logged once for each binary upload with that
+    result.
+  </summary>
+</histogram>
+
 <histogram name="SafeBrowsing.DeepScan.Download.Unknown.Duration" units="ms"
     expires_after="2022-02-01">
   <owner>domfc@chromium.org</owner>
@@ -431,6 +446,17 @@ reviews. Googlers can read more about this at go/gwsq-gerrit.
   </summary>
 </histogram>
 
+<histogram name="SafeBrowsing.DeepScan.DragAndDrop.TooManyRequests.Duration"
+    units="ms" expires_after="2022-02-01">
+  <owner>domfc@chromium.org</owner>
+  <owner>webprotect-team@google.com</owner>
+  <summary>
+    This records the deep scanning duration of a user &quot;drag and drop&quot;
+    request with a TooManyRequests result. It is logged once for each binary
+    upload with that result.
+  </summary>
+</histogram>
+
 <histogram name="SafeBrowsing.DeepScan.DragAndDrop.Unknown.Duration" units="ms"
     expires_after="2022-02-01">
   <owner>domfc@chromium.org</owner>
@@ -536,6 +562,17 @@ reviews. Googlers can read more about this at go/gwsq-gerrit.
   <summary>
     This records the deep scanning duration of a user paste request with a
     Timeout result. It is logged once for each binary upload with that result.
+  </summary>
+</histogram>
+
+<histogram name="SafeBrowsing.DeepScan.Paste.TooManyRequests.Duration"
+    units="ms" expires_after="2022-02-01">
+  <owner>domfc@chromium.org</owner>
+  <owner>webprotect-team@google.com</owner>
+  <summary>
+    This records the deep scanning duration of a user paste request with a
+    TooManyRequests result. It is logged once for each binary upload with that
+    result.
   </summary>
 </histogram>
 
@@ -653,6 +690,17 @@ reviews. Googlers can read more about this at go/gwsq-gerrit.
   <summary>
     SB.This records the deep scanning duration of a user upload request with a
     Timeout result. It is logged once for each binary upload with that result.
+  </summary>
+</histogram>
+
+<histogram name="SafeBrowsing.DeepScan.Upload.TooManyRequests.Duration"
+    units="ms" expires_after="2022-02-01">
+  <owner>domfc@chromium.org</owner>
+  <owner>webprotect-team@google.com</owner>
+  <summary>
+    This records the deep scanning duration of a user upload request with a
+    TooManyRequests result. It is logged once for each binary upload with that
+    result.
   </summary>
 </histogram>
 

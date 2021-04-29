@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Виявлене посилання. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Зображення з галереї</translation>
 <translation id="1430915738399379752">Друк</translation>
+<translation id="1467231725790366244">Камеру <ph name="CAMERA" /> відключено.</translation>
 <translation id="1473110567575736769">Таймер на 3 секунди</translation>
 <translation id="1620510694547887537">Камера</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Нічого не записано</translation>
 <translation id="1838104802459806957">Нахилити вгору</translation>
+<translation id="1851169887664797861">Доступні додаткові елементи керування камерою</translation>
 <translation id="1851616744363735765">ПРИЗУПИНЕНО</translation>
 <translation id="1862930711583847113">Не вдається експортувати файл "<ph name="FILE" />"</translation>
 <translation id="1899697626337024495">Роздільна здатність фото</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Фотографуйте й записуйте відео камерою.</translation>
 <translation id="2549985041256363841">Почати запис</translation>
 <translation id="2599796128805996109">Камера на задній панелі</translation>
+<translation id="2879583609344924966">Камеру <ph name="CAMERA" /> підключено.</translation>
 <translation id="2912439424121107408">Режим експерта не підтримується на цьому пристрої</translation>
 <translation id="2968794441791257519">Фото й відео з камери перенесуться в папку "Завантаження", і ви зможете відкрити їх у Файлах.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Роздільна здатність камери</translation>
 <translation id="3517926952904427380">Не вдалося зробити портретне фото</translation>
 <translation id="3569311554794739032">Видалити файл "<ph name="FILE" />"?</translation>
+<translation id="3733597664308256288">Доступні додаткові елементи керування камерою. Щоб перейти до них, натисніть клавішу пошуку + стрілку вправо.</translation>
 <translation id="3810838688059735925">Відео</translation>
 <translation id="3838931309141338733">Сканувати штрих-код</translation>
 <translation id="3892148308691398805">Копіювати текст</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">Довідка</translation>
 <translation id="7658239707568436148">Скасувати</translation>
 <translation id="7670511624014457267">60 кадрів/с</translation>
+<translation id="7974782136796202581">Показувати параметри панорамування, нахилу та масштабу</translation>
 <translation id="7983668134180549431">Виявлений текст.</translation>
 <translation id="8067883171444229417">Дивитися відео</translation>
 <translation id="8120146556401698679">Панорамування нахил масштаб</translation>

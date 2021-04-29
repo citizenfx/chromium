@@ -273,7 +273,7 @@ OobeUIDialogDelegate::OobeUIDialogDelegate(
   layout_view_->SetHasShelf(
       !ChromeKeyboardControllerClient::Get()->is_keyboard_visible());
 
-  dialog_view_->AddObserver(this);
+  view_observer_.Observe(dialog_view_);
 
   extensions::ChromeExtensionWebContentsObserver::CreateForWebContents(
       dialog_view_->web_contents());
@@ -283,12 +283,13 @@ OobeUIDialogDelegate::OobeUIDialogDelegate(
 
   GetOobeUI()->GetErrorScreen()->MaybeInitCaptivePortalWindowProxy(
       dialog_view_->web_contents());
+  oobe_ui_observer_.Observe(GetOobeUI());
   captive_portal_observer_.Observe(
       GetOobeUI()->GetErrorScreen()->captive_portal_window_proxy());
 }
 
 OobeUIDialogDelegate::~OobeUIDialogDelegate() {
-  dialog_view_->RemoveObserver(this);
+  view_observer_.Reset();
   if (captive_portal_delegate_)
     captive_portal_delegate_->Close();
   if (controller_)
@@ -448,6 +449,12 @@ void OobeUIDialogDelegate::OnViewBoundsChanged(views::View* observed_view) {
       layout_view_->GetContentsBounds().size());
 }
 
+void OobeUIDialogDelegate::OnViewIsDeleting(views::View* observed_view) {
+  DCHECK_EQ(observed_view, dialog_view_);
+  view_observer_.Reset();
+  dialog_view_ = nullptr;
+}
+
 void OobeUIDialogDelegate::OnKeyboardVisibilityChanged(bool visible) {
   if (!widget_)
     return;
@@ -467,6 +474,14 @@ void OobeUIDialogDelegate::OnAfterCaptivePortalHidden() {
   should_display_captive_portal_ = false;
 
   captive_portal_delegate_->Hide();
+}
+
+void OobeUIDialogDelegate::OnCurrentScreenChanged(OobeScreenId current_screen,
+                                                  OobeScreenId new_screen) {}
+
+void OobeUIDialogDelegate::OnDestroyingOobeUI() {
+  captive_portal_observer_.Reset();
+  oobe_ui_observer_.Reset();
 }
 
 void OobeUIDialogDelegate::OnFocusLeavingSystemTray(bool reverse) {

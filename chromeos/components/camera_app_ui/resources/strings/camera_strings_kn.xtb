@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">ಲಿಂಕ್ ಪತ್ತೆಯಾಗಿದೆ. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">ಗ್ಯಾಲರಿ ಚಿತ್ರಗಳು</translation>
 <translation id="1430915738399379752">ಮುದ್ರಿಸು</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> ಅನ್‌ಪ್ಲಗ್ ಆಗಿದೆ.</translation>
 <translation id="1473110567575736769">3 ಸೆಕೆಂಡುಗಳ ಟೈಮರ್</translation>
 <translation id="1620510694547887537">ಕ್ಯಾಮರಾ</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">ಏನನ್ನೂ ರೆಕಾರ್ಡ್ ಮಾಡಲಾಗಿಲ್ಲ</translation>
 <translation id="1838104802459806957">ಮೇಲಕ್ಕೆ ಟಿಲ್ಟ್ ಮಾಡಿ</translation>
+<translation id="1851169887664797861">ಹೆಚ್ಚುವರಿ ಕ್ಯಾಮರಾ ನಿಯಂತ್ರಣಗಳು ಲಭ್ಯ</translation>
 <translation id="1851616744363735765">ವಿರಾಮಗೊಳಿಸಲಾಗಿದೆ</translation>
 <translation id="1862930711583847113"><ph name="FILE" /> ರಫ್ತು ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ</translation>
 <translation id="1899697626337024495">ಫೋಟೋ ರೆಸಲ್ಯೂಷನ್</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">ನಿಮ್ಮ ಕ್ಯಾಮರಾದ ಮೂಲಕ ಚಿತ್ರಗಳನ್ನು ತೆಗೆಯಿರಿ ಮತ್ತು ವೀಡಿಯೊಗಳನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ.</translation>
 <translation id="2549985041256363841">ರೆಕಾರ್ಡಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ</translation>
 <translation id="2599796128805996109">ಹಿಂಬದಿ ಕ್ಯಾಮರಾ</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> ಪ್ಲಗ್-ಇನ್ ಆಗಿದೆ.</translation>
 <translation id="2912439424121107408">ಈ ಸಾಧನದಲ್ಲಿ ತಜ್ಞ ಮೋಡ್ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ</translation>
 <translation id="2968794441791257519">ಕ್ಯಾಮರಾದಿಂದ ತೆಗೆದ ಫೋಟೋಗಳು ಮತ್ತು ವೀಡಿಯೊಗಳನ್ನು ಡೌನ್‌ಲೋಡ್‌ಗಳ ಫೋಲ್ಡರ್‌ಗೆ ವರ್ಗಾಯಿಸಲಾಗುತ್ತದೆ.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">ಕ್ಯಾಮರಾ ರೆಸಲ್ಯೂಷನ್</translation>
 <translation id="3517926952904427380">ಪೋರ್ಟ್ರೇಟ್ ಫೋಟೋ ತೆಗೆಯಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ</translation>
 <translation id="3569311554794739032">ನೀವು ನಿಜವಾಗಿಯೂ <ph name="FILE" /> ತೆಗೆದುಹಾಕಲು ಬಯಸುವಿರಾ?</translation>
+<translation id="3733597664308256288">ಹೆಚ್ಚುವರಿ ಕ್ಯಾಮರಾ ನಿಯಂತ್ರಣಗಳು ಲಭ್ಯ. ಪ್ರವೇಶಿಸಲು Search + ರೈಟ್ ಗುರುತು.</translation>
 <translation id="3810838688059735925">ವೀಡಿಯೊ</translation>
 <translation id="3838931309141338733">ಬಾರ್‌ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</translation>
 <translation id="3892148308691398805">ಪಠ್ಯ ನಕಲಿಸಿ</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">ಸಹಾಯ</translation>
 <translation id="7658239707568436148">ರದ್ದುಮಾಡಿ</translation>
 <translation id="7670511624014457267">60 FPS</translation>
+<translation id="7974782136796202581">ಪ್ಯಾನ್ ಟಿಲ್ಟ್ ಝೂಮ್ ಆಯ್ಕೆಗಳನ್ನು ತೋರಿಸಿ</translation>
 <translation id="7983668134180549431">ಪಠ್ಯ ಪತ್ತೆಯಾಗಿದೆ.</translation>
 <translation id="8067883171444229417">ವೀಡಿಯೊ ಪ್ಲೇ ಮಾಡಿ</translation>
 <translation id="8120146556401698679">ಪ್ಯಾನ್ ಮಾಡಿ ಟಿಲ್ಟ್ ಮಾಡಿ ಝೂಮ್ ಮಾಡಿ</translation>

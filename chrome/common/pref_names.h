@@ -1034,6 +1034,7 @@ extern const char kIsolateOrigins[];
 extern const char kSitePerProcess[];
 
 #if !defined(OS_ANDROID)
+extern const char kSharedArrayBufferUnrestrictedAccessAllowed[];
 extern const char kAutoplayAllowed[];
 extern const char kAutoplayWhitelist[];
 extern const char kBlockAutoplayEnabled[];
@@ -1127,6 +1128,8 @@ extern const char kSecurityTokenSessionNotificationScheduledDomain[];
 #if !defined(OS_ANDROID)
 extern const char kCartModuleHidden[];
 extern const char kCartModuleWelcomeSurfaceShownTimes[];
+extern const char kCartDiscountAcknowledged[];
+extern const char kCartDiscountEnabled[];
 #endif
 
 #if defined(OS_ANDROID)
@@ -1142,6 +1145,8 @@ extern const char kSuppressDifferentOriginSubframeJSDialogs[];
 #if BUILDFLAG(IS_CHROMEOS_ASH)
 extern const char kPdfAnnotationsEnabled[];
 #endif
+
+extern const char kExplicitlyAllowedNetworkPorts[];
 
 }  // namespace prefs
 

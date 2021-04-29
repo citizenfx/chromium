@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">偵測到連結。<ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">圖片庫圖片</translation>
 <translation id="1430915738399379752">列印</translation>
+<translation id="1467231725790366244">已解除連接「<ph name="CAMERA" />」。</translation>
 <translation id="1473110567575736769">3 秒計時器</translation>
 <translation id="1620510694547887537">攝影機</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">未錄製任何內容</translation>
 <translation id="1838104802459806957">向上傾斜</translation>
+<translation id="1851169887664797861">已推出新的相機控制項</translation>
 <translation id="1851616744363735765">已暫停</translation>
 <translation id="1862930711583847113">無法匯出「<ph name="FILE" />」</translation>
 <translation id="1899697626337024495">相片解析度</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">使用相機拍攝相片及錄製影片。</translation>
 <translation id="2549985041256363841">開始錄影</translation>
 <translation id="2599796128805996109">後置鏡頭</translation>
+<translation id="2879583609344924966">已連接「<ph name="CAMERA" />」。</translation>
 <translation id="2912439424121107408">此裝置不支援專家模式</translation>
 <translation id="2968794441791257519">使用相機拍攝的相片和影片將移至「下載內容」資料夾，你可以在「檔案」應用程式中找到這些內容。
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">相機解析度</translation>
 <translation id="3517926952904427380">無法拍攝肖像相片</translation>
 <translation id="3569311554794739032">確定要移除「<ph name="FILE" />」嗎？</translation>
+<translation id="3733597664308256288">已推出新的相機控制項。按下搜尋鍵 + 向右鍵即可使用。</translation>
 <translation id="3810838688059735925">影片</translation>
 <translation id="3838931309141338733">掃描條碼</translation>
 <translation id="3892148308691398805">複製文字</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">說明</translation>
 <translation id="7658239707568436148">取消</translation>
 <translation id="7670511624014457267">每秒畫格數：60</translation>
+<translation id="7974782136796202581">顯示平移/傾斜/縮放選項</translation>
 <translation id="7983668134180549431">偵測到文字。</translation>
 <translation id="8067883171444229417">播放影片</translation>
 <translation id="8120146556401698679">平移 傾斜 縮放</translation>

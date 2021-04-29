@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,6 +67,8 @@ import org.chromium.net.ConnectionType;
 import org.chromium.ui.base.DeviceFormFactor;
 import org.chromium.url.GURL;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +105,25 @@ public class AppMenuPropertiesDelegateImpl implements AppMenuPropertiesDelegate 
         int OVERVIEW_MODE_MENU = 1;
         int START_SURFACE_MODE_MENU = 2;
         int TABLET_EMPTY_MODE_MENU = 3;
+    }
+
+    // Please treat this list as append only and keep it in sync with
+    // AppMenuHighlightItem in enums.xml.
+    @IntDef({AppMenuHighlightItem.UNKNOWN, AppMenuHighlightItem.DOWNLOADS,
+            AppMenuHighlightItem.BOOKMARKS, AppMenuHighlightItem.TRANSLATE,
+            AppMenuHighlightItem.ADD_TO_HOMESCREEN, AppMenuHighlightItem.DOWNLOAD_THIS_PAGE,
+            AppMenuHighlightItem.BOOKMARK_THIS_PAGE, AppMenuHighlightItem.DATA_REDUCTION_FOOTER})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface AppMenuHighlightItem {
+        int UNKNOWN = 0;
+        int DOWNLOADS = 1;
+        int BOOKMARKS = 2;
+        int TRANSLATE = 3;
+        int ADD_TO_HOMESCREEN = 4;
+        int DOWNLOAD_THIS_PAGE = 5;
+        int BOOKMARK_THIS_PAGE = 6;
+        int DATA_REDUCTION_FOOTER = 7;
+        int NUM_ENTRIES = 8;
     }
 
     protected @Nullable OverviewModeBehavior mOverviewModeBehavior;
@@ -662,6 +684,39 @@ public class AppMenuPropertiesDelegateImpl implements AppMenuPropertiesDelegate 
         return false;
     }
 
+    @Override
+    public void recordHighlightedMenuItemShown(@Nullable @IdRes Integer menuItemId) {
+        RecordHistogram.recordEnumeratedHistogram("Mobile.AppMenu.HighlightMenuItem.Shown",
+                getUmaEnumForMenuItem(menuItemId), AppMenuHighlightItem.NUM_ENTRIES);
+    }
+
+    @Override
+    public void recordHighlightedMenuItemClicked(@Nullable @IdRes Integer menuItemId) {
+        RecordHistogram.recordEnumeratedHistogram("Mobile.AppMenu.HighlightMenuItem.Clicked",
+                getUmaEnumForMenuItem(menuItemId), AppMenuHighlightItem.NUM_ENTRIES);
+    }
+
+    private int getUmaEnumForMenuItem(@Nullable @IdRes Integer menuItemId) {
+        if (menuItemId == null) return AppMenuHighlightItem.UNKNOWN;
+
+        if (menuItemId == R.id.downloads_menu_id) {
+            return AppMenuHighlightItem.DOWNLOADS;
+        } else if (menuItemId == R.id.all_bookmarks_menu_id) {
+            return AppMenuHighlightItem.BOOKMARKS;
+        } else if (menuItemId == R.id.translate_id) {
+            return AppMenuHighlightItem.TRANSLATE;
+        } else if (menuItemId == R.id.add_to_homescreen_id) {
+            return AppMenuHighlightItem.ADD_TO_HOMESCREEN;
+        } else if (menuItemId == R.id.offline_page_id) {
+            return AppMenuHighlightItem.DOWNLOAD_THIS_PAGE;
+        } else if (menuItemId == R.id.bookmark_this_page_id) {
+            return AppMenuHighlightItem.BOOKMARK_THIS_PAGE;
+        } else if (menuItemId == R.id.app_menu_footer) {
+            return AppMenuHighlightItem.DATA_REDUCTION_FOOTER;
+        }
+        return AppMenuHighlightItem.UNKNOWN;
+    }
+
     /**
      * Updates the bookmark item's visibility.
      *
@@ -719,14 +774,25 @@ public class AppMenuPropertiesDelegateImpl implements AppMenuPropertiesDelegate 
 
         boolean isRequestDesktopSite =
                 currentTab.getWebContents().getNavigationController().getUseDesktopUserAgent();
-        // Mark the checkbox if RDS is activated on this page.
-        requestMenuCheck.setChecked(isRequestDesktopSite);
+        if (CachedFeatureFlags.isEnabled(ChromeFeatureList.APP_MENU_MOBILE_SITE_OPTION)) {
+            requestMenuLabel.setTitle(isRequestDesktopSite
+                            ? R.string.menu_item_request_mobile_site
+                            : R.string.menu_item_request_desktop_site);
+            requestMenuLabel.setIcon(isRequestDesktopSite ? R.drawable.smartphone_black_24dp
+                                                          : R.drawable.ic_desktop_windows);
+            requestMenuCheck.setVisible(false);
+        } else {
+            requestMenuLabel.setTitle(R.string.menu_request_desktop_site);
+            requestMenuCheck.setVisible(true);
+            // Mark the checkbox if RDS is activated on this page.
+            requestMenuCheck.setChecked(isRequestDesktopSite);
 
-        // This title doesn't seem to be displayed by Android, but it is used to set up
-        // accessibility text in {@link AppMenuAdapter#setupMenuButton}.
-        requestMenuLabel.setTitleCondensed(isRequestDesktopSite
-                        ? mContext.getString(R.string.menu_request_desktop_site_on)
-                        : mContext.getString(R.string.menu_request_desktop_site_off));
+            // This title doesn't seem to be displayed by Android, but it is used to set up
+            // accessibility text in {@link AppMenuAdapter#setupMenuButton}.
+            requestMenuLabel.setTitleCondensed(isRequestDesktopSite
+                            ? mContext.getString(R.string.menu_request_desktop_site_on)
+                            : mContext.getString(R.string.menu_request_desktop_site_off));
+        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)

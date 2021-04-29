@@ -52,11 +52,16 @@ cr.define('cellular_setup', function() {
       }
       this.fakeEuicc_.notifyProfileChangedForTest(this);
       this.fakeEuicc_.notifyProfileListChangedForTest();
-      return Promise.resolve({
-        result: this.profileInstallResult_ ?
-            this.profileInstallResult_ :
-            chromeos.cellularSetup.mojom.ProfileInstallResult.kSuccess
-      });
+      // Simulate a delay in response. This is neccessary because a few tests
+      // require UI to be in installing state.
+      return new Promise(
+          resolve => setTimeout(
+              () => resolve({
+                result: this.profileInstallResult_ ?
+                    this.profileInstallResult_ :
+                    chromeos.cellularSetup.mojom.ProfileInstallResult.kSuccess
+              }),
+              0));
     }
 
     /**
@@ -313,6 +318,7 @@ cr.define('cellular_setup', function() {
       const eid = this.euiccs_.length + 1 + '';
       const euicc = new FakeEuicc(eid, numProfiles, this);
       this.euiccs_.push(euicc);
+      this.notifyAvailableEuiccListChanged();
       return euicc;
     }
 
@@ -322,6 +328,12 @@ cr.define('cellular_setup', function() {
      */
     addObserver(observer) {
       this.observers_.push(observer);
+    }
+
+    notifyAvailableEuiccListChanged() {
+      for (const observer of this.observers_) {
+        observer.onAvailableEuiccListChanged();
+      }
     }
 
     /**

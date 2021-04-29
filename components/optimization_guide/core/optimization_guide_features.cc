@@ -264,6 +264,16 @@ size_t MaxConcurrentPageNavigationFetches() {
       "max_concurrent_page_navigation_fetches", 20);
 }
 
+int ActiveTabsHintsFetchRandomMinDelaySecs() {
+  return GetFieldTrialParamByFeatureAsInt(kRemoteOptimizationGuideFetching,
+                                          "fetch_random_min_delay_secs", 30);
+}
+
+int ActiveTabsHintsFetchRandomMaxDelaySecs() {
+  return GetFieldTrialParamByFeatureAsInt(kRemoteOptimizationGuideFetching,
+                                          "fetch_random_max_delay_secs", 60);
+}
+
 base::TimeDelta StoredHostModelFeaturesFreshnessDuration() {
   return base::TimeDelta::FromDays(GetFieldTrialParamByFeatureAsInt(
       kOptimizationTargetPrediction,
@@ -329,6 +339,16 @@ int PredictionModelFetchRandomMinDelaySecs() {
 int PredictionModelFetchRandomMaxDelaySecs() {
   return GetFieldTrialParamByFeatureAsInt(kOptimizationTargetPrediction,
                                           "fetch_random_max_delay_secs", 60);
+}
+
+base::TimeDelta PredictionModelFetchRetryDelay() {
+  return base::TimeDelta::FromMinutes(GetFieldTrialParamByFeatureAsInt(
+      kOptimizationTargetPrediction, "fetch_retry_minutes", 2));
+}
+
+base::TimeDelta PredictionModelFetchInterval() {
+  return base::TimeDelta::FromHours(GetFieldTrialParamByFeatureAsInt(
+      kOptimizationTargetPrediction, "fetch_interval_hours", 24));
 }
 
 base::flat_set<std::string> ExternalAppPackageNamesApprovedForFetch() {

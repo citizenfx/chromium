@@ -694,6 +694,13 @@ base::Value SerializeReferrer(const ReferrerChainEntry& referrer) {
       "maybe_launched_by_external_application",
       base::Value(referrer.maybe_launched_by_external_application()));
 
+  referrer_dict.SetKey("is_subframe_url_removed",
+                       base::Value(referrer.is_subframe_url_removed()));
+
+  referrer_dict.SetKey(
+      "is_subframe_referrer_url_removed",
+      base::Value(referrer.is_subframe_referrer_url_removed()));
+
   return std::move(referrer_dict);
 }
 
@@ -1543,6 +1550,44 @@ std::string SerializeContentAnalysisRequest(
   }
   if (tab_url.is_valid()) {
     request_dict.SetStringKey("tab_url", tab_url.spec());
+  }
+
+  if (request.has_client_metadata()) {
+    base::DictionaryValue metadata;
+
+    if (request.client_metadata().has_browser()) {
+      const auto& browser = request.client_metadata().browser();
+      base::DictionaryValue browser_metadata;
+      browser_metadata.SetStringKey("browser_id", browser.browser_id());
+      browser_metadata.SetStringKey("user_agent", browser.user_agent());
+      browser_metadata.SetStringKey("chrome_version", browser.chrome_version());
+      browser_metadata.SetStringKey("machine_user", browser.machine_user());
+      metadata.SetKey("browser", std::move(browser_metadata));
+    }
+
+    if (request.client_metadata().has_device()) {
+      base::DictionaryValue device_metadata;
+      const auto& device = request.client_metadata().device();
+      device_metadata.SetStringKey("dm_token", device.dm_token());
+      device_metadata.SetStringKey("client_id", device.client_id());
+      device_metadata.SetStringKey("os_version", device.os_version());
+      device_metadata.SetStringKey("os_platform", device.os_platform());
+      device_metadata.SetStringKey("name", device.name());
+      metadata.SetKey("device", std::move(device_metadata));
+    }
+
+    if (request.client_metadata().has_profile()) {
+      base::DictionaryValue profile_metadata;
+      const auto& profile = request.client_metadata().profile();
+      profile_metadata.SetStringKey("dm_token", profile.dm_token());
+      profile_metadata.SetStringKey("gaia_email", profile.gaia_email());
+      profile_metadata.SetStringKey("profile_path", profile.profile_path());
+      profile_metadata.SetStringKey("profile_name", profile.profile_name());
+      profile_metadata.SetStringKey("client_id", profile.client_id());
+      metadata.SetKey("profile", std::move(profile_metadata));
+    }
+
+    request_dict.SetKey("client_metadata", std::move(metadata));
   }
 
   base::ListValue tags;

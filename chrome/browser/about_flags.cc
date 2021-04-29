@@ -1910,6 +1910,14 @@ const FeatureEntry::FeatureVariation kLensCameraAssistedSearchVariations[] = {
     {"(Mic then Lens)", kLensCameraAssistedSearchLensButtonEnd,
      base::size(kLensCameraAssistedSearchLensButtonEnd), nullptr}};
 
+const FeatureEntry::FeatureParam kLensContextMenuTranslateHideRemoveIcon[] = {
+    {"hideChipRemoveIcon", "true"}};
+
+const FeatureEntry::FeatureVariation kLensContextMenuTranslateVariations[] = {
+    {"(Hide Remove Icon)", kLensContextMenuTranslateHideRemoveIcon,
+     base::size(kLensContextMenuTranslateHideRemoveIcon), nullptr},
+};
+
 #endif  // defined(OS_ANDROID)
 
 const FeatureEntry::FeatureParam kLazyFrameLoadingAutomatic[] = {
@@ -3356,6 +3364,9 @@ const FeatureEntry kFeatureEntries[] = {
      kOsCrOS,
      FEATURE_VALUE_TYPE(
          chromeos::features::kVmCameraMicIndicatorsAndNotifications)},
+    {"vm-status-page", flag_descriptions::kVmStatusPageName,
+     flag_descriptions::kVmStatusPageDescription, kOsCrOS,
+     FEATURE_VALUE_TYPE(chromeos::features::kVmStatusPage)},
     {"crostini-reset-lxd-db", flag_descriptions::kCrostiniResetLxdDbName,
      flag_descriptions::kCrostiniResetLxdDbDescription, kOsCrOS,
      FEATURE_VALUE_TYPE(chromeos::features::kCrostiniResetLxdDb)},
@@ -4418,6 +4429,10 @@ const FeatureEntry kFeatureEntries[] = {
      FEATURE_WITH_PARAMS_VALUE_TYPE(features::kRequestDesktopSiteForTablets,
                                     kRequestDesktopSiteForTabletsVariations,
                                     "RequestDesktopSiteForTablets")},
+    {"app-menu-mobile-site-option",
+     flag_descriptions::kAppMenuMobileSiteOptionName,
+     flag_descriptions::kAppMenuMobileSiteOptionDescription, kOsAndroid,
+     FEATURE_VALUE_TYPE(chrome::android::kAppMenuMobileSiteOption)},
 #endif  // OS_ANDROID
 
     {"omnibox-display-title-for-current-url",
@@ -4612,6 +4627,10 @@ const FeatureEntry kFeatureEntries[] = {
      flag_descriptions::kReadLaterReminderNotificationDescription, kOsAndroid,
      FEATURE_VALUE_TYPE(
          reading_list::switches::kReadLaterReminderNotification)},
+
+    {"bookmark-bottom-sheet", flag_descriptions::kBookmarkBottomSheetName,
+     flag_descriptions::kBookmarkBottomSheetDescription, kOsAndroid,
+     FEATURE_VALUE_TYPE(chrome::android::kBookmarkBottomSheet)},
 #endif
 
     {"tab-groups-auto-create", flag_descriptions::kTabGroupsAutoCreateName,
@@ -5614,6 +5633,10 @@ const FeatureEntry kFeatureEntries[] = {
      flag_descriptions::kPhoneHubDescription, kOsCrOS,
      FEATURE_VALUE_TYPE(chromeos::features::kPhoneHub)},
 
+    {"wifi-sync-allow-deletes", flag_descriptions::kWifiSyncAllowDeletesName,
+     flag_descriptions::kWifiSyncAllowDeletesDescription, kOsCrOS,
+     FEATURE_VALUE_TYPE(chromeos::features::kWifiSyncAllowDeletes)},
+
     {"wifi-sync-android", flag_descriptions::kWifiSyncAndroidName,
      flag_descriptions::kWifiSyncAndroidDescription, kOsCrOS,
      FEATURE_VALUE_TYPE(chromeos::features::kWifiSyncAndroid)},
@@ -6047,7 +6070,10 @@ const FeatureEntry kFeatureEntries[] = {
      flag_descriptions::kContextMenuTranslateWithGoogleLensName,
      flag_descriptions::kContextMenuTranslateWithGoogleLensDescription,
      kOsAndroid,
-     FEATURE_VALUE_TYPE(chrome::android::kContextMenuTranslateWithGoogleLens)},
+     FEATURE_WITH_PARAMS_VALUE_TYPE(
+         chrome::android::kContextMenuTranslateWithGoogleLens,
+         kLensContextMenuTranslateVariations,
+         "LensContextMenuTranslate")},
 
     {"lens-camera-assisted-search",
      flag_descriptions::kLensCameraAssistedSearchName,
@@ -7177,6 +7203,10 @@ const FeatureEntry kFeatureEntries[] = {
      flag_descriptions::kOptimizationGuideModelDownloadingDescription, kOsAll,
      FEATURE_VALUE_TYPE(
          optimization_guide::features::kOptimizationGuideModelDownloading)},
+
+    {"media-session-webrtc", flag_descriptions::kMediaSessionWebRTCName,
+     flag_descriptions::kMediaSessionWebRTCDescription, kOsAll,
+     FEATURE_VALUE_TYPE(media::kMediaSessionWebRTC)},
 
     {"webid", flag_descriptions::kWebIdName,
      flag_descriptions::kWebIdDescription, kOsAll,

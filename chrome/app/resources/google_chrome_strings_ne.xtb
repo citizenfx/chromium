@@ -13,11 +13,12 @@
 <translation id="1125124144982679672">Chrome कसले चलाउँदै हुनुहुन्छ?</translation>
 <translation id="1142745911746664600">Chrome लाई अद्यावधिक गर्न सकिएन</translation>
 <translation id="1154147086299354128">Chrome मा खोल्नुहोस्</translation>
-<translation id="1293325835983155583"><ph name="MANAGER" /> को नीतिअनुसार तपाईंले यो यन्त्र चलाउनुअघि तल दिइएका सेवाका सर्तहरू पढेर स्वीकार गर्नु पर्ने हुन्छ। यी सर्तहरूले Google Chrome OS का सर्तहरू विस्तार, परिमार्जन वा ती सर्तहरू सीमित पार्दैनन्।</translation>
+<translation id="1293325835983155583"><ph name="MANAGER" /> को नीतिअनुसार तपाईंले यो डिभाइस चलाउनुअघि तल दिइएका सेवाका सर्तहरू पढेर स्वीकार गर्नु पर्ने हुन्छ। यी सर्तहरूले Google Chrome OS का सर्तहरू विस्तार, परिमार्जन वा ती सर्तहरू सीमित पार्दैनन्।</translation>
 <translation id="1302523850133262269">Chrome ले नवीनतम सिस्टम अपडेटहरू स्थापित गर्दै गर्दा कृपया प्रतिक्षा गर्नुहोस्।</translation>
 <translation id="137466361146087520">Google Chrome बिटा</translation>
 <translation id="1399397803214730675">यो कम्प्युटर पहिले नै Google Chrome को एउटा अझ हालैको संस्करण छ। यदि सफ्टवेयरले काम गरिरहेको छैन भने, कृपया Google Chrome को स्थापना हटाउनुहोस् र पुन: प्रयास गर्नुहोस्।</translation>
 <translation id="1434626383986940139">Chrome क्यानरी एप्स</translation>
+<translation id="1507198376417198979">आफ्नो नयाँ Chrome प्रोफाइल आफूले चाहे जस्तो बनाउनुहोस्</translation>
 <translation id="1516530951338665275">कनेक्ट गर्ने प्रक्रिया जारी राख्न Google Chrome लाई ब्लुटुथ प्रयोग गर्ने अनुमति
  दिनु पर्ने हुन्छ। <ph name="IDS_BLUETOOTH_DEVICE_CHOOSER_AUTHORIZE_BLUETOOTH_LINK" /></translation>
 <translation id="1553358976309200471">Chrome अपडेट गर्नुहोस्</translation>
@@ -39,20 +40,20 @@
 <translation id="1807517590912578995">छुट्टै Chrome प्रोफाइल बनाउने हो?</translation>
 <translation id="1812689907177901597">यसलाई निष्क्रिय पारेर, तपाईं Chrome मा साइन इन नगरिकनै Gmail जस्तो Google का साइटहरूमा साइन इन गर्न सक्नुहुन्छ।</translation>
 <translation id="1860536484129686729">Chrome लाई यो साइटका लागि तपाईंको क्यामेरामाथि पहुँच राख्ने अनुमति चाहिन्छ</translation>
-<translation id="1873233029667955273">Google Chrome तपाईंको पूर्वनिर्धारित ब्राउजर होइन</translation>
+<translation id="1873233029667955273">Google Chrome तपाईंको डिफल्ट ब्राउजर होइन</translation>
 <translation id="1874309113135274312">Google Chrome बिटा (mDNS-In)</translation>
 <translation id="1877026089748256423">Chrome को मिति समाप्त भएको छ</translation>
 <translation id="1919130412786645364">Chrome मा साइन इन गर्ने अनुमति दिनुहोस्</translation>
 <translation id="2018528049276128029">हरेक प्रोफाइलका आफ्नै बुकमार्क, इतिहास, पासवर्डलगायत Chrome का सबै जानकारी हुन्छन्</translation>
 <translation id="2063848847527508675">यो अद्यावधिक लागू गर्न Chrome OS लाई पुनः सुरु गर्नुपर्छ।</translation>
 <translation id="2094919256425865063">जे भए पनि Chrome छाडेर बाहिरिने हो?</translation>
-<translation id="2120620239521071941">यसले यस यन्त्रका <ph name="ITEMS_COUNT" /> वस्तुहरू मेट्नेछ। पछि आफ्नो डेटा प्राप्त गर्न Chrome मा <ph name="USER_EMAIL" /> को रूपमा साइन इन गर्नुहोस्।</translation>
+<translation id="2120620239521071941">यसले यस डिभाइसका <ph name="ITEMS_COUNT" /> वस्तुहरू मेट्नेछ। पछि आफ्नो डेटा प्राप्त गर्न Chrome मा <ph name="USER_EMAIL" /> को रूपमा साइन इन गर्नुहोस्।</translation>
 <translation id="2123055963409958220"><ph name="BEGIN_LINK" />हालका सेटिङहरू<ph name="END_LINK" /> को रिपोर्ट गरेर Chrome लाई अझ राम्रो बनाउन मद्दत गर्नुहोस्</translation>
 <translation id="2151406531797534936">कृपया अहिले नै Chrome पुनः सुरु गर्नुहोस्</translation>
 <translation id="2246246234298806438">अन्तर्निर्मित PDF दर्शक नहुँदा Google Chrome प्रिन्ट पूर्वावलोकन देखाउन सक्दैन।</translation>
 <translation id="2290014774651636340">गूगल API कुञ्जीहरू हराइरहेका छन्। Google Chrome का केही कार्यक्षमता अक्षम हुनेछन्।</translation>
 <translation id="2290095356545025170">के तपाइँ पक्का हुनुहुन्छ कि तपाइँ Google Chrome विस्थापित गर्न चाहनुहुन्छ?</translation>
-<translation id="2309047409763057870">यो Google Chrome को एउटा सहायक स्थापना हो र यसलाई तपाईँको पूर्वनिर्धारित ब्राउजर बनाउन सकिँदैन।</translation>
+<translation id="2309047409763057870">यो Google Chrome को एउटा सहायक स्थापना हो र यसलाई तपाईँको डिफल्ट ब्राउजर बनाउन सकिँदैन।</translation>
 <translation id="2348335408836342058">Chrome लाई यो साइटका लागि तपाईंको क्यामेरा र माइक्रोफोनमाथि पहुँच राख्ने अनुमति चाहिन्छ</translation>
 <translation id="234869673307233423">Chrome ले तपाईंका पासवर्डहरूको जाँच गर्न सकेन। पछि फेरि प्रयास गर्नुहोस्।</translation>
 <translation id="235650106824528204">कार्य प्रोफाइलका एड्मिन यो प्रोफाइल चलाउँदा Chrome मा सिर्जना हुने (बुकमार्क, इतिहास, पासवर्ड र अन्य सेटिङलगायतका) सबै डेटा हटाउन सक्नुहुन्छ। <ph name="LEARN_MORE" /></translation>
@@ -71,7 +72,7 @@
 <translation id="2665296953892887393">Google मा क्रयास प्रतिवेदनहरू र <ph name="UMA_LINK" /> पठाएर Google Chrome लाई अझ राम्रो बनाउन मद्दत गर्नुहोस्</translation>
 <translation id="2689103672227170538">यो विस्तारले तपाईँले Chrome सुरु गर्दा देखाइएको पृष्ठलाई परिवर्तन गरेको छ।</translation>
 <translation id="2765403129283291972">Chrome लाई यो साइटका लागि तपाईंको माइक्रोफोनमाथि पहुँच राख्ने अनुमति चाहिन्छ</translation>
-<translation id="2770231113462710648">पूर्वनिर्धारित ब्राउजरलाई यसमा बदल्नुहोस्:</translation>
+<translation id="2770231113462710648">डिफल्ट ब्राउजरलाई यसमा बदल्नुहोस्:</translation>
 <translation id="2775140325783767197">Chrome ले तपाईंका पासवर्डहरूको जाँच गर्न सकेन। आफ्नो इन्टरनेट जडान जाँच गरी हेर्नुहोस्।</translation>
 <translation id="2799223571221894425">पुन: सुरुवात गर्नुहोस्</translation>
 <translation id="2847461019998147611">यो भाषामा Google Chrome प्रदर्शन गर्नुहोस्</translation>
@@ -107,7 +108,7 @@
 <translation id="3582972582564653026">आफ्ना यन्त्रहरूभरि Chrome लाई सिंक तथा वैयक्तीकृत गर्नुहोस्</translation>
 <translation id="3596080736082218006">{COUNT,plural, =0{तपाईंका व्यवस्थापकका अनुसार तपाईंले यो अद्यावधिक लागू गर्न Chrome पुनः सुरु गर्नु पर्ने हुन्छ}=1{तपाईंका व्यवस्थापकका अनुसार तपाईंले यो अद्यावधिक लागू गर्न Chrome पुनः सुरु गर्नु पर्ने हुन्छ। तपाईंको इन्कोग्निटो विन्डो पुनः खुल्ने छैन।}other{तपाईंका व्यवस्थापकका अनुसार तपाईंले यो अद्यावधिक लागू गर्न Chrome पुनः सुरु गर्नु पर्ने हुन्छ। तपाईंका # वटा इन्कोग्निटो विन्डो पुनः खुल्ने छैनन्।}}</translation>
 <translation id="3622797965165704966">अब Chrome तपाइँको Google खाता र साझा गरिएका कम्प्युटरहरूमा प्रयोग गर्न सजिलो भएको छ।</translation>
-<translation id="3718181793972440140">यसले यो यन्त्रको १ वस्तु मेट्नेछ। पछि आफ्नो डेटा प्राप्त गर्न Chrome मा <ph name="USER_EMAIL" /> को रूपमा साइन इन गर्नुहोस्।</translation>
+<translation id="3718181793972440140">यसले यो डिभाइसको १ वस्तु मेट्नेछ। पछि आफ्नो डेटा प्राप्त गर्न Chrome मा <ph name="USER_EMAIL" /> को रूपमा साइन इन गर्नुहोस्।</translation>
 <translation id="3735758079232443276">विस्तार "<ph name="EXTENSION_NAME" />" ले तपाईँले Chrome सुरु गर्दा देखाइएको पृष्ठलाई परिवर्तन गरेको छ।</translation>
 <translation id="3779473566290487688">भविष्यमा Google Chrome का अपडेटहरू प्राप्त गर्न तपाईंसँग OS X १०.११ वा सोभन्दा पछिल्लो संस्करण हुनु पर्ने छ। यो कम्प्युटरमा OS X १०.१० प्रयोग भइरहेको छ।</translation>
 <translation id="3780814664026482060">Chrome - <ph name="PAGE_TITLE" /></translation>
@@ -148,10 +149,10 @@
 <translation id="4728575227883772061">अनिर्दिष्ट त्रुटिको कारण स्थापना असफल भयो। यदि Google Chrome अहिले चालू छ भने, कृपया यसलाई बन्द गरि पुन: प्रयास गर्नुहोस्।</translation>
 <translation id="4754614261631455953">Google Chrome क्यानरी (mDNS-In)</translation>
 <translation id="4771048833395599659">यो फाइल खतरनाक हुन सक्छ, त्यसैले Chrome ले यसमाथि रोक लगाएको छ।</translation>
-<translation id="479167709087336770">यसले Google खोजमा प्रयोग गरिएकै हिज्जे परीक्षक प्रयोग गर्दछ। तपाईंले ब्राउजरमा टाइप गर्ने पाठ Google मा पठाइन्छ। तपाईं सेटिङमा गई जुनसुकै बेला उक्त व्यवहार परिवर्तन गर्न सक्नुहुन्छ।</translation>
+<translation id="479167709087336770">यसले Google खोजमा प्रयोग गरिएकै स्पेल चेकर प्रयोग गर्दछ। तपाईंले ब्राउजरमा टाइप गर्ने पाठ Google मा पठाइन्छ। तपाईं सेटिङमा गई जुनसुकै बेला उक्त व्यवहार परिवर्तन गर्न सक्नुहुन्छ।</translation>
 <translation id="4891791193823137474">Google Chrome लाई पृष्ठभूमिमा चल्न दिनुहोस्</translation>
 <translation id="4895437082222824641">लिंकलाई Chrome को नयाँ ट्याबमा खोल्नुहोस्</translation>
-<translation id="4953650215774548573">Google Chrome लाई तपाइँको पूर्वनिर्धारित ब्राउजरको रूपमा सेट गर्नुहोस्</translation>
+<translation id="4953650215774548573">Google Chrome लाई तपाइँको डिफल्ट ब्राउजरको रूपमा सेट गर्नुहोस्</translation>
 <translation id="495931528404527476">Chrome मा</translation>
 <translation id="4970761609246024540">Chrome का प्रोफाइलमा तपाईंलाई स्वागत छ</translation>
 <translation id="4990567037958725628">Google Chrome क्यानरी</translation>
@@ -187,7 +188,7 @@ Google Chrome ले तपाईंको सेटिङहरू पुन: �
 <translation id="5895138241574237353">पुन: शुरू गर्नुहोस्</translation>
 <translation id="5903106910045431592"><ph name="PAGE_TITLE" /> - नेटवर्क साइन इन</translation>
 <translation id="5940385492829620908">तपाईंको वेब, बुकमार्कहरू, र अन्य Chrome सामान यहाँ रहन्छन्।</translation>
-<translation id="5941830788786076944">Google Chrome लाई पूर्वनिर्धारित ब्राउजर बनाउनुहोस्</translation>
+<translation id="5941830788786076944">Google Chrome लाई डिफल्ट ब्राउजर बनाउनुहोस्</translation>
 <translation id="6070348360322141662">थप गरिएको सुरक्षाका लागि Google Chrome ले तपाईंको डेटालाई इन्क्रिप्ट गर्ने छ</translation>
 <translation id="608006075545470555">यो ब्राउजरमा कार्य प्रोफाइल हाल्नुहोस्</translation>
 <translation id="6113794647360055231">Chrome अझ राम्रो भएको छ</translation>
@@ -212,9 +213,10 @@ Google Chrome ले तपाईंको सेटिङहरू पुन: �
 <translation id="677276454032249905">जे भए पनि Chrome बाट बाहिरिने हो?</translation>
 <translation id="683440813066116847">mDNS ट्राफिक अनुमतिका लागि गूगल क्रोम क्यानरीका लागि अन्तरगामी नियम।</translation>
 <translation id="6885412569789873916">Chrome बिटा एपहरू</translation>
-<translation id="6943584222992551122">यस यन्त्रबाट यो व्यक्तिको ब्राउजिङ डेटा मेटाइने छ। डेटा पुनः प्राप्त गर्न <ph name="USER_EMAIL" /> का रूपमा Chrome मा साइन इन गर्नुहोस्।</translation>
+<translation id="6943584222992551122">यस डिभाइसबाट यो व्यक्तिको ब्राउजिङ डेटा मेटाइने छ। डेटा पुनः प्राप्त गर्न <ph name="USER_EMAIL" /> का रूपमा Chrome मा साइन इन गर्नुहोस्।</translation>
 <translation id="6967962315388095737">mDNS ट्राफिकलाई अनुमति दिने Google Chrome बिटाको अन्तर्गामी नियम।</translation>
 <translation id="6989339256997917931">Google Chrome अद्यावधिक गरिएको छ, तर तपाइँले त्यसलाई कम्तीमा पनि 30 दिनको लागि प्रयोग गर्नुभएको छैन।</translation>
+<translation id="7025800014283535195">तपाईं यहाँबाट Chrome मा रहेको एक प्रोफाइलबाट अर्को प्रोफाइलमा जान सक्नुहुन्छ</translation>
 <translation id="7062128746136194023">तपाईंका अभिभावकले Chrome का हकमा "साइट, एप तथा एक्सटेन्सनसम्बन्धी अनुमति" निष्क्रिय पार्नुभएको छ। तपाईंसँग यो <ph name="EXTENSION_TYPE_PARAMETER" /> थप्ने अनुमति छैन।</translation>
 <translation id="7098166902387133879">Google Chrome ले तपाइँको माइक्रोफोन प्रयोग ग्रदैछ।</translation>
 <translation id="7106741999175697885">कार्य प्रबन्धक - Google Chrome</translation>
@@ -275,7 +277,7 @@ Google Chrome ले तपाईंको सेटिङहरू पुन: �
 <translation id="8679801911857917785">तपाइँले Chrome सुरु गर्दा कुन पृष्ठ देखाउँछ भनेर पनि यसले नियन्त्रण गर्छ।</translation>
 <translation id="8686817260976772516">तपाईं Chrome का प्रोफाइल प्रयोग गरी Chrome मा भएका आफ्ना सबै कुराहरू छुट्याएर राख्न सक्नुहुन्छ। साथीभाइ तथा परिवारका सदस्यहरूका लागि अलग्गै प्रोफाइल बनाइदिनुहोस् वा काम तथा मनोरञ्जनसँग सम्बन्धित कुराहरू छुट्याएर राख्नुहोस्।</translation>
 <translation id="870251953148363156">&amp;Google Chrome अपडेट गर्नुहोस्</translation>
-<translation id="873133009373065397">Google Chrome ले पूर्वनिर्धारित ब्राउजर निर्धारण वा सेट गर्न सक्दैन</translation>
+<translation id="873133009373065397">Google Chrome ले डिफल्ट ब्राउजर निर्धारण वा सेट गर्न सक्दैन</translation>
 <translation id="8823341990149967727">Chrome को मिति समाप्त भएको छ</translation>
 <translation id="8834965163890861871">Google Chrome ले पासवर्डहरू बदल्ने प्रयास गर्दैछ। यसो गर्ने अनुमति दिन आफूले Windows मा प्रयोग गरेको पासवर्ड टाइप गर्नुहोस्।</translation>
 <translation id="884296878221830158">तपाइँले Chrome सुरु गर्दा वा गृह बटन क्लिक गर्दा यसले कुन पृष्ठ देखाउँछ भनेर पनि नियन्त्रण गर्छ।</translation>
@@ -291,5 +293,6 @@ Google Chrome ले तपाईंको सेटिङहरू पुन: �
 <translation id="919706545465235479">सिंंक सुरु गर्न Chrome लाई अपडेट गर्नुहोस्</translation>
 <translation id="922152298093051471">Chrome आफूले चाहे जस्तो बनाउनुहोस्</translation>
 <translation id="940313311831216333">आफूले प्रयोग गर्ने जुनसुकै यन्त्रबाट Chrome मा रहेका आफ्ना डेटा हेर्न तथा प्रयोग गर्न सिंक गर्ने सुविधा अन गर्नुहोस्।</translation>
-<translation id="989369509083708165">Google Chrome तपाईंको पूर्वनिर्धारित ब्राउजर हो</translation>
+<translation id="989369509083708165">Google Chrome तपाईंको डिफल्ट ब्राउजर हो</translation>
+<translation id="989816563149873169">तपाईं <ph name="SHORTCUT" /> थिचेर Chrome मा एक प्रोफाइलबाट अर्को प्रोफाइलमा जान सक्नुहुन्छ</translation>
 </translationbundle>

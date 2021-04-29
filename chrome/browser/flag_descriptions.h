@@ -863,6 +863,9 @@ extern const char kMediaHistoryDescription[];
 extern const char kMediaRouterCastAllowAllIPsName[];
 extern const char kMediaRouterCastAllowAllIPsDescription[];
 
+extern const char kMediaSessionWebRTCName[];
+extern const char kMediaSessionWebRTCDescription[];
+
 extern const char kMemoriesName[];
 extern const char kMemoriesDescription[];
 
@@ -1630,11 +1633,17 @@ extern const char kAutofillAssistantProactiveHelpDescription[];
 extern const char kAutofillUseMobileLabelDisambiguationName[];
 extern const char kAutofillUseMobileLabelDisambiguationDescription[];
 
+extern const char kAppMenuMobileSiteOptionName[];
+extern const char kAppMenuMobileSiteOptionDescription[];
+
 extern const char kBackgroundTaskComponentUpdateName[];
 extern const char kBackgroundTaskComponentUpdateDescription[];
 
 extern const char kBentoOfflineName[];
 extern const char kBentoOfflineDescription[];
+
+extern const char kBookmarkBottomSheetName[];
+extern const char kBookmarkBottomSheetDescription[];
 
 extern const char kCCTIncognitoName[];
 extern const char kCCTIncognitoDescription[];
@@ -2841,11 +2850,17 @@ extern const char kVirtualKeyboardMultipasteDescription[];
 extern const char kVmCameraMicIndicatorsAndNotificationsName[];
 extern const char kVmCameraMicIndicatorsAndNotificationsDescription[];
 
+extern const char kVmStatusPageName[];
+extern const char kVmStatusPageDescription[];
+
 extern const char kWakeOnWifiAllowedName[];
 extern const char kWakeOnWifiAllowedDescription[];
 
 extern const char kWebuiDarkModeName[];
 extern const char kWebuiDarkModeDescription[];
+
+extern const char kWifiSyncAllowDeletesName[];
+extern const char kWifiSyncAllowDeletesDescription[];
 
 extern const char kWifiSyncAndroidName[];
 extern const char kWifiSyncAndroidDescription[];

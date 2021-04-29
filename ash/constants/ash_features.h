@@ -221,6 +221,8 @@ extern const base::Feature kMinimumChromeVersion;
 COMPONENT_EXPORT(ASH_CONSTANTS)
 extern const base::Feature kMultilingualTyping;
 COMPONENT_EXPORT(ASH_CONSTANTS)
+extern const base::Feature kNoteTakingForEnabledWebApps;
+COMPONENT_EXPORT(ASH_CONSTANTS)
 extern const base::Feature kOnDeviceGrammarCheck;
 COMPONENT_EXPORT(ASH_CONSTANTS)
 extern const base::Feature kNewOobeLayout;
@@ -317,9 +319,13 @@ extern const base::Feature kVirtualKeyboardMultipaste;
 COMPONENT_EXPORT(ASH_CONSTANTS)
 extern const base::Feature kVmCameraMicIndicatorsAndNotifications;
 COMPONENT_EXPORT(ASH_CONSTANTS)
+extern const base::Feature kVmStatusPage;
+COMPONENT_EXPORT(ASH_CONSTANTS)
 extern const base::Feature kWakeOnWifiAllowed;
 COMPONENT_EXPORT(ASH_CONSTANTS)
 extern const base::Feature kWallpaperWebUI;
+COMPONENT_EXPORT(ASH_CONSTANTS)
+extern const base::Feature kWifiSyncAllowDeletes;
 COMPONENT_EXPORT(ASH_CONSTANTS)
 extern const base::Feature kWifiSyncAndroid;
 COMPONENT_EXPORT(ASH_CONSTANTS)

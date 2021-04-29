@@ -28,9 +28,8 @@ namespace {
 
 const char kDefaultCellularDevicePath[] = "stub_cellular_device";
 const char kTestEuiccBasePath[] = "/org/chromium/Hermes/Euicc/";
+const char kTestProfileBasePath[] = "/org/chromium/Hermes/Profile/";
 const char kTestBaseEid[] = "12345678901234567890123456789012";
-const char kTestPSimIccid[] = "1234567890";
-const char kTestCellularServicePath[] = "/service/cellular";
 
 std::string CreateTestEuiccPath(int euicc_num) {
   return base::StringPrintf("%s%d", kTestEuiccBasePath, euicc_num);
@@ -70,9 +69,6 @@ class CellularESimProfileHandlerImplTest : public testing::Test {
 
     cellular_inhibitor_.Init(helper_.network_state_handler(),
                              helper_.network_device_handler());
-
-    helper_.device_test()->AddDevice(kDefaultCellularDevicePath,
-                                     shill::kTypeCellular, "cellular1");
   }
 
   void TearDown() override {
@@ -110,28 +106,46 @@ class CellularESimProfileHandlerImplTest : public testing::Test {
     }
   }
 
+  void AddCellularDevice() {
+    helper_.device_test()->AddDevice(kDefaultCellularDevicePath,
+                                     shill::kTypeCellular, "cellular1");
+    // Allow device state changes to propagate to network state handler.
+    base::RunLoop().RunUntilIdle();
+  }
+
   dbus::ObjectPath AddProfile(int euicc_num,
                               hermes::profile::State state,
-                              const std::string& activation_code) {
-    dbus::ObjectPath path = helper_.hermes_euicc_test()->AddFakeCarrierProfile(
-        dbus::ObjectPath(CreateTestEuiccPath(euicc_num)), state,
-        activation_code, /*service_only=*/false);
+                              const std::string& activation_code,
+                              hermes::profile::ProfileClass profile_class =
+                                  hermes::profile::ProfileClass::kOperational,
+                              bool blank_iccid = false) {
+    dbus::ObjectPath path(base::StringPrintf("%s%02d", kTestProfileBasePath,
+                                             num_profiles_created_));
+
+    std::string iccid;
+    if (!blank_iccid) {
+      iccid = base::StringPrintf("%s%02d", "iccid_", num_profiles_created_);
+    }
+    helper_.hermes_euicc_test()->AddCarrierProfile(
+        path, dbus::ObjectPath(CreateTestEuiccPath(euicc_num)), iccid,
+        base::StringPrintf("%s%02d", "name_", num_profiles_created_),
+        base::StringPrintf("%s%02d", "service_provider_",
+                           num_profiles_created_),
+        activation_code,
+        base::StringPrintf("%s%02d", "network_service_path_",
+                           num_profiles_created_),
+        state, profile_class,
+        HermesEuiccClient::TestInterface::AddCarrierProfileBehavior::
+            kAddProfileWithService);
+
     base::RunLoop().RunUntilIdle();
+
+    ++num_profiles_created_;
     return path;
   }
 
   std::vector<CellularESimProfile> GetESimProfiles() {
     return handler_->GetESimProfiles();
-  }
-
-  bool AddOrRemoveStubCellularNetworks(
-      NetworkStateHandler::ManagedStateList& network_list,
-      NetworkStateHandler::ManagedStateList& new_stub_networks) {
-    const DeviceState* device_state =
-        helper_.network_state_handler()->GetDeviceStateByType(
-            NetworkTypePattern::Cellular());
-    return handler_->AddOrRemoveStubCellularNetworks(
-        network_list, new_stub_networks, device_state);
   }
 
   size_t NumObserverEvents() const { return observer_.num_updates(); }
@@ -191,11 +205,14 @@ class CellularESimProfileHandlerImplTest : public testing::Test {
   TestingPrefServiceSimple device_prefs_;
   FakeObserver observer_;
 
+  int num_profiles_created_ = 0;
+
   CellularInhibitor cellular_inhibitor_;
   std::unique_ptr<CellularESimProfileHandlerImpl> handler_;
 };
 
 TEST_F(CellularESimProfileHandlerImplTest, NoEuicc) {
+  AddCellularDevice();
   // No EUICCs exist, so no profiles should exist.
   Init();
   EXPECT_TRUE(GetESimProfiles().empty());
@@ -212,6 +229,7 @@ TEST_F(CellularESimProfileHandlerImplTest, NoEuicc) {
 }
 
 TEST_F(CellularESimProfileHandlerImplTest, EuiccWithNoProfiles) {
+  AddCellularDevice();
   AddEuicc(/*euicc_num=*/1);
 
   // No profiles were added to the EUICC.
@@ -230,13 +248,26 @@ TEST_F(CellularESimProfileHandlerImplTest, EuiccWithNoProfiles) {
 }
 
 TEST_F(CellularESimProfileHandlerImplTest, EuiccWithProfiles) {
+  AddCellularDevice();
   AddEuicc(/*euicc_num=*/1);
+
+  // Add two normal (i.e., kOperational) profiles.
   dbus::ObjectPath path1 = AddProfile(
       /*euicc_num=*/1, hermes::profile::State::kPending,
       /*activation_code=*/"code1");
   dbus::ObjectPath path2 = AddProfile(
       /*euicc_num=*/1, hermes::profile::State::kActive,
       /*activation_code=*/"code2");
+
+  // Add one kTesting and one kProvisioning profile. These profiles are ignored
+  // and should never be returned by CellularESimProfileHandlerImpl.
+  AddProfile(
+      /*euicc_num=*/1, hermes::profile::State::kInactive,
+      /*activation_code=*/"code3", hermes::profile::ProfileClass::kTesting);
+  AddProfile(
+      /*euicc_num=*/1, hermes::profile::State::kInactive,
+      /*activation_code=*/"code4",
+      hermes::profile::ProfileClass::kProvisioning);
 
   // Prefs not yet set.
   Init();
@@ -274,6 +305,7 @@ TEST_F(CellularESimProfileHandlerImplTest, EuiccWithProfiles) {
 }
 
 TEST_F(CellularESimProfileHandlerImplTest, Persistent) {
+  AddCellularDevice();
   Init();
   SetDevicePrefs();
   EXPECT_TRUE(GetESimProfiles().empty());
@@ -317,6 +349,7 @@ TEST_F(CellularESimProfileHandlerImplTest, Persistent) {
 
 TEST_F(CellularESimProfileHandlerImplTest,
        RefreshProfileList_AcquireLockInterally) {
+  AddCellularDevice();
   AddEuicc(/*euicc_num=*/1);
 
   Init();
@@ -335,6 +368,7 @@ TEST_F(CellularESimProfileHandlerImplTest,
 
 TEST_F(CellularESimProfileHandlerImplTest,
        RefreshProfileList_ProvideAlreadyAcquiredLock) {
+  AddCellularDevice();
   AddEuicc(/*euicc_num=*/1);
 
   Init();
@@ -356,6 +390,7 @@ TEST_F(CellularESimProfileHandlerImplTest,
 }
 
 TEST_F(CellularESimProfileHandlerImplTest, RefreshProfileList_Failure) {
+  AddCellularDevice();
   AddEuicc(/*euicc_num=*/1);
 
   Init();
@@ -377,6 +412,7 @@ TEST_F(CellularESimProfileHandlerImplTest, RefreshProfileList_Failure) {
 
 TEST_F(CellularESimProfileHandlerImplTest,
        RefreshProfileList_MultipleSimultaneousRequests) {
+  AddCellularDevice();
   AddEuicc(/*euicc_num=*/1);
 
   Init();
@@ -406,6 +442,7 @@ TEST_F(CellularESimProfileHandlerImplTest,
 
 TEST_F(CellularESimProfileHandlerImplTest,
        RefreshesAutomaticallyWhenNotSeenBefore) {
+  AddCellularDevice();
   AddEuicc(/*euicc_num=*/1, /*also_add_to_prefs=*/false);
 
   Init();
@@ -421,54 +458,55 @@ TEST_F(CellularESimProfileHandlerImplTest,
             euicc_paths_from_prefs.GetList()[0].GetString());
 }
 
-TEST_F(CellularESimProfileHandlerImplTest, AddOrRemoveStubCellularNetworks) {
-  SetPSimSlotInfo(kTestPSimIccid);
-  AddEuicc(/*euicc_num=*/1);
-  dbus::ObjectPath profile1_path =
-      AddProfile(/*euicc_num=*/1, hermes::profile::State::kPending,
-                 /*activation_code=*/"code1");
-  dbus::ObjectPath profile2_path =
-      AddProfile(/*euicc_num=*/1, hermes::profile::State::kInactive,
-                 /*activation_code=*/"code1");
+TEST_F(CellularESimProfileHandlerImplTest, IgnoresESimProfilesWithNoIccid) {
+  const char kTestIccid[] = "1245671234567";
+  AddEuicc(/*euicc_num=*/1, /*also_add_to_prefs=*/false);
   Init();
   SetDevicePrefs();
-  HermesProfileClient::Properties* profile2_properties =
-      HermesProfileClient::Get()->GetProperties(profile2_path);
 
-  NetworkStateHandler::ManagedStateList network_list, new_stub_networks;
+  // Verify that no profiles are added if there are some profiles that have
+  // not received iccid updates yet.
+  dbus::ObjectPath profile_path1 = AddProfile(
+      /*euicc_num=*/1, hermes::profile::State::kInactive,
+      /*activation_code=*/std::string(),
+      hermes::profile::ProfileClass::kOperational,
+      /*blank_iccid=*/true);
+  dbus::ObjectPath profile_path2 = AddProfile(
+      /*euicc_num=*/1, hermes::profile::State::kInactive,
+      /*activation_code=*/std::string(),
+      hermes::profile::ProfileClass::kOperational,
+      /*blank_iccid=*/false);
+  EXPECT_TRUE(GetESimProfiles().empty());
 
-  // Verify that stub services are created for eSIM profiles and pSIM iccids
-  // on sim slot info.
-  AddOrRemoveStubCellularNetworks(network_list, new_stub_networks);
-  EXPECT_EQ(2u, new_stub_networks.size());
-  NetworkState* network1 = new_stub_networks[0]->AsNetworkState();
-  NetworkState* network2 = new_stub_networks[1]->AsNetworkState();
-  EXPECT_TRUE(network1->IsNonShillCellularNetwork());
-  EXPECT_TRUE(network2->IsNonShillCellularNetwork());
-  EXPECT_EQ(network1->iccid(), profile2_properties->iccid().value());
-  EXPECT_EQ(network2->iccid(), kTestPSimIccid);
-
-  // Verify the stub networks are removed when corresponding slot is no longer
-  // present. e.g. SIM removed.
-  network_list = std::move(new_stub_networks);
-  new_stub_networks.clear();
-  SetPSimSlotInfo(/*iccid=*/std::string());
+  // Verify that profile object is created after iccid property is set.
+  HermesProfileClient::Properties* properties1 =
+      HermesProfileClient::Get()->GetProperties(profile_path1);
+  properties1->iccid().ReplaceValue(kTestIccid);
   base::RunLoop().RunUntilIdle();
-  AddOrRemoveStubCellularNetworks(network_list, new_stub_networks);
-  EXPECT_EQ(1u, network_list.size());
 
-  // Verify that stub networks are removed when real networks are added to the
-  // list.
-  std::unique_ptr<NetworkState> test_network =
-      std::make_unique<NetworkState>(kTestCellularServicePath);
-  test_network->PropertyChanged(shill::kTypeProperty,
-                                base::Value(shill::kTypeCellular));
-  test_network->PropertyChanged(
-      shill::kIccidProperty, base::Value(profile2_properties->iccid().value()));
-  test_network->set_update_received();
-  network_list.push_back(std::move(test_network));
-  AddOrRemoveStubCellularNetworks(network_list, new_stub_networks);
-  EXPECT_EQ(1u, network_list.size());
+  std::vector<CellularESimProfile> esim_profiles = GetESimProfiles();
+  EXPECT_EQ(2u, esim_profiles.size());
+  EXPECT_EQ(kTestIccid, esim_profiles[0].iccid());
+}
+
+TEST_F(CellularESimProfileHandlerImplTest,
+       SkipsAutomaticRefreshIfNoCellularDevice) {
+  Init();
+  AddEuicc(/*euicc_num=*/1, /*also_add_to_prefs=*/false);
+  SetDevicePrefs();
+
+  // Verify that no EUICCs exist in pref.
+  base::Value euicc_paths_from_prefs = GetEuiccListFromPrefs();
+  EXPECT_TRUE(euicc_paths_from_prefs.is_list());
+  EXPECT_TRUE(euicc_paths_from_prefs.GetList().empty());
+
+  // Verify that EUICCs are refreshed after the cellular device is added.
+  AddCellularDevice();
+  euicc_paths_from_prefs = GetEuiccListFromPrefs();
+  EXPECT_TRUE(euicc_paths_from_prefs.is_list());
+  EXPECT_EQ(1u, euicc_paths_from_prefs.GetList().size());
+  EXPECT_EQ(CreateTestEuiccPath(/*euicc_num=*/1),
+            euicc_paths_from_prefs.GetList()[0].GetString());
 }
 
 }  // namespace chromeos

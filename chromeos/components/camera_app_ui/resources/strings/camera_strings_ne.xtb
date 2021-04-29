@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">लिंक भेट्टियो। <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">ग्यालेरीका छविहरू</translation>
 <translation id="1430915738399379752">प्रिन्ट गर्नुहोस्</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> निकालिएको छ।</translation>
 <translation id="1473110567575736769">३ सेकेन्डको टाइमर</translation>
 <translation id="1620510694547887537">क्यामेरा</translation>
 <translation id="1627744224761163218">४ x ४</translation>
 <translation id="1664224225747386870">केही पनि रेकर्ड गरिएन</translation>
 <translation id="1838104802459806957">माथितिर ढल्काइयोस्</translation>
+<translation id="1851169887664797861">क्यामेरासम्बन्धी थप कन्ट्रोलहरू उपलब्ध छन्</translation>
 <translation id="1851616744363735765">रोकियो</translation>
 <translation id="1862930711583847113"><ph name="FILE" /> निर्यात गर्न सकिएन</translation>
 <translation id="1899697626337024495">तस्बिरको रिजोल्युसन</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">आफ्नो क्यामेरामार्फत तस्बिरहरू खिच्नुहोस् र भिडियोहरू रेकर्ड गर्नुहोस्।</translation>
 <translation id="2549985041256363841">रेकर्डिङ सुरु गर्नुहोस्</translation>
 <translation id="2599796128805996109">पछाडिको क्यामेरा</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> जोडिएको छ।</translation>
 <translation id="2912439424121107408">यस यन्त्रमा विशेषज्ञ मोड चलाउन मिल्दैन</translation>
 <translation id="2968794441791257519">क्यामेरामार्फत खिचिएका तस्बिर र भिडियोहरू डाउनलोडहरू नामक फोल्डरमा सारिने छ। तपाईं फाइलहरू नामक फोल्डरमा गई तिनीहरूमाथि पहुँच राख्न सक्नुहुन्छ।
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">क्यामेराको रिजोल्युसन</translation>
 <translation id="3517926952904427380">पोर्ट्रेट तस्बिर खिच्न सकिएन</translation>
 <translation id="3569311554794739032">तपाईंले <ph name="FILE" /> हटाउन खोज्नुभएकै हो त?</translation>
+<translation id="3733597664308256288">क्यामेरासम्बन्धी थप कन्ट्रोलहरू उपलब्ध छन्। ती कन्ट्रोलहरू प्रयोग गर्न खोज बटन + राइट एरो थिच्नुहोस्।</translation>
 <translation id="3810838688059735925">भिडियो</translation>
 <translation id="3838931309141338733">बारकोड स्क्यान गर्नुहोस्</translation>
 <translation id="3892148308691398805">पाठ कपी गर्नुहोस्</translation>
@@ -62,7 +66,7 @@
 <translation id="5975083100439434680">जुम आउट</translation>
 <translation id="6040143037577758943">बन्द गर्नुहोस्</translation>
 <translation id="6073451960410192870">रेकर्ड गर्न छाड्नुहोस्</translation>
-<translation id="6197807149213783179">मेटाडेटा सुरक्षित गर्नुहोस्</translation>
+<translation id="6197807149213783179">मेटाडेटा सेभ गर्नुहोस्</translation>
 <translation id="6233780560267770709">३ गुणा ३</translation>
 <translation id="6243827288366940320">सुनौलो अनुपात</translation>
 <translation id="6248749904681914629">बाह्य क्यामेरा</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">मद्दत</translation>
 <translation id="7658239707568436148">रद्द गर्नुहोस्</translation>
 <translation id="7670511624014457267">६० FPS</translation>
+<translation id="7974782136796202581">प्यान गर्ने, ढल्काउने र जुम गर्ने विकल्पहरू देखाइयोस्</translation>
 <translation id="7983668134180549431">टेक्स्ट भेट्टियो।</translation>
 <translation id="8067883171444229417">भिडियो प्ले गर्नुहोस्</translation>
 <translation id="8120146556401698679">प्यान गर्नुहोस्, ढल्काउनुहोस्, जुम गर्नुहोस्</translation>

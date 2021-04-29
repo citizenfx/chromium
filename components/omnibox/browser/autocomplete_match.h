@@ -13,6 +13,7 @@
 #include <utility>
 #include <vector>
 
+#include "base/memory/weak_ptr.h"
 #include "base/strings/utf_offset_string_conversions.h"
 #include "build/build_config.h"
 #include "components/omnibox/browser/autocomplete_input.h"
@@ -194,6 +195,7 @@ struct AutocompleteMatch {
   ~AutocompleteMatch();
 
   AutocompleteMatch& operator=(const AutocompleteMatch& match);
+  AutocompleteMatch& operator=(AutocompleteMatch&& match) noexcept;
 
 #if defined(OS_ANDROID)
   // Returns a corresponding Java object, creating it if necessary.
@@ -212,6 +214,18 @@ struct AutocompleteMatch {
 
   // Returns a corresponding Java Class object.
   static jclass GetClazz(JNIEnv* env);
+
+  // Update the clipboard match with the current clipboard data.
+  void UpdateWithClipboardContent(
+      JNIEnv* env,
+      const base::android::JavaParamRef<jobject>& j_callback);
+
+  // Called when the match is updated with the clipboard content.
+  void OnClipboardSuggestionContentUpdated(
+      const base::android::JavaRef<jobject>& j_callback);
+
+  // Update the Java object with clipboard content.
+  void UpdateClipboardContent(JNIEnv* env);
 #endif
 
 #if (!defined(OS_ANDROID) || BUILDFLAG(ENABLE_VR)) && !defined(OS_IOS)
@@ -746,7 +760,10 @@ struct AutocompleteMatch {
   // for throw away AutocompleteMatch objects, eg. during Classify() or
   // QualifyPartialUrlQuery() calls.
   // See AutocompleteControllerAndroid for more details.
-  mutable base::android::ScopedJavaGlobalRef<jobject> java_match_;
+  mutable std::unique_ptr<base::android::ScopedJavaGlobalRef<jobject>>
+      java_match_;
+
+  base::WeakPtrFactory<AutocompleteMatch> weak_ptr_factory_{this};
 #endif
 };
 

@@ -165,6 +165,9 @@ struct WebApplicationInfo {
   explicit WebApplicationInfo(const webapps::mojom::WebPageMetadata& metadata);
   ~WebApplicationInfo();
 
+  // Id specified in the manifest.
+  base::Optional<std::string> manifest_id;
+
   // Title of the application.
   std::u16string title;
 
@@ -249,6 +252,11 @@ struct WebApplicationInfo {
 
   // The URL protocols/schemes that the app can handle.
   std::vector<blink::Manifest::ProtocolHandler> protocol_handlers;
+
+  // URL within scope to launch for a "new note" action. Valid iff this is
+  // considered a note-taking app.
+  // TODO(crbug.com/1185678): Parse this from the manifest.
+  GURL note_taking_new_note_url;
 
   // The app intends to act as a URL handler for URLs described by this
   // information.

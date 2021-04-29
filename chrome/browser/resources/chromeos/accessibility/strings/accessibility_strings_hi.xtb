@@ -22,7 +22,6 @@
 <translation id="1120938014254001895">दो उंगलियों से ऊपर स्वाइप करें</translation>
 <translation id="1126928665165112660">इटैलिक नहीं है</translation>
 <translation id="113582498867142724"><ph name="NUM" /> आइटम के साथ <ph name="TAG" /> संकलन</translation>
-<translation id="1146441463334103638">स्क्रीन को चालू या बंद करें</translation>
 <translation id="1156488781945104845">मौजूदा समय</translation>
 <translation id="1161762950103988776">Jump</translation>
 <translation id="1164857107703583584">किसी वेब पेज पर एक से दूसरी जगह जाने के लिए, आप जंप कमांड का इस्तेमाल कर सकते हैं. यह बेहतर तरीका है.</translation>
@@ -158,7 +157,6 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="2045055672832940894">पहले से कोई सेटिंग नहीं है</translation>
 <translation id="2045606329038304310">फ़ॉर्म फ़ील्ड कंट्रोल</translation>
 <translation id="2063539687800151747">इपिग्राफ़</translation>
-<translation id="2074531330963286860">कार्रवाइयां उपलब्ध हैं. इन्हें देखने के लिए, खोज बटन और पीरियड दबाएं</translation>
 <translation id="2086961585857038472">अगला शब्‍द</translation>
 <translation id="2087981446621639008">जानकारी वाली सूची का ब्यौरा</translation>
 <translation id="2089387485033699258">hi</translation>
@@ -226,7 +224,7 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="2592212930811759050">बदलाव शुरू करने के लिए दो बार टैप करें</translation>
 <translation id="2598495320872286378">व्याकरण की गड़बड़ी</translation>
 <translation id="2603828437139726540">एक वर्ण आगे ले जाएं</translation>
-<translation id="2619344480613750862">आप स्क्रीन पर एक सेक्शन से दूसरे सेक्शन पर भी जा सकते हैं. उदाहरण के लिए, आप लॉन्चर, शेल्फ़, और Chrome के एक टैब से दूसरे टैब पर जा सकते हैं. अगले सेक्शन पर जाने के लिए, चार उंगलियों से बाईं से दाईं ओर स्वाइप करें. जारी रखने के लिए, इसे अभी आज़माएं.</translation>
+<translation id="2619344480613750862">आप स्क्रीन के एक सेक्शन से दूसरे सेक्शन पर भी जा सकते हैं. उदाहरण के लिए, आप लॉन्चर, शेल्फ़, और Chrome के एक टैब से दूसरे टैब पर जा सकते हैं. अगले सेक्शन पर जाने के लिए, चार उंगलियों से बाईं से दाईं ओर स्वाइप करें. जारी रखने के लिए, इसे अभी आज़माएं.</translation>
 <translation id="2624431853467395961">जानें मोड खोलें</translation>
 <translation id="2626530649491650971">क्‍लिक करने योग्‍य</translation>
 <translation id="2637227747952042642">गणित</translation>
@@ -257,6 +255,7 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="2783001728278437613">{COUNT,plural, =1{+#}one{+#}other{+#}}</translation>
 <translation id="2792200646155001340">पिछले आइटम पर जाने के लिए, आप एक उंगली को दाईं से बाईं ओर स्वाइप भी कर सकते हैं. इसे अभी आज़माएं.</translation>
 <translation id="280499067616661124">पेज में ChromeVox ढूंढें</translation>
+<translation id="2808001342598757276">स्क्रीन का गहरापन हटाएं</translation>
 <translation id="2811019999044652585">टूलबार या सिस्टम ट्रे जैसे स्क्रीन के अन्य हिस्सों पर सीधे जाने के लिए, Control+Forward बटन दबाएं. Chromebook पर Forward बटन की जगह, 2 नंबर के बटन के ठीक ऊपर होती है.</translation>
 <translation id="2811204574343810641">पंक्ति</translation>
 <translation id="2816868829355607410">प्रैक्टिस करने की जगह: जंप कमांड</translation>
@@ -303,7 +302,6 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="3082249673510793544">पीछे की ओर स्क्रोल करें</translation>
 <translation id="3084806535845658316">कोई टाइपिंग इको नहीं</translation>
 <translation id="3086746722712840547">नोट</translation>
-<translation id="308736057934395497">यह आपके डिवाइस की स्क्रीन को बंद करके निजता को बेहतर बनाता है, ताकि यह अन्य लोगों को न दिखे. आप जब चाहें, खोज बटन और स्क्रीन की चमक बढ़ाने वाला बटन साथ में दबाकर, स्क्रीन को फिर से चालू कर सकते हैं.</translation>
 <translation id="3090227230165225418">डाउनलोड सूचनाओं का एलान करें</translation>
 <translation id="3090532668523289635">grp</translation>
 <translation id="3093176084511590672">अगला लैंडमार्क</translation>
@@ -314,7 +312,6 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="3109724472072898302">संक्षिप्त</translation>
 <translation id="311015743332597320">चार उंगलियों से दाईं ओर स्वाइप करें</translation>
 <translation id="3112457281078985179">ChromeVox को चालू या बंद करने के लिए, Control+Alt+Z का उपयोग करें.</translation>
-<translation id="3115800313647508384">क्या आप स्क्रीन बंद करना चाहते हैं?</translation>
 <translation id="3131002934070407451">नंबर इस तरह पढ़ें:</translation>
 <translation id="3134461040845705080">rdonly</translation>
 <translation id="3137663468179739624">जैतूनी</translation>
@@ -722,6 +719,7 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="6034000775414344507">हल्का भूरा</translation>
 <translation id="6036135911048686884">टच मोड की सुविधा से एक्सप्लोर करें</translation>
 <translation id="6037602951055904232">आगे की ओर पैन करें</translation>
+<translation id="6044160928851315051">स्क्रीन गहरी करें</translation>
 <translation id="6082768461603900813">मूलभूत नेविगेशन</translation>
 <translation id="609281021724813947">पहले से कोई स्लाइडर नहीं है</translation>
 <translation id="6100239002225743044">एक पंक्ति ऊपर ले जाएं</translation>
@@ -792,7 +790,6 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="6696967141280706829">आमुख</translation>
 <translation id="6697092096875747123">पिछला कॉम्बो बॉक्स</translation>
 <translation id="6702609185760332517">{COUNT,plural, =1{विस्मयादिबोधक}one{# विस्मयादिबोधक}other{# विस्मयादिबोधक}}</translation>
-<translation id="670717715607710284">स्क्रीन बंद करें</translation>
 <translation id="6710213216561001401">पिछला</translation>
 <translation id="6714813999819678458">पिछले लेवल 2 का शीर्षक</translation>
 <translation id="6730312624811567147">होम पर जाने या एंड के लिए सर्च लेफ़्ट या राइट, कंट्रोल होम या एंड के लिए सर्च कंट्रोल लेफ़्ट या राइट, पेज अप या डाउन के लिए सर्च अप या डाउन का इस्तेमाल करें</translation>
@@ -994,7 +991,6 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="816818801578874684">यह पहली हेडिंग है. अगली हेडिंग पर जाने के लिए, खोज बटन और H दबाएं.</translation>
 <translation id="8173092779156526980">चार उंगलियों से बाईं ओर स्वाइप करें</translation>
 <translation id="817440585505441544">{COUNT,plural, =1{अंडरस्कोर}one{# अंडरस्कोर}other{# अंडरस्कोर}}</translation>
-<translation id="817529114347680055">स्क्रीन चालू करें</translation>
 <translation id="8179976553408161302">Enter</translation>
 <translation id="8184828902145951186">पंक्ति</translation>
 <translation id="8186185314313222077">फ़ुल स्‍क्रीन टॉगल करें</translation>
@@ -1017,6 +1013,7 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="8316881042119029234">ओल्ड लेस</translation>
 <translation id="8324974933005349667">लिखाई को बोली में बदलने की सेटिंग पसंद के मुताबिक बनाएं</translation>
 <translation id="8326783648485765113">हल्का हरा</translation>
+<translation id="8328063869313048659">बिना चमक वाली स्क्रीन टॉगल करें</translation>
 <translation id="8345569862449483843">{COUNT,plural, =1{पाउंड}one{# पाउंड चिह्न}other{# पाउंड चिह्न}}</translation>
 <translation id="8378855320830505539">क्षेत्र</translation>
 <translation id="8382679411218029383">अपने आप पूरा होने का इनलाइन और सूची</translation>
@@ -1080,6 +1077,7 @@ Chrome ब्राउज़र मेन्यू खोलने के लि
 <translation id="8897030325301866860">फ़ॉन्ट <ph name="FONT_FAMILY" /></translation>
 <translation id="8898516272131543774">विराम चिह्न इको को चक्रित करें</translation>
 <translation id="8908714597367957477">colhdr</translation>
+<translation id="8910180774920883033">कार्रवाइयां उपलब्ध हैं. इन्हें देखने के लिए, Search+Ctrl+A दबाएं</translation>
 <translation id="8937112856099038376">intlnk</translation>
 <translation id="8940925288729953902">संशोधक कुंजियां</translation>
 <translation id="8943282376843390568">नींबू पीला</translation>

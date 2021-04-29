@@ -14,8 +14,11 @@
 #include "third_party/blink/renderer/bindings/modules/v8/v8_image_decoder_init.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_image_track.h"
 #include "third_party/blink/renderer/core/imagebitmap/image_bitmap.h"
+#include "third_party/blink/renderer/core/streams/readable_stream.h"
+#include "third_party/blink/renderer/core/streams/test_underlying_source.h"
 #include "third_party/blink/renderer/core/typed_arrays/dom_array_buffer.h"
 #include "third_party/blink/renderer/modules/webcodecs/video_frame.h"
+#include "third_party/blink/renderer/platform/heap/persistent.h"
 #include "third_party/blink/renderer/platform/testing/unit_test_helpers.h"
 #include "third_party/blink/renderer/platform/wtf/text/string_builder.h"
 
@@ -342,8 +345,244 @@ TEST_F(ImageDecoderTest, DecoderClose) {
   }
 }
 
-// TODO(crbug.com/1073995): Add tests for each format, selectTrack(), partial
-// decoding, and ImageBitmapOptions.
+TEST_F(ImageDecoderTest, DecoderContextDestroyed) {
+  V8TestingScope v8_scope;
+  constexpr char kImageType[] = "image/gif";
+  EXPECT_TRUE(IsTypeSupported(&v8_scope, kImageType));
+  auto* decoder =
+      CreateDecoder(&v8_scope, "images/resources/animated.gif", kImageType);
+  ASSERT_TRUE(decoder);
+  ASSERT_FALSE(v8_scope.GetExceptionState().HadException());
+  EXPECT_EQ(decoder->type(), "image/gif");
+
+  // Decoder creation will queue metadata decoding which should be counted as
+  // pending activity.
+  EXPECT_TRUE(decoder->HasPendingActivity());
+  {
+    auto promise = decoder->decodeMetadata();
+    ScriptPromiseTester tester(v8_scope.GetScriptState(), promise);
+    tester.WaitUntilSettled();
+    EXPECT_TRUE(tester.IsFulfilled());
+  }
+
+  // After metadata resolution completes, we should return to no activity.
+  EXPECT_FALSE(decoder->HasPendingActivity());
+
+  // Queue some activity.
+  decoder->decode();
+  EXPECT_TRUE(decoder->HasPendingActivity());
+
+  // Destroying the context should close() the decoder and stop all activity.
+  v8_scope.GetExecutionContext()->NotifyContextDestroyed();
+  EXPECT_FALSE(decoder->HasPendingActivity());
+
+  // Promises won't resolve or reject now that the context is destroyed, but we
+  // should ensure decodeMetadata() and decode() don't trigger any issues.
+  decoder->decodeMetadata();
+  decoder->decode(MakeOptions(0, true));
+
+  // This will fail if a decode() or decodeMetadata() was queued.
+  EXPECT_FALSE(decoder->HasPendingActivity());
+}
+
+TEST_F(ImageDecoderTest, DecoderReadableStream) {
+  V8TestingScope v8_scope;
+  constexpr char kImageType[] = "image/gif";
+  EXPECT_TRUE(IsTypeSupported(&v8_scope, kImageType));
+
+  auto data = ReadFile("images/resources/animated-10color.gif");
+
+  Persistent<TestUnderlyingSource> underlying_source =
+      MakeGarbageCollected<TestUnderlyingSource>(v8_scope.GetScriptState());
+  Persistent<ReadableStream> stream =
+      ReadableStream::CreateWithCountQueueingStrategy(v8_scope.GetScriptState(),
+                                                      underlying_source, 0);
+
+  auto* init = MakeGarbageCollected<ImageDecoderInit>();
+  init->setType(kImageType);
+  init->setData(
+      ArrayBufferOrArrayBufferViewOrReadableStream::FromReadableStream(stream));
+
+  Persistent<ImageDecoderExternal> decoder = ImageDecoderExternal::Create(
+      v8_scope.GetScriptState(), init, IGNORE_EXCEPTION_FOR_TESTING);
+  ASSERT_TRUE(decoder);
+  ASSERT_FALSE(v8_scope.GetExceptionState().HadException());
+  EXPECT_EQ(decoder->type(), kImageType);
+
+  constexpr size_t kNumChunks = 2;
+  const size_t chunk_size = (data->size() + 1) / kNumChunks;
+
+  const uint8_t* data_ptr = reinterpret_cast<const uint8_t*>(data->Data());
+  underlying_source->Enqueue(ScriptValue(
+      v8_scope.GetIsolate(), ToV8(DOMUint8Array::Create(data_ptr, chunk_size),
+                                  v8_scope.GetScriptState())));
+
+  // Ensure we have metadata.
+  {
+    auto promise = decoder->decodeMetadata();
+    ScriptPromiseTester tester(v8_scope.GetScriptState(), promise);
+    tester.WaitUntilSettled();
+    ASSERT_TRUE(tester.IsFulfilled());
+  }
+
+  // Deselect the current track.
+  ASSERT_TRUE(decoder->tracks().selectedTrack());
+  decoder->tracks().selectedTrack().value()->setSelected(false);
+
+  // Enqueue remaining data.
+  underlying_source->Enqueue(
+      ScriptValue(v8_scope.GetIsolate(),
+                  ToV8(DOMUint8Array::Create(data_ptr + chunk_size,
+                                             data->size() - chunk_size),
+                       v8_scope.GetScriptState())));
+  underlying_source->Close();
+
+  // Metadata should resolve okay while no track is selected.
+  {
+    auto promise = decoder->decodeMetadata();
+    ScriptPromiseTester tester(v8_scope.GetScriptState(), promise);
+    tester.WaitUntilSettled();
+    ASSERT_TRUE(tester.IsFulfilled());
+  }
+
+  // Decodes should be rejected while no track is selected.
+  {
+    auto promise = decoder->decode();
+    ScriptPromiseTester tester(v8_scope.GetScriptState(), promise);
+    tester.WaitUntilSettled();
+    EXPECT_TRUE(tester.IsRejected());
+  }
+
+  // Select a track again.
+  decoder->tracks().AnonymousIndexedGetter(0)->setSelected(true);
+
+  // Verify a decode completes successfully.
+  {
+    auto promise = decoder->decode();
+    ScriptPromiseTester tester(v8_scope.GetScriptState(), promise);
+    tester.WaitUntilSettled();
+    ASSERT_TRUE(tester.IsFulfilled());
+    auto* result = ToImageDecodeResult(&v8_scope, tester.Value());
+    EXPECT_TRUE(result->complete());
+
+    auto* frame = result->image();
+    EXPECT_EQ(frame->displayWidth(), 100u);
+    EXPECT_EQ(frame->displayHeight(), 100u);
+  }
+}
+
+TEST_F(ImageDecoderTest, DecoderReadableStreamAvif) {
+  V8TestingScope v8_scope;
+  constexpr char kImageType[] = "image/avif";
+  EXPECT_TRUE(IsTypeSupported(&v8_scope, kImageType));
+
+  auto data = ReadFile("images/resources/avif/star-animated-8bpc.avif");
+
+  Persistent<TestUnderlyingSource> underlying_source =
+      MakeGarbageCollected<TestUnderlyingSource>(v8_scope.GetScriptState());
+  Persistent<ReadableStream> stream =
+      ReadableStream::CreateWithCountQueueingStrategy(v8_scope.GetScriptState(),
+                                                      underlying_source, 0);
+
+  auto* init = MakeGarbageCollected<ImageDecoderInit>();
+  init->setType(kImageType);
+  init->setData(
+      ArrayBufferOrArrayBufferViewOrReadableStream::FromReadableStream(stream));
+
+  Persistent<ImageDecoderExternal> decoder = ImageDecoderExternal::Create(
+      v8_scope.GetScriptState(), init, IGNORE_EXCEPTION_FOR_TESTING);
+  ASSERT_TRUE(decoder);
+  ASSERT_FALSE(v8_scope.GetExceptionState().HadException());
+  EXPECT_EQ(decoder->type(), kImageType);
+
+  // Enqueue a single byte and ensure nothing breaks.
+  const uint8_t* data_ptr = reinterpret_cast<const uint8_t*>(data->Data());
+  underlying_source->Enqueue(ScriptValue(
+      v8_scope.GetIsolate(),
+      ToV8(DOMUint8Array::Create(data_ptr, 1), v8_scope.GetScriptState())));
+
+  auto metadata_promise = decoder->decodeMetadata();
+  auto decode_promise = decoder->decode();
+  base::RunLoop().RunUntilIdle();
+
+  // One byte shouldn't be enough to decode size or fail, so no promises should
+  // be resolved.
+  ScriptPromiseTester metadata_tester(v8_scope.GetScriptState(),
+                                      metadata_promise);
+  EXPECT_FALSE(metadata_tester.IsFulfilled());
+  EXPECT_FALSE(metadata_tester.IsRejected());
+
+  ScriptPromiseTester decode_tester(v8_scope.GetScriptState(), decode_promise);
+  EXPECT_FALSE(decode_tester.IsFulfilled());
+  EXPECT_FALSE(decode_tester.IsRejected());
+
+  // Append the rest of the data.
+  underlying_source->Enqueue(
+      ScriptValue(v8_scope.GetIsolate(),
+                  ToV8(DOMUint8Array::Create(data_ptr + 1, data->size() - 1),
+                       v8_scope.GetScriptState())));
+
+  // Ensure we have metadata.
+  metadata_tester.WaitUntilSettled();
+  ASSERT_TRUE(metadata_tester.IsFulfilled());
+
+  // Verify decode completes successfully.
+  decode_tester.WaitUntilSettled();
+  ASSERT_TRUE(decode_tester.IsFulfilled());
+  auto* result = ToImageDecodeResult(&v8_scope, decode_tester.Value());
+  EXPECT_TRUE(result->complete());
+
+  auto* frame = result->image();
+  EXPECT_EQ(frame->displayWidth(), 159u);
+  EXPECT_EQ(frame->displayHeight(), 159u);
+}
+
+TEST_F(ImageDecoderTest, DecodePartialImage) {
+  V8TestingScope v8_scope;
+  constexpr char kImageType[] = "image/png";
+  EXPECT_TRUE(IsTypeSupported(&v8_scope, kImageType));
+
+  auto* init = MakeGarbageCollected<ImageDecoderInit>();
+  init->setType(kImageType);
+
+  // Read just enough to get the header and some of the image data.
+  auto data = ReadFile("images/resources/dice.png");
+  auto* array_buffer = DOMArrayBuffer::Create(128, 1);
+  ASSERT_TRUE(data->GetBytes(array_buffer->Data(), array_buffer->ByteLength()));
+
+  init->setData(ArrayBufferOrArrayBufferViewOrReadableStream::FromArrayBuffer(
+      array_buffer));
+  auto* decoder = ImageDecoderExternal::Create(v8_scope.GetScriptState(), init,
+                                               v8_scope.GetExceptionState());
+  ASSERT_TRUE(decoder);
+  ASSERT_FALSE(v8_scope.GetExceptionState().HadException());
+
+  {
+    auto promise = decoder->decodeMetadata();
+    ScriptPromiseTester tester(v8_scope.GetScriptState(), promise);
+    tester.WaitUntilSettled();
+    ASSERT_TRUE(tester.IsFulfilled());
+  }
+
+  {
+    auto promise1 = decoder->decode();
+    auto promise2 = decoder->decode(MakeOptions(2, true));
+
+    ScriptPromiseTester tester1(v8_scope.GetScriptState(), promise1);
+    ScriptPromiseTester tester2(v8_scope.GetScriptState(), promise2);
+
+    // Order is inverted here to catch a specific issue where out of range
+    // resolution is handled ahead of decode. https://crbug.com/1200137.
+    tester2.WaitUntilSettled();
+    ASSERT_TRUE(tester2.IsRejected());
+
+    tester1.WaitUntilSettled();
+    ASSERT_TRUE(tester1.IsRejected());
+  }
+}
+
+// TODO(crbug.com/1073995): Add tests for each format, partial decoding,
+// reduced resolution decoding, premultiply, and ignored color behavior.
 
 }  // namespace
 

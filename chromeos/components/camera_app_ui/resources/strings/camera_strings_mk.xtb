@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Препознаен е линк. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Слики од галеријата</translation>
 <translation id="1430915738399379752">Печати</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> е исклучена.</translation>
 <translation id="1473110567575736769">Тајмер од 3 секунди</translation>
 <translation id="1620510694547887537">Камера</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Ништо не е снимено</translation>
 <translation id="1838104802459806957">Навалeте нагоре</translation>
+<translation id="1851169887664797861">Достапни се дополнителни контроли за камерата</translation>
 <translation id="1851616744363735765">ПАУЗИРАНО</translation>
 <translation id="1862930711583847113">Не може да се извезе <ph name="FILE" /></translation>
 <translation id="1899697626337024495">Фоторезолуција</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Фотографирајте и снимајте видеа со камерата.</translation>
 <translation id="2549985041256363841">Започни со снимање</translation>
 <translation id="2599796128805996109">Задна камера</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> е приклучена.</translation>
 <translation id="2912439424121107408">Експертскиот режим не е поддржан на овој уред</translation>
 <translation id="2968794441791257519">Фотографиите и видеата снимени со камерата ќе се преместат во папката „Преземања“. До нив може да пристапувате од „Датотеки“.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Резолуција на камерата</translation>
 <translation id="3517926952904427380">Не може да фотографира во портрет</translation>
 <translation id="3569311554794739032">Дали навистина сакате да ја отстраните <ph name="FILE" />?</translation>
+<translation id="3733597664308256288">Достапни се дополнителни контроли за камерата. Search + Стрелка надесно за пристап.</translation>
 <translation id="3810838688059735925">Видео</translation>
 <translation id="3838931309141338733">Скенирајте го баркодот</translation>
 <translation id="3892148308691398805">Копирај текст</translation>
@@ -85,6 +89,7 @@
 <translation id="7649070708921625228">Помош</translation>
 <translation id="7658239707568436148">Откажи</translation>
 <translation id="7670511624014457267">60 FPS</translation>
+<translation id="7974782136796202581">Прикажувај ги опциите за движење, навалување и зумирање</translation>
 <translation id="7983668134180549431">Препознаен е текст.</translation>
 <translation id="8067883171444229417">Пушти го видеото</translation>
 <translation id="8120146556401698679">Движи Навали Зумирај</translation>

@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Pautan dikesan. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Imej galeri</translation>
 <translation id="1430915738399379752">Cetak</translation>
+<translation id="1467231725790366244">Palam <ph name="CAMERA" /> dicabut.</translation>
 <translation id="1473110567575736769">Pemasa 3 saat</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Tiada apa-apa yang dirakamkan</translation>
 <translation id="1838104802459806957">Condongkan ke atas</translation>
+<translation id="1851169887664797861">Kawalan kamera tambahan tersedia</translation>
 <translation id="1851616744363735765">DIJEDA</translation>
 <translation id="1862930711583847113">Tidak dapat mengeksport <ph name="FILE" /></translation>
 <translation id="1899697626337024495">Peleraian foto</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Ambil foto dan rakam video dengan kamera anda.</translation>
 <translation id="2549985041256363841">Mulakan rakaman</translation>
 <translation id="2599796128805996109">Kamera belakang</translation>
+<translation id="2879583609344924966">Palam <ph name="CAMERA" /> dipasang.</translation>
 <translation id="2912439424121107408">Mod pakar tidak disokong pada peranti ini</translation>
 <translation id="2968794441791257519">Foto dan video yang diambil dengan kamera akan dialihkan ke folder Muat Turun. Anda boleh mengakses foto dan video itu dalam Fail.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Peleraian kamera</translation>
 <translation id="3517926952904427380">Tidak dapat mengambil foto potret</translation>
 <translation id="3569311554794739032">Adakah anda benar-benar mahu mengalih keluar <ph name="FILE" />?</translation>
+<translation id="3733597664308256288">Kawalan kamera tambahan tersedia. Carian + Anak panah ke kanan untuk mengakses.</translation>
 <translation id="3810838688059735925">Video</translation>
 <translation id="3838931309141338733">Imbas kod bar</translation>
 <translation id="3892148308691398805">Salin teks</translation>
@@ -85,6 +89,7 @@ Jika maklum balas anda adalah tentang kualiti imej atau video, sila lampirkan sa
 <translation id="7649070708921625228">Bantuan</translation>
 <translation id="7658239707568436148">Batal</translation>
 <translation id="7670511624014457267">60 FPS</translation>
+<translation id="7974782136796202581">Tunjukkan pilihan sorot/condong/zum</translation>
 <translation id="7983668134180549431">Teks dikesan.</translation>
 <translation id="8067883171444229417">Mainkan video</translation>
 <translation id="8120146556401698679">Sorot/condong/zum</translation>

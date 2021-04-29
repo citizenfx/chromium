@@ -27,7 +27,8 @@
       <h1 slot="title">
         [[i18nDynamic(locale, 'assistantVoiceMatchTitle')]]
       </h1>
-      <div slot="subtitle" inner-h-t-m-l="[[getSubtitleMessage_(locale)]]">
+      <div slot="subtitle" id="message-horizontal-mode"
+          inner-h-t-m-l="[[getSubtitleMessage_(locale)]]">
       </div>
       <div slot="content" class="flex layout vertical center center-justified">
         <div id="voice-match-animation">
@@ -35,14 +36,17 @@
               animation-url="voice_match_animation.json">
           </cr-lottie>
         </div>
+        <div id="message-vertical-mode"
+            inner-h-t-m-l="[[getSubtitleMessage_(locale)]]">
+        </div>
       </div>
       <div slot="bottom-buttons">
         <oobe-text-button id="skip-button" on-click="onSkipTap_"
             disabled="[[buttonsDisabled]]"
-            text-key="assistantOptinSkipButton">
+            text-key="assistantOptinNoThanksButton">
         </oobe-text-button>
         <oobe-next-button id="agree-button" on-click="onAgreeTap_"
-            disabled="[[buttonsDisabled]]" text-key="next">
+            disabled="[[buttonsDisabled]]" text-key="assistantOptinAgreeButton">
         </oobe-next-button>
       </div>
     </oobe-adaptive-dialog>

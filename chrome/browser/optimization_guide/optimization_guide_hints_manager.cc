@@ -68,10 +68,9 @@ constexpr char kManualConfigComponentVersion[] = "0.0.0";
 // Provides a random time delta in seconds between |kFetchRandomMinDelay| and
 // |kFetchRandomMaxDelay|.
 base::TimeDelta RandomFetchDelay() {
-  constexpr int kFetchRandomMinDelaySecs = 30;
-  constexpr int kFetchRandomMaxDelaySecs = 60;
-  return base::TimeDelta::FromSeconds(
-      base::RandInt(kFetchRandomMinDelaySecs, kFetchRandomMaxDelaySecs));
+  return base::TimeDelta::FromSeconds(base::RandInt(
+      optimization_guide::features::ActiveTabsHintsFetchRandomMinDelaySecs(),
+      optimization_guide::features::ActiveTabsHintsFetchRandomMaxDelaySecs()));
 }
 
 void MaybeRunUpdateClosure(base::OnceClosure update_closure) {
@@ -688,6 +687,7 @@ void OptimizationGuideHintsManager::FetchHintsForActiveTabs() {
   batch_update_hints_fetcher_->FetchOptimizationGuideServiceHints(
       top_hosts, active_tab_urls_to_refresh, registered_optimization_types_,
       optimization_guide::proto::CONTEXT_BATCH_UPDATE,
+      g_browser_process->GetApplicationLocale(),
       base::BindOnce(
           &OptimizationGuideHintsManager::OnHintsForActiveTabsFetched,
           ui_weak_ptr_factory_.GetWeakPtr(), top_hosts_set,
@@ -916,6 +916,7 @@ void OptimizationGuideHintsManager::OnPredictionUpdated(
   batch_update_hints_fetcher_->FetchOptimizationGuideServiceHints(
       target_hosts_serialized, target_urls, registered_optimization_types_,
       optimization_guide::proto::CONTEXT_BATCH_UPDATE,
+      g_browser_process->GetApplicationLocale(),
       base::BindOnce(
           &OptimizationGuideHintsManager::OnPageNavigationHintsFetched,
           ui_weak_ptr_factory_.GetWeakPtr(), nullptr, base::nullopt,
@@ -1351,6 +1352,7 @@ void OptimizationGuideHintsManager::MaybeFetchHintsForNavigation(
   it->second->FetchOptimizationGuideServiceHints(
       hosts, urls, registered_optimization_types_,
       optimization_guide::proto::CONTEXT_PAGE_NAVIGATION,
+      g_browser_process->GetApplicationLocale(),
       base::BindOnce(
           &OptimizationGuideHintsManager::OnPageNavigationHintsFetched,
           ui_weak_ptr_factory_.GetWeakPtr(), navigation_data->GetWeakPtr(), url,

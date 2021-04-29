@@ -4,11 +4,13 @@
 <translation id="1175958423215084756">Kiungo kimetambuliwa. <ph name="HOSTNAME" /></translation>
 <translation id="1276998909102132017">Picha za matunzio</translation>
 <translation id="1430915738399379752">Chapisha</translation>
+<translation id="1467231725790366244"><ph name="CAMERA" /> imechomolewa.</translation>
 <translation id="1473110567575736769">Kipima muda wa sekunde tatu</translation>
 <translation id="1620510694547887537">Kamera</translation>
 <translation id="1627744224761163218">4 x 4</translation>
 <translation id="1664224225747386870">Haijarekodi chochote</translation>
 <translation id="1838104802459806957">Inamisha juu</translation>
+<translation id="1851169887664797861">Vidhibiti vya ziada vya kamera vinapatikana</translation>
 <translation id="1851616744363735765">IMESITISHWA</translation>
 <translation id="1862930711583847113">Imeshindwa kutuma <ph name="FILE" /></translation>
 <translation id="1899697626337024495">Ubora wa picha</translation>
@@ -24,6 +26,7 @@
 <translation id="2501953888035679275">Piga picha na urekodi video ukitumia kamera yako.</translation>
 <translation id="2549985041256363841">Anza kurekodi</translation>
 <translation id="2599796128805996109">Kamera ya nyuma</translation>
+<translation id="2879583609344924966"><ph name="CAMERA" /> imechomekwa.</translation>
 <translation id="2912439424121107408">Hali ya wataalamu haitumiki kwenye kifaa hiki</translation>
 <translation id="2968794441791257519">Itahamishia picha na video ulizopigwa kwa kamera kwenye folda ya Vipakuliwa. Unaweza kuzifikia kwenye Faili.
 
@@ -37,6 +40,7 @@
 <translation id="3259149966178251584">Ubora wa kamera</translation>
 <translation id="3517926952904427380">Imeshindwa kupiga picha ya wima</translation>
 <translation id="3569311554794739032">Una uhakika ungependa kuondoa <ph name="FILE" />?</translation>
+<translation id="3733597664308256288">Vidhibiti vya ziada vya kamera vinapatikana. Bonyeza kitufe cha Utafutaji pamoja na kishale cha Kulia ili uvifikie.</translation>
 <translation id="3810838688059735925">Video</translation>
 <translation id="3838931309141338733">Changanua msimbo wa mistari</translation>
 <translation id="3892148308691398805">Nakili maandishi</translation>
@@ -85,6 +89,7 @@ Iwapo maoni yako yanahusu ubora wa picha au video, tafadhali ambatisha mfano wa 
 <translation id="7649070708921625228">Usaidizi</translation>
 <translation id="7658239707568436148">Ghairi</translation>
 <translation id="7670511624014457267">60 FPS</translation>
+<translation id="7974782136796202581">Onyesha chaguo za kugeuza upande, kuinamisha na kukuza</translation>
 <translation id="7983668134180549431">Maandishi yametambuliwa.</translation>
 <translation id="8067883171444229417">Cheza video</translation>
 <translation id="8120146556401698679">Kugeuza upande, kuinamisha na kukuza</translation>

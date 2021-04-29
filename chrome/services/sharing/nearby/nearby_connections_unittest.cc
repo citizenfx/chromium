@@ -59,6 +59,7 @@ mojom::AdvertisingOptionsPtr CreateAdvertisingOptions() {
       /*auto_upgrade_bandwidth=*/true,
       /*enforce_topology_constraints=*/true,
       /*enable_bluetooth_listening=*/use_ble,
+      /*enable_webrtc_listening=*/false,
       /*fast_advertisement_service_uuid=*/
       device::BluetoothUUID(kFastAdvertisementServiceUuid));
 }
@@ -194,7 +195,7 @@ class NearbyConnectionsTest : public testing::Test {
         webrtc_dependencies_.messenger_.BindNewPipeAndPassRemote());
     auto dependencies = mojom::NearbyConnectionsDependencies::New(
         bluetooth_adapter_.adapter_.BindNewPipeAndPassRemote(),
-        std::move(webrtc_dependencies));
+        std::move(webrtc_dependencies), api::LogMessage::Severity::kInfo);
     auto service_controller =
         std::make_unique<testing::NiceMock<MockServiceController>>();
     service_controller_ptr_ = service_controller.get();

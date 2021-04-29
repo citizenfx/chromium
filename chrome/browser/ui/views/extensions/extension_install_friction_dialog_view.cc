@@ -73,6 +73,9 @@ void ShowExtensionInstallFrictionDialog(
 
 namespace {
 
+// NOTE: This should be a shared constant, but none exist at the moment.
+constexpr int kWarningIconSize = 24;
+
 // These values are persisted to logs. Entries should not be renumbered and
 // numeric values should never be reused.
 enum class ExtensionInstallFrictionDialogAction {
@@ -109,23 +112,9 @@ ExtensionInstallFrictionDialogView::ExtensionInstallFrictionDialogView(
   SetTitle(
       l10n_util::GetStringUTF16(IDS_EXTENSION_PROMPT_INSTALL_FRICTION_TITLE));
 
-  auto run_callback = [](ExtensionInstallFrictionDialogView* dialog,
-                         bool accept) {
-    ExtensionInstallFrictionDialogAction action;
-    if (accept) {
-      action = ExtensionInstallFrictionDialogAction::kContinueToInstall;
-    } else if (dialog->learn_more_clicked_) {
-      action = ExtensionInstallFrictionDialogAction::kLearnMore;
-    } else {
-      action = ExtensionInstallFrictionDialogAction::kClose;
-    }
-    ReportExtensionInstallFrictionDialogAction(action);
-
-    std::move(dialog->callback_).Run(accept);
-  };
-  SetAcceptCallback(base::BindOnce(run_callback, base::Unretained(this), true));
-  SetCancelCallback(
-      base::BindOnce(run_callback, base::Unretained(this), false));
+  SetAcceptCallback(base::BindOnce(
+      [](ExtensionInstallFrictionDialogView* view) { view->accepted_ = true; },
+      base::Unretained(this)));
 
   SetLayoutManager(std::make_unique<views::FillLayout>());
   const ChromeLayoutProvider* provider = ChromeLayoutProvider::Get();
@@ -169,13 +158,31 @@ ExtensionInstallFrictionDialogView::CreateWarningLabel() {
   return label;
 }
 
-ExtensionInstallFrictionDialogView::~ExtensionInstallFrictionDialogView() =
-    default;
+ExtensionInstallFrictionDialogView::~ExtensionInstallFrictionDialogView() {
+  // Another modal dialog (ExtensionInstallDialogView) is displayed when
+  // clicking through this friction dialog. The callback is invoked in the
+  // destructor to make sure the current modal dialog is closed before showing
+  // the next one.
+  //
+  // On MacOS, a modal dialog silently fails to display if another modal dialog
+  // is already displayed. The issue is tracked in crbug.com/1199383
+  ExtensionInstallFrictionDialogAction action;
+  if (accepted_) {
+    action = ExtensionInstallFrictionDialogAction::kContinueToInstall;
+  } else if (learn_more_clicked_) {
+    action = ExtensionInstallFrictionDialogAction::kLearnMore;
+  } else {
+    action = ExtensionInstallFrictionDialogAction::kClose;
+  }
+  ReportExtensionInstallFrictionDialogAction(action);
+
+  std::move(callback_).Run(accepted_);
+}
 
 // override
 gfx::ImageSkia ExtensionInstallFrictionDialogView::GetWindowIcon() {
   return gfx::CreateVectorIcon(
-      vector_icons::kGppMaybeIcon, extension_misc::EXTENSION_ICON_SMALL,
+      vector_icons::kGppMaybeIcon, kWarningIconSize,
       GetNativeTheme()->GetSystemColor(
           ui::NativeTheme::kColorId_AlertSeverityMedium));
 }
