@@ -130,6 +130,7 @@ class MimeHandlerViewGuest
   void EmbedderFullscreenToggled(bool entered_fullscreen) final;
   bool ZoomPropagatesFromEmbedderToGuest() const final;
   bool ShouldDestroyOnDetach() const final;
+  void WillDestroy() override;
 
   // WebContentsDelegate implementation.
   content::WebContents* OpenURLFromTab(
