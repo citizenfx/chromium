@@ -189,6 +189,7 @@ class MimeHandlerViewGuest
       content::ChildProcessHost::kInvalidUniqueID, MSG_ROUTING_NONE};
   int embedder_widget_routing_id_ = MSG_ROUTING_NONE;
 
+  bool is_guest_attached_ = false;
   bool is_guest_fullscreen_ = false;
   bool is_embedder_fullscreen_ = false;
   bool plugin_can_save_ = false;

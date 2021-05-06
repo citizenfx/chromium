@@ -217,6 +217,7 @@ void MimeHandlerViewGuest::CreateWebContents(
 }
 
 void MimeHandlerViewGuest::DidAttachToEmbedder() {
+  is_guest_attached_ = true;
   if (delegate_)
     delegate_->OnGuestAttached();
 
@@ -251,7 +252,7 @@ bool MimeHandlerViewGuest::ShouldDestroyOnDetach() const {
 }
 
 void MimeHandlerViewGuest::WillDestroy() {
-  if (delegate_)
+  if (is_guest_attached_ && delegate_)
     delegate_->OnGuestDetached();
 }
 
