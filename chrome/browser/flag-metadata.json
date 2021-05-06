@@ -1496,6 +1496,11 @@
     "expiry_milestone": -1
   },
   {
+    "name": "enable-commerce-merchant-viewer",
+    "owners": [ "chrome-shopping@google.com" ],
+    "expiry_milestone": 94
+  },
+  {
     "name": "enable-conditional-tabstrip",
     "owners": [ "memex-team@google.com" ],
     "expiry_milestone": 90
@@ -3111,6 +3116,11 @@
     "expiry_milestone": 93
   },
   {
+    "name": "google-lens-sdk-intent",
+    "owners": [ "juanmojica@google.com", "benwgold@google.com", "lens-chrome@google.com" ],
+    "expiry_milestone": 92
+  },
+  {
     "name": "handwriting-gesture-editing",
     "owners": [ "essential-inputs-team@google.com" ],
     "expiry_milestone": 95
@@ -3270,7 +3280,7 @@
   {
     "name": "intensive-wake-up-throttling",
     "owners": [ "fdoray" ],
-    "expiry_milestone": 89
+    "expiry_milestone": 95
   },
   {
     "name": "intent-handling-sharing",

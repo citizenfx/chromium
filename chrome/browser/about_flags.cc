@@ -1746,7 +1746,13 @@ const FeatureEntry::FeatureParam kTabGridLayoutAndroid_SearchChip[] = {
     {"enable_search_term_chip", "true"}};
 
 const FeatureEntry::FeatureParam kTabGridLayoutAndroid_PriceAlerts[] = {
-    {"enable_price_tracking", "true"}};
+    {"enable_price_tracking", "true"},
+    {"price_tracking_with_optimization_guide", "false"}};
+
+const FeatureEntry::FeatureParam
+    kTabGridLayoutAndroid_PriceAlerts_WithOptimizationGuide[] = {
+        {"enable_price_tracking", "true"},
+        {"price_tracking_with_optimization_guide", "true"}};
 
 const FeatureEntry::FeatureParam kTabGridLayoutAndroid_TabGroupAutoCreation[] =
     {{"enable_tab_group_auto_creation", "false"}};
@@ -1765,6 +1771,10 @@ const FeatureEntry::FeatureVariation kTabGridLayoutAndroidVariations[] = {
      base::size(kTabGridLayoutAndroid_SearchChip), nullptr},
     {"Price alerts", kTabGridLayoutAndroid_PriceAlerts,
      base::size(kTabGridLayoutAndroid_PriceAlerts), nullptr},
+    {"Price alerts with OptimizationGuide",
+     kTabGridLayoutAndroid_PriceAlerts_WithOptimizationGuide,
+     base::size(kTabGridLayoutAndroid_PriceAlerts_WithOptimizationGuide),
+     nullptr},
     {"Without auto group", kTabGridLayoutAndroid_TabGroupAutoCreation,
      base::size(kTabGridLayoutAndroid_TabGroupAutoCreation), nullptr},
     {"Price notifications", kTabGridLayoutAndroid_PriceNotifications,
@@ -4946,6 +4956,11 @@ const FeatureEntry kFeatureEntries[] = {
                                     kTabGridLayoutAndroidVariations,
                                     "TabGridLayoutAndroid")},
 
+    {"enable-commerce-merchant-viewer",
+     flag_descriptions::kCommerceMerchantViewerAndroidName,
+     flag_descriptions::kCommerceMerchantViewerAndroidDescription, kOsAndroid,
+     FEATURE_VALUE_TYPE(chrome::android::kCommerceMerchantViewer)},
+
     {"enable-tab-groups", flag_descriptions::kTabGroupsAndroidName,
      flag_descriptions::kTabGroupsAndroidDescription, kOsAndroid,
      FEATURE_VALUE_TYPE(chrome::android::kTabGroupsAndroid)},
@@ -6074,6 +6089,10 @@ const FeatureEntry kFeatureEntries[] = {
          chrome::android::kContextMenuTranslateWithGoogleLens,
          kLensContextMenuTranslateVariations,
          "LensContextMenuTranslate")},
+
+    {"google-lens-sdk-intent", flag_descriptions::kGoogleLensSdkIntentName,
+     flag_descriptions::kGoogleLensSdkIntentDescription, kOsAndroid,
+     FEATURE_VALUE_TYPE(chrome::android::kGoogleLensSdkIntent)},
 
     {"lens-camera-assisted-search",
      flag_descriptions::kLensCameraAssistedSearchName,

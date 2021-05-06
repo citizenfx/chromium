@@ -32,16 +32,15 @@ public class MerchantTrustDetailsTabMediator {
     private Profile mProfile;
     private WebContentsDelegateAndroid mWebContentsDelegate;
     private WebContentsObserver mWebContentsObserver;
+    private final MerchantTrustMetrics mMetrics;
     private static final long HIDE_PROGRESS_BAR_DELAY_MS = 50;
 
-    // TODO: Read from config.
-    private static final boolean sShouldUsePageTitle = true;
-
     /** Creates a new instance. */
-    MerchantTrustDetailsTabMediator(
-            BottomSheetController bottomSheetController, int topControlsHeightDp) {
+    MerchantTrustDetailsTabMediator(BottomSheetController bottomSheetController,
+            int topControlsHeightDp, MerchantTrustMetrics metrics) {
         mBottomSheetController = bottomSheetController;
         mTopControlsHeightDp = topControlsHeightDp;
+        mMetrics = metrics;
     }
 
     /**
@@ -73,8 +72,13 @@ public class MerchantTrustDetailsTabMediator {
             }
 
             @Override
+            public void didStartNavigation(NavigationHandle navigation) {
+                mMetrics.recordNavigateLinkOnBottomSheet();
+            }
+
+            @Override
             public void titleWasSet(String title) {
-                if (!sShouldUsePageTitle) return;
+                if (!MerchantViewerConfig.TRUST_SIGNALS_SHEET_USE_PAGE_TITLE.getValue()) return;
                 mSheetContent.setTitle(title);
             }
 

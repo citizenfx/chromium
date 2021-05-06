@@ -2868,6 +2868,13 @@ Unknown properties are collapsed to zero. -->
   <int value="25" label="APP_LIST_SEARCH_WEBSTORE"/>
 </enum>
 
+<enum name="AppLaunchBlockDrawForInitialTabAccuracy">
+  <int value="0" label="Blocked draw correctly"/>
+  <int value="1" label="Blocked draw when should not have"/>
+  <int value="2" label="Did not block draw when should have"/>
+  <int value="3" label="Correctly did not block draw"/>
+</enum>
+
 <enum name="AppLaunchContainer">
   <int value="0" label="LAUNCH_CONTAINER_WINDOW"/>
   <int value="1" label="LAUNCH_CONTAINER_PANEL"/>
@@ -7216,6 +7223,7 @@ Called by update_bad_message_reasons.py.-->
   <int value="240" label="WCI_INVALID_FULLSCREEN_OPTIONS"/>
   <int value="241" label="PAYMENTS_WITHOUT_PERMISSION"/>
   <int value="242" label="WEB_BUNDLE_INVALID_NAVIGATION_URL"/>
+  <int value="243" label="WCI_INVALID_DOWNLOAD_IMAGE_RESULT"/>
 </enum>
 
 <enum name="BadMessageReasonExtensions">
@@ -17628,6 +17636,14 @@ Called by update_debug_scenarios.py.-->
   <int value="28" label="Google Docs (Chrome app)"/>
   <int value="29" label="Google Sheets (Chrome app)"/>
   <int value="30" label="Google Slides (Chrome app)"/>
+  <int value="31" label="YouTube (PWA)"/>
+  <int value="32" label="Google Docs (PWA)"/>
+  <int value="33" label="Google Meet (PWA)"/>
+  <int value="34" label="Google Sheets (PWA)"/>
+  <int value="35" label="Spotify (PWA)"/>
+  <int value="36" label="BeFunky (PWA)"/>
+  <int value="37" label="Clipchamp (PWA)"/>
+  <int value="38" label="GeForce NOW (PWA)"/>
 </enum>
 
 <enum name="DemoModeAppLaunchSource">
@@ -45124,6 +45140,7 @@ from previous Chrome versions.
   <int value="-1145246849" label="ThirdPartyDoodles:enabled"/>
   <int value="-1144754105" label="ScalableStatusArea:enabled"/>
   <int value="-1144501989" label="UserActivityPredictionMlService:disabled"/>
+  <int value="-1144128534" label="GoogleLensSdkIntent:enabled"/>
   <int value="-1143496217" label="enable-oop-rasterization"/>
   <int value="-1143007275" label="EnableNewStyleLauncher:disabled"/>
   <int value="-1142933895" label="ReduceDisplayNotifications:disabled"/>
@@ -47127,6 +47144,7 @@ from previous Chrome versions.
   <int value="681622885" label="FullscreenExitUI:enabled"/>
   <int value="682549212" label="ash-enable-cursor-motion-blur"/>
   <int value="683013217" label="AllowPopupsDuringPageUnload:disabled"/>
+  <int value="683433500" label="CommerceMerchantViewer:disabled"/>
   <int value="684806628" label="TranslateLanguageByULP:disabled"/>
   <int value="685406951" label="UseNotificationCompatBuilder:disabled"/>
   <int value="685916283" label="enable-zip-archiver-on-file-manager"/>
@@ -47673,6 +47691,7 @@ from previous Chrome versions.
   <int value="1179013979"
       label="OmniboxUIExperimentMaxAutocompleteMatches:enabled"/>
   <int value="1179407596" label="PreemptiveLinkToTextGeneration:enabled"/>
+  <int value="1179587141" label="CommerceMerchantViewer:enabled"/>
   <int value="1179936481" label="enable-android-pay-integration-v1"/>
   <int value="1180722846" label="OculusVR:disabled"/>
   <int value="1181056275" label="enable-cloud-backup"/>
@@ -47895,6 +47914,7 @@ from previous Chrome versions.
   <int value="1367487214" label="VaapiJpegImageDecodeAcceleration:enabled"/>
   <int value="1367529437" label="NTPAssetDownloadSuggestions:enabled"/>
   <int value="1367671275" label="enable-proximity-auth-proximity-detection"/>
+  <int value="1368907760" label="GoogleLensSdkIntent:disabled"/>
   <int value="1369449914" label="SysInternals:disabled"/>
   <int value="1369649674" label="ChromeShareScreenshot:enabled"/>
   <int value="1370797930" label="ShowBluetoothDeviceBattery:enabled"/>
@@ -51678,6 +51698,24 @@ Called by update_use_counter_css.py.-->
   <int value="5" label="Could not identify the target language"/>
   <int value="6" label="Translate is not allowed by policy"/>
   <int value="7" label="Could not identify the source language"/>
+</enum>
+
+<enum name="MerchantTrustMessageClearReason">
+  <int value="0" label="Unknown"/>
+  <int value="1" label="Navigate to same domain"/>
+  <int value="2" label="Navigate to different domain"/>
+</enum>
+
+<enum name="MessageDismissReason">
+  <int value="0" label="Unknown"/>
+  <int value="1" label="Primary action"/>
+  <int value="2" label="Secondary action"/>
+  <int value="3" label="Timer"/>
+  <int value="4" label="Gesture"/>
+  <int value="5" label="Tab switched"/>
+  <int value="6" label="Tab destroyed"/>
+  <int value="7" label="Activity destroyed"/>
+  <int value="8" label="Scope destroyed"/>
 </enum>
 
 <enum name="MessageLoopProblems">

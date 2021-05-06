@@ -328,7 +328,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="1354045473509304750"><ph name="HOST" /> کو اپنا کیمرا استعمال اور منتقل کرنے کی اجازت دینا جاری رکھیں</translation>
 <translation id="1355088139103479645">سبھی ڈیٹا حذف کریں؟</translation>
 <translation id="1355466263109342573"><ph name="PLUGIN_NAME" /> مسدود ہے</translation>
-<translation id="1358612436266364864">ہائی لائٹس ہٹائیں</translation>
 <translation id="1358741672408003399">املاء اور قواعد</translation>
 <translation id="1359923111303110318">‏Smart Lock کی مدد سے آپ کا آلہ غیر مقفل کیا جا سکتا ہے۔ غیر مقفل کرنے کے لیے Enter دبائیں۔</translation>
 <translation id="1361164813881551742">دستی طور پر شامل کریں</translation>
@@ -1320,6 +1319,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="2428939361789119025">‏WiFi آف کریں</translation>
 <translation id="2428978615149723410">یہ کارٹس</translation>
 <translation id="2431027948063157455">‏Google اسسٹنٹ لوڈ نہیں ہو سکا، براہ کرم اپنا نیٹ ورک کنکشن چیک کریں اور دوبارہ کوشش کریں۔</translation>
+<translation id="243179355394256322">‏آپ کی تنظیم آلہ کے اندراج کو صرف مجاز صارفین تک محدود کرتی ہے۔ یہ صارف آلات کے اندراج کیلئے مجاز نہیں ہے۔ براہ کرم یقینی بنائیں کہ صارف کے پاس منتظم کونسول کے صارفین سیکشن میں "Google Meet ہارڈویئر کا اندراج کریں" کا حق ہے جو کہ صرف منتظم کو حاصل ہوتا ہے۔</translation>
 <translation id="2433452467737464329">‏صفحہ کو خودکار طور پر ریفریش کرنے کیلئے URL میں ایک استفسار پیرامیٹر شامل کریں: chrome://network/?refresh=&lt;sec&gt;‎</translation>
 <translation id="2433507940547922241">موجودگی</translation>
 <translation id="2433836460518180625">صرف آلہ غیر مقفل کریں</translation>
@@ -1329,7 +1329,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="2435457462613246316">پاس ورڈ دکھائیں</translation>
 <translation id="2435579801172349831">سبھی (<ph name="URL_COUNT" />) کو پوشیدگی ونڈو میں کھولیں</translation>
 <translation id="2436186046335138073"><ph name="HANDLER_HOSTNAME" /> کو سبھی <ph name="PROTOCOL" /> لنکس کھولنے کی اجازت دیں؟</translation>
-<translation id="2440366609912234507">{COUNT,plural, =1{ایپ}other{# ایپس}}</translation>
 <translation id="2440604414813129000">ما&amp;خذ دیکھیں</translation>
 <translation id="244231003699905658">غلط پتہ۔ براہ کرم پتہ چیک کریں اور دوبارہ کوشش کریں۔</translation>
 <translation id="2442916515643169563">متنی سایہ</translation>
@@ -1894,7 +1893,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="3031417829280473749">‏ایجنٹ X</translation>
 <translation id="3031557471081358569">درآمد کرنے کیلئے آئٹمز منتخب کریں:</translation>
 <translation id="3036327949511794916">اس <ph name="DEVICE_TYPE" /> کو واپس کرنے کی آخری تاریخ گزر چکی ہے۔</translation>
-<translation id="3036438888981457032">ہائی لائٹس ہٹائیں</translation>
 <translation id="3036546437875325427">‏Flash کو فعال کریں</translation>
 <translation id="3037754279345160234">ڈومین میں شمولیت کے لیے کنفیگریشن کو پارس نہیں کیا جا سکتا۔ براہ کرم اپنے منتظم سے رابطہ کریں۔</translation>
 <translation id="3038612606416062604">دستی طور پر پرنٹر شامل کریں</translation>
@@ -2390,8 +2388,8 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="3615579745882581859"><ph name="FILE_NAME" /> اسکین کیا جا رہا ہے۔</translation>
 <translation id="3616741288025931835">براؤزنگ ڈیٹا &amp;صاف کریں…</translation>
 <translation id="3617891479562106823">پس منظر غیر دستیاب ہیں۔ بعد میں دوبارہ کوشش کریں۔</translation>
-<translation id="3618800144880386250">{COUNT,plural, =1{ویڈیو}other{# ویڈیوز}}</translation>
 <translation id="3619115746895587757">کیپو چینو</translation>
+<translation id="362266093274784978">{COUNT,plural, =1{ایک ایپ}other{# ایپس}}</translation>
 <translation id="362333465072914957">‏سرٹیفیکیٹ جاری کرنے کے لیے CA کا انتظار</translation>
 <translation id="3624567683873126087">‏آلہ کو غیر مقفل کریں اور Google اکاؤنٹ میں سائن ان کریں</translation>
 <translation id="3625481642044239431">غلط فائل منتخب ہو گئی۔ دوبارہ کوشش کریں۔</translation>
@@ -2664,6 +2662,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="3895076768659607631">سرچ انجن کا &amp;نظم کریں...</translation>
 <translation id="3895090224522145010">‏Kerberos صارف کا نام</translation>
 <translation id="389521680295183045">آپ اپنے آلے کا فعال طور پر استعمال کب کر رہے ہیں یہ جاننے کے لیے سائٹس پوچھ سکتی ہیں</translation>
+<translation id="3897298432557662720">{COUNT,plural, =1{ایک تصویر}other{# تصاویر}}</translation>
 <translation id="3898233949376129212">آلے کی زبان</translation>
 <translation id="3898327728850887246"><ph name="SITE_NAME" /> کو درکار ہے: <ph name="FIRST_PERMISSION" /> اور <ph name="SECOND_PERMISSION" /></translation>
 <translation id="389901847090970821">کی بورڈ منتخب کریں</translation>
@@ -3243,7 +3242,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="4568025708905928793">سیکیورٹی کلید کی درخواست کی جا رہی ہے</translation>
 <translation id="4568213207643490790">‏معذرت، Google اکاؤنٹس اس آلہ پر اجازت یافتہ نہیں ہیں۔</translation>
 <translation id="4569747168316751899">جب معطل ہو</translation>
-<translation id="4569830245132310845">{COUNT,plural, =1{پتہ}other{# پتے}}</translation>
 <translation id="4572659312570518089">"<ph name="DEVICE_NAME" />" سے منسلک کیے جانے کے وقت توثیق منسوخ کر دی گئی۔</translation>
 <translation id="4572779512957829735">‏اپنی سیکورٹی کلید کے لئے PIN درج کریں</translation>
 <translation id="4573515936045019911">‏Linux کو اپ گریڈ کرنے کے لیے نیٹ ورک کنکشن درکار ہے۔ براہ کرم انٹر نیٹ سے منسلک ہوں اور دوبارہ کوشش کریں۔</translation>
@@ -3393,6 +3391,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="473936925429402449">منتخب کردہ، <ph name="CURRENT_ELEMENT" /> میں سے اضافی مواد <ph name="TOTAL_ELEMENTS" /></translation>
 <translation id="4739639199548674512">ٹکٹیں</translation>
 <translation id="4742334355511750246">تصاویر دکھانے کی اجازت نہیں ہے</translation>
+<translation id="4742970037960872810">ہائی لائٹ کو ہٹائیں</translation>
 <translation id="4743260470722568160"><ph name="BEGIN_LINK" />ایپلیکیشنز کو اپ ڈیٹ کرنے کا طریقہ جانیں<ph name="END_LINK" /></translation>
 <translation id="4744981231093950366">{NUM_TABS,plural, =1{سائٹ کی آواز چالو کریں}other{سائٹس کی آواز چالو کریں}}</translation>
 <translation id="4746351372139058112">پیغامات</translation>
@@ -3429,7 +3428,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="4794810983896241342">اپ ڈیٹس <ph name="BEGIN_LINK" />آپ کے منتظم<ph name="END_LINK" /> کے زیر انتظام ہیں۔</translation>
 <translation id="479536056609751218">‏ویب صفحہ، صرف HTML</translation>
 <translation id="4798236378408895261">‏<ph name="BEGIN_LINK" />بلوٹوتھ لاگز<ph name="END_LINK" /> منسلک کریں (Google داخلی)</translation>
-<translation id="4798543057539040565">{COUNT,plural, =1{آئٹم}other{# آئٹمز}}</translation>
 <translation id="4801448226354548035">اکاؤنٹس چھپائیں</translation>
 <translation id="4801512016965057443">موبائل ڈیٹا رومنگ کی اجازت دیں</translation>
 <translation id="4804818685124855865">منقطع کریں</translation>
@@ -3572,6 +3570,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="4943368462779413526">فٹبال</translation>
 <translation id="4943691134276646401">"<ph name="CHROME_EXTENSION_NAME" />" ایک سیریل پورٹ سے منسلک ہونا چاہتا ہے</translation>
 <translation id="4944310289250773232">یہ توثیقی سروس <ph name="SAML_DOMAIN" /> کی زیر میزبانی ہے</translation>
+<translation id="495164417696120157">{COUNT,plural, =1{ایک فائل}other{# فائلز}}</translation>
 <translation id="495170559598752135">کارروائیاں</translation>
 <translation id="4953808748584563296">ڈیفالٹ نارنجی اوتار</translation>
 <translation id="4955710816792587366">‏اپنا PIN منتخب کریں</translation>
@@ -3880,7 +3879,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="5310281978693206542">لنک اپنے آلات پر بھیجیں</translation>
 <translation id="5311304534597152726">اس کے بطور سائن ان کرنا</translation>
 <translation id="5311565231560644461">سائٹس کو اپنے ورچوئل رئیلٹی آلات اور ڈیٹا استعمال کرنے کی اجازت نہ دیں</translation>
-<translation id="5312876166662946389">{COUNT,plural, =1{تصویر}other{# تصاویر}}</translation>
 <translation id="5315179276708231080">‏Lacros ایک تجرباتی براؤزر ہے۔ براہ کرم مدد &gt; "مسئلے کی اطلاع دیں..." کے ساتھ مسائل کی اطلاع دیں لانچر میں Chrome ٹائپ کر کے معیاری براؤزر تلاش کیا جا سکتا ہے۔</translation>
 <translation id="5315738755890845852">اضافی خمیدہ قوسین: <ph name="ERROR_LINE" /></translation>
 <translation id="5317780077021120954">محفوظ کریں</translation>
@@ -4418,6 +4416,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="5932124097031739492">‏Linux کامیابی کے ساتھ اپ گریڈ کر دیا گیا ہے۔</translation>
 <translation id="5932224571077948991">سائٹ دخل انداز یا گمراہ کن اشتہارات دکھاتی ہے</translation>
 <translation id="59324397759951282">‏<ph name="MANUFACTURER_NAME" /> کی جانب سے USB آلہ</translation>
+<translation id="5932441198730183141">‏اس Google Meet ہارڈ ویئر آلہ کا اندراج کرنے کیلئے آپ کے پاس خاطر خواہ لائسنسز دستیاب نہیں ہیں۔ براہ کرم مزید خریداری کیلئے سیلز سے رابطہ کریں۔ اگر آپ کو یقین ہے کہ آپ کو یہ پیغام غلطی سے نظر آ رہا ہے تو براہ کرم سپورٹ سے رابطہ کریں۔</translation>
 <translation id="5932881020239635062">نمبر شمار</translation>
 <translation id="5933376509899483611">ٹائم زون</translation>
 <translation id="5933522550144185133"><ph name="APP_NAME" /> آپ کا کیمرا اور مائیکروفون استعمال کر رہی ہے</translation>
@@ -5071,6 +5070,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="6664237456442406323">‏بدقسمتی سے، آپ کا کمپیوٹر بدوضع ہارڈ ویئر ID کے ساتھ کنفیگر کیا ہوا ہے۔ یہ Chrome OS کو تازہ ترین سیکیورٹی فکسز کے ساتھ اپ ڈیٹ ہونے سے روکتا ہے اور آپ کے کمپیوٹر کو <ph name="BEGIN_BOLD" />نقصان دہ حملوں سے خطرہ ہو سکتا ہے<ph name="END_BOLD" />۔</translation>
 <translation id="6664774537677393800">آپ کے پروفائل کو کھولتے وقت کچھ غلط ہوگیا۔ براہ کرم سائن آؤٹ کر کے دوبارہ سائن ان کریں۔</translation>
 <translation id="6670142487971298264"><ph name="APP_NAME" /> ابھی دستیاب ہے</translation>
+<translation id="6671320560732140690">{COUNT,plural, =1{ایک پتہ}other{# پتے}}</translation>
 <translation id="6673391612973410118"><ph name="PRINTER_MAKE_OR_MODEL" /> (USB)</translation>
 <translation id="6674571176963658787">مطابقت پذیری شروع کرنے کے لیے، اپنا پاس فریز درج کریں</translation>
 <translation id="6675665718701918026">پوائنٹنگ آلہ منسلک ہو گیا</translation>
@@ -5196,7 +5196,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="6812349420832218321">‏<ph name="PRODUCT_NAME" /> کو root کے بطور نہیں چلایا جا سکتا ہے۔</translation>
 <translation id="6812841287760418429">تبدیلیاں برقرار رکھیں</translation>
 <translation id="6813907279658683733">پوری اسکرین</translation>
-<translation id="681584224457905309">{COUNT,plural, =1{فائل}other{# فائلز}}</translation>
 <translation id="6817174620439930047">‏جب کوئی سائٹ MIDI آلات تک رسائی کیلئے سسٹم کے جامع پیغامات استعمال کرنا چاہے تو پوچھیں (تجویز کردہ)</translation>
 <translation id="6818198425579322765">ترجمہ کرنے کے لیے صفحے کی زبان</translation>
 <translation id="6818802132960437751">پہلے سے شامل وائرس سے تحفظ</translation>
@@ -5218,7 +5217,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="683373380308365518">اسمارٹ اور محفوظ براؤزر پر سوئچ کریں</translation>
 <translation id="6835762382653651563">براہ کرم اپنا <ph name="DEVICE_TYPE" /> اپ ڈیٹ کرنے کیلئے انٹرنیٹ سے منسلک ہوں۔</translation>
 <translation id="6838034009068684089">جب کوئی سائٹ ونڈوز کھولنا اور آپ کی اسکرین پر رکھنا چاہے تو پوچھیں (تجاویز کردہ)</translation>
-<translation id="6838860780238890144">{COUNT,plural, =1{فون نمبر}other{# فون نمبرز}}</translation>
 <translation id="6839225236531462745">سرٹیفکیٹ حذف کرنے میں خرابی</translation>
 <translation id="6839916869147598086">سائن ان تبدیل ہو چکا ہے</translation>
 <translation id="6840155290835956714">بھیجنے سے پہلے پوچھیں</translation>
@@ -5327,7 +5325,6 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="6955446738988643816">پاپ اپ کا معائنہ کریں</translation>
 <translation id="6955535239952325894">یہ ترتیب نظم کردہ براؤزرز پر غیر فعال ہے</translation>
 <translation id="6957044667612803194">‏یہ سیکیورٹی کلید PINs کو سپورٹ نہیں کرتی</translation>
-<translation id="6957914043905853560">{COUNT,plural, =1{لنک}other{# لنکس}}</translation>
 <translation id="6960507406838246615">‏Linux کا اپ ڈیٹ درکار ہے</translation>
 <translation id="6960565108681981554">فعال نہیں ہے۔ اپنے کیریئر سے رابطہ کریں۔</translation>
 <translation id="696103774840402661">اس <ph name="DEVICE_TYPE" /> پر موجود سبھی صارفین کے لیے تمام فائلز اور مقامی ڈیٹا کو مستقل طور پر حذف کر دیا گیا ہے۔</translation>
@@ -5391,6 +5388,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="7009709314043432820"><ph name="APP_NAME" /> ایپ آپ کا کیمرا استعمال کر رہی ہے</translation>
 <translation id="701080569351381435">ماخذ دیکھیں</translation>
 <translation id="7014174261166285193">انسٹالیشن ناکام ہو گیا۔</translation>
+<translation id="7014480873681694324">ہائی لائٹ کو ہٹائیں</translation>
 <translation id="7017004637493394352">‏"Ok Google" دوبارہ بولیں</translation>
 <translation id="7017219178341817193">ایک نیا صفحہ شامل کریں</translation>
 <translation id="7017354871202642555">ونڈو سیٹ ہو جانے کے بعد وضع سیٹ نہیں کر سکتے۔</translation>
@@ -5407,6 +5405,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="7029307918966275733">‏Crostini انسٹال نہیں ہے۔ کریڈٹس دیکھنے کیلئے براہ کرم Crostini انسٹال کریں۔</translation>
 <translation id="7029809446516969842">پاس ورڈز</translation>
 <translation id="7031608529463141342"><ph name="WINDOW_TITLE" /> - سیریل پورٹ منسلک ہے</translation>
+<translation id="7034692021407794547">‏بلنگ کے نظم و نسق کے لئے خصوصی حقوق رکھنے والے منتظم کو پہلے منتظم کنسول کے Google Meet ہارڈ ویئر سیکشن میں Google Meet ہارڈ ویئر سروس کی شرائط کو قبول کرنا ہوگا۔</translation>
 <translation id="7036706669646341689">‏<ph name="DISK_SIZE" /> کی جگہ Linux کے لیے تجویز کی جاتی ہے۔ خالی جگہ میں اضافہ کرنے کے لیے، اپنے آلہ سے فائلز حذف کریں۔</translation>
 <translation id="7037509989619051237">متن کا پیش منظر دیکھیں</translation>
 <translation id="7038632520572155338">سوئچ رسائی</translation>
@@ -5772,6 +5771,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="7456142309650173560">dev</translation>
 <translation id="7456847797759667638">مقام کھولیں…</translation>
 <translation id="7457384018036134905">‏Chrome OS ترتیبات میں زبانوں کا نظم کریں</translation>
+<translation id="7457831169406914076">{COUNT,plural, =1{ایک لنک}other{# لنکس}}</translation>
 <translation id="7458168200501453431">‏اسی املا جانچ کنندہ کا استعمال کرتا ہے جس کا Google تلاش میں استعمال کیا جاتا ہے۔ آپ براؤزر میں جو متن ٹائپ کرتے ہیں وہ Google کو بھیجا جاتا ہے۔</translation>
 <translation id="7460045493116006516">موجودہ تھیم جسے آپ نے انسٹال کیا ہے</translation>
 <translation id="7461924472993315131">پن کریں</translation>
@@ -6173,6 +6173,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="7883792253546618164">کسی بھی وقت اَن سبسکرائب کریں۔</translation>
 <translation id="788453346724465748">اکاؤنٹ کی معلومات لوڈ ہورہی ہے...</translation>
 <translation id="7885253890047913815">حالیہ منزلیں</translation>
+<translation id="7886279613512920452">{COUNT,plural, =1{ایک آئٹم}other{# آئٹمز}}</translation>
 <translation id="7886605625338676841">eSIM</translation>
 <translation id="7887334752153342268">ڈپلیکیٹ</translation>
 <translation id="7887864092952184874">بلوٹوتھ ماؤس کا جوڑا بنا دیا گیا</translation>
@@ -6410,6 +6411,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="813913629614996137">آغاز کیا جا رہا ہے…</translation>
 <translation id="8141584439523427891">اب متبادل براؤزر میں کھل رہا ہے</translation>
 <translation id="8141725884565838206">اپنے پاس ورڈز کا نظم کریں</translation>
+<translation id="814204052173971714">{COUNT,plural, =1{ایک ویڈیو}other{# ویڈیوز}}</translation>
 <translation id="8143442547342702591">غلط ایپلیکیشن</translation>
 <translation id="8143951647992294073"><ph name="TOPIC_SOURCE" /> <ph name="TOPIC_SOURCE_DESC" /> منتخب کریں</translation>
 <translation id="8146177459103116374">اگر آپ پہلے ہی اس آلہ پر رجسٹر ہو گئے ہیں تو آپ <ph name="LINK2_START" />ایک موجودہ صارف کے بطور سائن ان<ph name="LINK2_END" /> کر سکتے ہیں۔</translation>
@@ -6429,6 +6431,7 @@ myaccount.google.com/activitycontrols/search پر تبدیل کر سکتے ہي�
 <translation id="8161293209665121583">ویب صفحات کے لیے ریڈر وضع</translation>
 <translation id="8162984717805647492">{NUM_TABS,plural, =1{ٹیب کو نئی ونڈو میں منتقل کریں}other{ٹیبز کو نئی ونڈو میں منتقل کریں}}</translation>
 <translation id="8165997195302308593">‏Crostini پورٹ فارورڈنگ</translation>
+<translation id="816704878106051517">{COUNT,plural, =1{ایک فون نمبر}other{# فون نمبرز}}</translation>
 <translation id="8168435359814927499">مواد</translation>
 <translation id="8168943654413034772">منتخب کرنے کے لئے تفویض کردہ سوئچ ہی ہٹایا نہیں جا سکتا۔ باہر نکلنے کے لیے کوئی بھی کلید دبائیں۔</translation>
 <translation id="8169165065843881617">{NUM_TABS,plural, =1{پڑھنے کی فہرست میں ٹیب شامل کریں}other{پڑھنے کی فہرست میں ٹیبز شامل کریں}}</translation>

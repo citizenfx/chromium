@@ -4,6 +4,8 @@
 
 package org.chromium.chrome.browser.merchant_viewer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -74,6 +76,9 @@ public class MerchantTrustDetailsTabMediatorTest {
 
     @Mock
     private Profile mMockProfile;
+
+    @Mock
+    private MerchantTrustMetrics mMockMetrics;
 
     @Captor
     private ArgumentCaptor<WebContentsDelegateAndroid> mWebContentsDelegateCaptor;
@@ -163,6 +168,33 @@ public class MerchantTrustDetailsTabMediatorTest {
     }
 
     @Test
+    public void testWebContentsDelegateShouldCreateWebContents() {
+        MerchantTrustDetailsTabMediator instance = getMediatorUnderTest();
+        instance.init(mMockWebContents, mMockContentView, mMockSheetContent, mMockProfile);
+        verify(mMockSheetContent, times(1))
+                .attachWebContents(eq(mMockWebContents), eq(mMockContentView),
+                        mWebContentsDelegateCaptor.capture());
+        instance.requestShowContent(mMockDestinationGurl, DUMMY_SHEET_TITLE);
+
+        assertFalse(mWebContentsDelegateCaptor.getValue().shouldCreateWebContents(
+                mMockDestinationGurl));
+
+        verify(mMockNavigationController, times(2)).loadUrl(any(LoadUrlParams.class));
+    }
+
+    @Test
+    public void testGetTopControlsHeight() {
+        MerchantTrustDetailsTabMediator instance = getMediatorUnderTest();
+        instance.init(mMockWebContents, mMockContentView, mMockSheetContent, mMockProfile);
+        verify(mMockSheetContent, times(1))
+                .attachWebContents(eq(mMockWebContents), eq(mMockContentView),
+                        mWebContentsDelegateCaptor.capture());
+        instance.requestShowContent(mMockDestinationGurl, DUMMY_SHEET_TITLE);
+
+        assertEquals(100, mWebContentsDelegateCaptor.getValue().getTopControlsHeight());
+    }
+
+    @Test
     public void testLoadingStateChanges() {
         MerchantTrustDetailsTabMediator instance = getMediatorUnderTest();
         instance.init(mMockWebContents, mMockContentView, mMockSheetContent, mMockProfile);
@@ -180,6 +212,6 @@ public class MerchantTrustDetailsTabMediatorTest {
     }
 
     private MerchantTrustDetailsTabMediator getMediatorUnderTest() {
-        return new MerchantTrustDetailsTabMediator(mMockBottomSheetController, 100);
+        return new MerchantTrustDetailsTabMediator(mMockBottomSheetController, 100, mMockMetrics);
     }
 }
