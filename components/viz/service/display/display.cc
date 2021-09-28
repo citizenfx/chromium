@@ -1079,7 +1079,7 @@ void Display::ForceImmediateDrawAndSwapIfPossible() {
 
 void Display::SetNeedsOneBeginFrame() {
   if (scheduler_)
-    scheduler_->SetNeedsOneBeginFrame(true);
+    scheduler_->SetNeedsOneBeginFrame(false);
 }
 
 void Display::RemoveOverdrawQuads(AggregatedFrame* frame) {
