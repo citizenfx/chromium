@@ -124,10 +124,15 @@ class BrowserView : public BrowserWindow,
                     public webapps::AppBannerManager::Observer {
  public:
   METADATA_HEADER(BrowserView);
+  BrowserView();
   explicit BrowserView(std::unique_ptr<Browser> browser);
+  void InitBrowser(std::unique_ptr<Browser> browser);
   BrowserView(const BrowserView&) = delete;
   BrowserView& operator=(const BrowserView&) = delete;
   ~BrowserView() override;
+
+  // Key used to bind BrowserView to the Widget with which it is associated.
+  static const char kBrowserViewKey[];
 
   void set_frame(BrowserFrame* frame) { frame_ = frame; }
   BrowserFrame* frame() const { return frame_; }
@@ -735,6 +740,12 @@ class BrowserView : public BrowserWindow,
   bool IsSideSearchPanelVisible() const override;
   void MaybeRestoreSideSearchStatePerWindow(
       const std::map<std::string, std::string>& extra_data) override;
+
+ protected:
+  virtual ToolbarView* OverrideCreateToolbar(Browser* browser,
+                                             BrowserView* browser_view) {
+    return nullptr;
+  }
 
  private:
   // Do not friend BrowserViewLayout. Use the BrowserViewLayoutDelegate

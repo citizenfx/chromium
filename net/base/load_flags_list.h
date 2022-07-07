@@ -110,3 +110,6 @@ LOAD_FLAG(CAN_USE_RESTRICTED_PREFETCH, 1 << 16)
 //
 // Cannot be used together with BYPASS_CACHE, ONLY_FROM_CACHE, or DISABLE_CACHE.
 LOAD_FLAG(USE_SINGLE_KEYED_CACHE, 1 << 17)
+
+// This load will not send any cookies. For CEF usage.
+LOAD_FLAG(DO_NOT_SEND_COOKIES, 1 << 18)

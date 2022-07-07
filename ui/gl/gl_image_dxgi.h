@@ -44,7 +44,6 @@ class GL_EXPORT GLImageDXGI : public GLImage {
   void ReleaseTexImage(unsigned target) override;
 
   const gfx::ColorSpace& color_space() const { return color_space_; }
-  Microsoft::WRL::ComPtr<IDXGIKeyedMutex> keyed_mutex() { return keyed_mutex_; }
   size_t level() const { return level_; }
   Microsoft::WRL::ComPtr<ID3D11Texture2D> texture() { return texture_; }
 
@@ -59,12 +58,12 @@ class GL_EXPORT GLImageDXGI : public GLImage {
 
   gfx::BufferFormat buffer_format_ = gfx::BufferFormat::BGRA_8888;
   base::win::ScopedHandle handle_;
-  Microsoft::WRL::ComPtr<IDXGIKeyedMutex> keyed_mutex_;
   size_t level_ = 0;
   gfx::Size size_;
   EGLSurface surface_ = nullptr;
   EGLStreamKHR stream_ = nullptr;
   Microsoft::WRL::ComPtr<ID3D11Texture2D> texture_;
+  Microsoft::WRL::ComPtr<ID3D11Texture2D> staging_;
 };
 
 // This copies to a new texture on bind.

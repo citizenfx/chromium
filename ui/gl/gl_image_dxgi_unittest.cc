@@ -36,7 +36,7 @@ class GLImageDXGITestDelegate : public GLImageTestDelegateBase {
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
     desc.CPUAccessFlags = 0;
     desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-                     D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+                     D3D11_RESOURCE_MISC_SHARED;
 
     std::vector<unsigned char> originalData(size.width() * size.height() * 4);
     for (int x = 0; x < size.width(); ++x) {

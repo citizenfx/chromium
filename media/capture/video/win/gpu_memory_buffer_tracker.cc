@@ -35,7 +35,7 @@ base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
       .BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET,
       .CPUAccessFlags = 0,
       .MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-                   D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX};
+                   D3D11_RESOURCE_MISC_SHARED};
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
 

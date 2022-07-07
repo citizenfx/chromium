@@ -13,6 +13,7 @@
 #include "base/strings/string_util.h"
 #include "build/build_config.h"
 #include "build/chromeos_buildflags.h"
+#include "cef/libcef/features/runtime.h"
 #include "chrome/browser/extensions/api/automation_internal/chrome_automation_internal_api_delegate.h"
 #include "chrome/browser/extensions/api/chrome_device_permissions_prompt.h"
 #include "chrome/browser/extensions/api/declarative_content/chrome_content_rules_registry.h"
@@ -72,6 +73,10 @@
 
 #if BUILDFLAG(IS_CHROMEOS)
 #include "chrome/browser/extensions/clipboard_extension_helper_chromeos.h"
+#endif
+
+#if BUILDFLAG(ENABLE_CEF)
+#include "cef/libcef/browser/chrome/extensions/chrome_mime_handler_view_guest_delegate_cef.h"
 #endif
 
 #if BUILDFLAG(ENABLE_PDF)
@@ -294,6 +299,9 @@ ChromeExtensionsAPIClient::CreateGuestViewManagerDelegate(
 std::unique_ptr<MimeHandlerViewGuestDelegate>
 ChromeExtensionsAPIClient::CreateMimeHandlerViewGuestDelegate(
     MimeHandlerViewGuest* guest) const {
+  if (cef::IsChromeRuntimeEnabled()) {
+    return std::make_unique<ChromeMimeHandlerViewGuestDelegateCef>(guest);
+  }
   return std::make_unique<ChromeMimeHandlerViewGuestDelegate>();
 }
 

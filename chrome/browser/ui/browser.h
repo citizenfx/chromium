@@ -22,6 +22,7 @@
 #include "base/timer/elapsed_timer.h"
 #include "build/build_config.h"
 #include "build/chromeos_buildflags.h"
+#include "cef/libcef/features/runtime.h"
 #include "chrome/browser/themes/theme_service_observer.h"
 #include "chrome/browser/ui/bookmarks/bookmark_bar.h"
 #include "chrome/browser/ui/bookmarks/bookmark_tab_helper_observer.h"
@@ -46,6 +47,10 @@
 #include "ui/base/window_open_disposition.h"
 #include "ui/gfx/geometry/rect.h"
 #include "ui/shell_dialogs/select_file_dialog.h"
+
+#if BUILDFLAG(ENABLE_CEF)
+#include "cef/libcef/browser/chrome/browser_delegate.h"
+#endif
 
 #if BUILDFLAG(IS_ANDROID)
 #error This file should only be included on desktop.
@@ -305,6 +310,11 @@ class Browser : public TabStripModelObserver,
     // maximizable.
     bool can_maximize = true;
 
+#if BUILDFLAG(ENABLE_CEF)
+    // Opaque CEF-specific configuration. Will be propagated to new Browsers.
+    scoped_refptr<cef::BrowserDelegate::CreateParams> cef_params;
+#endif
+
    private:
     friend class Browser;
     friend class WindowSizerChromeOSTest;
@@ -371,6 +381,13 @@ class Browser : public TabStripModelObserver,
   bool is_session_restore() const {
     return creation_source_ == CreationSource::kSessionRestore;
   }
+
+  // Return true if CEF will expose the toolbar to the client. This value is
+  // used to selectively enable toolbar behaviors such as command processing
+  // and omnibox focus without also including the toolbar in BrowserView layout
+  // calculations.
+  void set_toolbar_overridden(bool val) { toolbar_overridden_ = val; }
+  bool toolbar_overridden() const { return toolbar_overridden_; }
 
   // Accessors ////////////////////////////////////////////////////////////////
 
@@ -444,6 +461,12 @@ class Browser : public TabStripModelObserver,
   }
 
   base::WeakPtr<Browser> AsWeakPtr();
+
+#if BUILDFLAG(ENABLE_CEF)
+  cef::BrowserDelegate* cef_delegate() const {
+    return cef_browser_delegate_.get();
+  }
+#endif
 
   // Get the FindBarController for this browser, creating it if it does not
   // yet exist.
@@ -814,11 +837,19 @@ class Browser : public TabStripModelObserver,
   void SetContentsBounds(content::WebContents* source,
                          const gfx::Rect& bounds) override;
   void UpdateTargetURL(content::WebContents* source, const GURL& url) override;
+  bool DidAddMessageToConsole(content::WebContents* source,
+                              blink::mojom::ConsoleMessageLevel log_level,
+                              const std::u16string& message,
+                              int32_t line_no,
+                              const std::u16string& source_id) override;
   void ContentsMouseEvent(content::WebContents* source,
                           bool motion,
                           bool exited) override;
   void ContentsZoomChange(bool zoom_in) override;
   bool TakeFocus(content::WebContents* source, bool reverse) override;
+  void CanDownload(const GURL& url,
+                   const std::string& request_method,
+                   base::OnceCallback<void(bool)> callback) override;
   void BeforeUnloadFired(content::WebContents* source,
                          bool proceed,
                          bool* proceed_to_fire_unload) override;
@@ -1215,6 +1246,8 @@ class Browser : public TabStripModelObserver,
   const std::string initial_workspace_;
   bool initial_visible_on_all_workspaces_state_;
 
+  bool toolbar_overridden_ = false;
+
   CreationSource creation_source_ = CreationSource::kUnknown;
 
   UnloadController unload_controller_;
@@ -1279,6 +1312,10 @@ class Browser : public TabStripModelObserver,
 #if BUILDFLAG(ENABLE_SCREEN_AI_SERVICE)
   // Manages the snapshot processing by ScreenAI, if enabled.
   std::unique_ptr<screen_ai::AXScreenAIAnnotator> screen_ai_annotator_;
+#endif
+
+#if BUILDFLAG(ENABLE_CEF)
+  std::unique_ptr<cef::BrowserDelegate> cef_browser_delegate_;
 #endif
 
   const base::ElapsedTimer creation_timer_;

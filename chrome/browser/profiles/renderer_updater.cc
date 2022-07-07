@@ -8,6 +8,7 @@
 
 #include "base/bind.h"
 #include "build/chromeos_buildflags.h"
+#include "cef/libcef/features/runtime.h"
 #include "chrome/browser/content_settings/content_settings_manager_delegate.h"
 #include "chrome/browser/content_settings/host_content_settings_map_factory.h"
 #include "chrome/browser/profiles/profile.h"
@@ -35,8 +36,10 @@ RendererUpdater::RendererUpdater(Profile* profile)
     : profile_(profile),
       is_off_the_record_(profile_->IsOffTheRecord()),
       original_profile_(profile->GetOriginalProfile()) {
+  if (!cef::IsAlloyRuntimeEnabled()) {
   identity_manager_observation_.Observe(
       IdentityManagerFactory::GetForProfile(original_profile_));
+  }
 
 #if BUILDFLAG(IS_CHROMEOS_ASH)
   oauth2_login_manager_ =

@@ -6259,6 +6259,12 @@ NavigationRequest::GetOriginForURLLoaderFactoryWithoutFinalFrameHost(
     network::mojom::WebSandboxFlags sandbox_flags) {
   // Calculate an approximation of the origin. The sandbox/csp are ignored.
   url::Origin origin = GetOriginForURLLoaderFactoryUnchecked(this);
+  if (!origin.GetURL().IsStandard()) {
+    // Always return an opaque origin for non-standard URLs. Otherwise, the
+    // below CanAccessDataForOrigin() check may fail for unregistered custom
+    // scheme requests in CEF.
+    return origin.DeriveNewOpaqueOrigin();
+  }
 
   // Apply sandbox flags.
   // See https://html.spec.whatwg.org/#sandboxed-origin-browsing-context-flag
@@ -6291,6 +6297,15 @@ NavigationRequest::GetOriginForURLLoaderFactoryWithFinalFrameHost() {
 
   if (IsSameDocument() || IsPageActivation())
     return GetRenderFrameHost()->GetLastCommittedOrigin();
+
+  // Calculate an approximation of the origin. The sandbox/csp are ignored.
+  url::Origin unchecked_origin = GetOriginForURLLoaderFactoryUnchecked(this);
+  if (!unchecked_origin.GetURL().IsStandard()) {
+    // Always return an opaque origin for non-standard URLs. Otherwise, the
+    // below CanAccessDataForOrigin() check may fail for unregistered custom
+    // scheme requests in CEF.
+    return unchecked_origin.DeriveNewOpaqueOrigin();
+  }
 
   url::Origin origin =
       GetOriginForURLLoaderFactoryWithoutFinalFrameHost(SandboxFlagsToCommit());

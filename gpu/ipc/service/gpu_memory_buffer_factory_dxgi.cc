@@ -127,10 +127,10 @@ gfx::GpuMemoryBufferHandle GpuMemoryBufferFactoryDXGI::CreateGpuMemoryBuffer(
       dxgi_format,
       {1, 0},
       D3D11_USAGE_DEFAULT,
-      D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET,
+      D3D11_BIND_SHADER_RESOURCE,
       0,
       D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-          D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX};
+          D3D11_RESOURCE_MISC_SHARED};
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
 

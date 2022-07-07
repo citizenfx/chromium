@@ -118,23 +118,6 @@ bool CopyDXGIBufferToShMem(
   Microsoft::WRL::ComPtr<ID3D11DeviceContext> device_context;
   d3d11_device->GetImmediateContext(&device_context);
 
-  Microsoft::WRL::ComPtr<IDXGIKeyedMutex> keyed_mutex;
-  hr = texture.As(&keyed_mutex);
-
-  if (FAILED(hr)) {
-    DLOG(ERROR) << "Failed to get keyed mutex. hr=" << std::hex << hr;
-    return false;
-  }
-
-  // Key equal to 0 is also used by the producer. Therefore, this keyed mutex
-  // acts purely as a regular mutex.
-  hr = keyed_mutex->AcquireSync(0, INFINITE);
-  if (FAILED(hr)) {
-    DLOG(ERROR) << "Failed to acquire keyed mutex. hr=" << std::hex << hr;
-    return false;
-  }
-  DXGIScopedReleaseKeyedMutex release_keyed_mutex(keyed_mutex, 0);
-
   device_context->CopySubresourceRegion(staging_texture->Get(), 0, 0, 0, 0,
                                         texture.Get(), 0, nullptr);
 

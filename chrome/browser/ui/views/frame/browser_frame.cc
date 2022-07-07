@@ -74,15 +74,23 @@ bool IsUsingGtkTheme(Profile* profile) {
 ////////////////////////////////////////////////////////////////////////////////
 // BrowserFrame, public:
 
+BrowserFrame::BrowserFrame() : BrowserFrame(nullptr) {}
+
 BrowserFrame::BrowserFrame(BrowserView* browser_view)
     : native_browser_frame_(nullptr),
       root_view_(nullptr),
       browser_frame_view_(nullptr),
-      browser_view_(browser_view) {
-  browser_view_->set_frame(this);
+      browser_view_(nullptr) {
   set_is_secondary_widget(false);
   // Don't focus anything on creation, selecting a tab will set the focus.
   set_focus_on_creation(false);
+  if (browser_view)
+    InitBrowserView(browser_view);
+}
+
+void BrowserFrame::InitBrowserView(BrowserView* browser_view) {
+  browser_view_ = browser_view;
+  browser_view_->set_frame(this);
 }
 
 BrowserFrame::~BrowserFrame() {}
@@ -152,6 +160,12 @@ gfx::Rect BrowserFrame::GetBoundsForTabStripRegion(
 }
 
 int BrowserFrame::GetTopInset() const {
+  if (!browser_frame_view_) {
+    // With CEF the browser may already be part of a larger Views layout. Zero
+    // out the adjustment in BrowserView::GetTopInsetInBrowserView() so that
+    // the browser isn't shifted to the top of the window.
+    return browser_view_->y();
+  }
   return browser_frame_view_->GetTopInset(false);
 }
 
@@ -181,20 +195,30 @@ bool BrowserFrame::ShouldDrawFrameHeader() const {
 
 void BrowserFrame::GetWindowPlacement(gfx::Rect* bounds,
                                       ui::WindowShowState* show_state) const {
+  if (!native_browser_frame_) {
+    *show_state = ui::SHOW_STATE_DEFAULT;
+    return;
+  }
   return native_browser_frame_->GetWindowPlacement(bounds, show_state);
 }
 
 content::KeyboardEventProcessingResult BrowserFrame::PreHandleKeyboardEvent(
     const content::NativeWebKeyboardEvent& event) {
+  if (!native_browser_frame_)
+    return content::KeyboardEventProcessingResult::NOT_HANDLED;
   return native_browser_frame_->PreHandleKeyboardEvent(event);
 }
 
 bool BrowserFrame::HandleKeyboardEvent(
     const content::NativeWebKeyboardEvent& event) {
+  if (!native_browser_frame_)
+    return false;
   return native_browser_frame_->HandleKeyboardEvent(event);
 }
 
 void BrowserFrame::OnBrowserViewInitViewsComplete() {
+  if (!browser_frame_view_)
+    return;
   browser_frame_view_->OnBrowserViewInitViewsComplete();
 }
 
@@ -255,6 +279,8 @@ const ui::ThemeProvider* BrowserFrame::GetThemeProvider() const {
 
 ui::ColorProviderManager::ThemeInitializerSupplier*
 BrowserFrame::GetCustomTheme() const {
+  if (!browser_view_)
+    return nullptr;
   Browser* browser = browser_view_->browser();
   // If this is an incognito profile, there should never be a custom theme.
   if (browser->profile()->IsIncognitoProfile())
@@ -272,6 +298,8 @@ BrowserFrame::GetCustomTheme() const {
 }
 
 void BrowserFrame::OnNativeWidgetWorkspaceChanged() {
+  if (!browser_view_)
+    return;
   chrome::SaveWindowWorkspace(browser_view_->browser(), GetWorkspace());
   chrome::SaveWindowVisibleOnAllWorkspaces(browser_view_->browser(),
                                            IsVisibleOnAllWorkspaces());
@@ -361,6 +389,8 @@ void BrowserFrame::SetTabDragKind(TabDragKind tab_drag_kind) {
 
 ui::ColorProviderManager::Key BrowserFrame::GetColorProviderKey() const {
   auto key = Widget::GetColorProviderKey();
+  if (!browser_view_)
+    return key;
   auto* app_controller = browser_view_->browser()->app_controller();
   key.app_controller =
       app_controller ? app_controller->get_weak_ref() : nullptr;
@@ -391,7 +421,8 @@ void BrowserFrame::SelectNativeTheme() {
   // Select between regular, dark and GTK theme.
   ui::NativeTheme* native_theme = ui::NativeTheme::GetInstanceForNativeUi();
 
-  if (browser_view_->browser()->profile()->IsIncognitoProfile()) {
+  if (browser_view_ &&
+      browser_view_->browser()->profile()->IsIncognitoProfile()) {
     // No matter if we are using the default theme or not we always use the dark
     // ui instance.
     SetNativeTheme(ui::NativeTheme::GetInstanceForDarkUI());
@@ -404,7 +435,8 @@ void BrowserFrame::SelectNativeTheme() {
   // display_override so the web contents can blend with the overlay by using
   // the developer-provided theme color for a better experience. Context:
   // https://crbug.com/1219073.
-  if (linux_ui && !browser_view_->AppUsesWindowControlsOverlay()) {
+  if (linux_ui &&
+      (!browser_view_ || !browser_view_->AppUsesWindowControlsOverlay())) {
     native_theme = linux_ui->GetNativeTheme(GetNativeWindow());
   }
 #endif

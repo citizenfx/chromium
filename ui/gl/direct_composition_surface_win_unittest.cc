@@ -95,7 +95,7 @@ Microsoft::WRL::ComPtr<ID3D11Texture2D> CreateNV12Texture(
   desc.SampleDesc.Count = 1;
   desc.BindFlags = 0;
   if (shared) {
-    desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX |
+    desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED |
                      D3D11_RESOURCE_MISC_SHARED_NTHANDLE;
   }
 

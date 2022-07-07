@@ -264,6 +264,25 @@
 #include "components/captive_portal/content/captive_portal_tab_helper.h"
 #endif
 
+#if BUILDFLAG(ENABLE_CEF)
+#define CALL_CEF_DELEGATE(name, ...) \
+  if (cef_browser_delegate_) { \
+    cef_browser_delegate_->name(__VA_ARGS__); \
+  }
+#define CALL_CEF_DELEGATE_RETURN(name, ...) \
+  if (cef_browser_delegate_) { \
+    return cef_browser_delegate_->name(__VA_ARGS__); \
+  }
+#define CALL_CEF_DELEGATE_RESULT(name, result, ...) \
+  if (cef_browser_delegate_) { \
+    result = cef_browser_delegate_->name(__VA_ARGS__); \
+  }
+#else  // !BUILDFLAG(ENABLE_CEF)
+#define CALL_CEF_DELEGATE(name, ...)
+#define CALL_CEF_DELEGATE_RETURN(name, ...)
+#define CALL_CEF_DELEGATE_RESULT(name, result, ...)
+#endif
+
 #if BUILDFLAG(ENABLE_EXTENSIONS)
 #include "chrome/browser/extensions/extension_browser_window_helper.h"
 #endif
@@ -509,6 +528,13 @@ Browser::Browser(const CreateParams& params)
   }
 
   tab_strip_model_->AddObserver(this);
+
+#if BUILDFLAG(ENABLE_CEF)
+  if (cef::IsChromeRuntimeEnabled()) {
+    cef_browser_delegate_ =
+        cef::BrowserDelegate::Create(this, params.cef_params);
+  }
+#endif
 
   location_bar_model_ = std::make_unique<LocationBarModelImpl>(
       location_bar_model_delegate_.get(), content::kMaxURLDisplayChars);
@@ -1323,6 +1349,14 @@ content::KeyboardEventProcessingResult Browser::PreHandleKeyboardEvent(
   if (exclusive_access_manager_->HandleUserKeyEvent(event))
     return content::KeyboardEventProcessingResult::HANDLED;
 
+#if BUILDFLAG(ENABLE_CEF)
+  if (cef_browser_delegate_) {
+    auto result = cef_browser_delegate_->PreHandleKeyboardEvent(source, event);
+    if (result != content::KeyboardEventProcessingResult::NOT_HANDLED)
+      return result;
+  }
+#endif
+
   return window()->PreHandleKeyboardEvent(event);
 }
 
@@ -1330,8 +1364,18 @@ bool Browser::HandleKeyboardEvent(content::WebContents* source,
                                   const NativeWebKeyboardEvent& event) {
   DevToolsWindow* devtools_window =
       DevToolsWindow::GetInstanceForInspectedWebContents(source);
-  return (devtools_window && devtools_window->ForwardKeyboardEvent(event)) ||
-         window()->HandleKeyboardEvent(event);
+  if (devtools_window && devtools_window->ForwardKeyboardEvent(event)) {
+    return true;
+  }
+
+#if BUILDFLAG(ENABLE_CEF)
+  if (cef_browser_delegate_ &&
+      cef_browser_delegate_->HandleKeyboardEvent(source, event)) {
+    return true;
+  }
+#endif
+
+  return window()->HandleKeyboardEvent(event);
 }
 
 bool Browser::TabsNeedBeforeUnloadFired() {
@@ -1536,6 +1580,14 @@ WebContents* Browser::OpenURLFromTab(WebContents* source,
     return window->OpenURLFromTab(source, params);
   }
 
+#if BUILDFLAG(ENABLE_CEF)
+  if (cef_browser_delegate_) {
+    auto web_contents = cef_browser_delegate_->OpenURLFromTab(source, params);
+    if (!web_contents)
+      return nullptr;
+  }
+#endif
+
   NavigateParams nav_params(this, params.url, params.transition);
   nav_params.FillNavigateParamsFromOpenURLParams(params);
   nav_params.source_contents = source;
@@ -1665,6 +1717,15 @@ void Browser::AddNewContents(WebContents* source,
     return;
   }
 
+#if BUILDFLAG(ENABLE_CEF)
+  if (cef_browser_delegate_) {
+    cef_browser_delegate_->AddNewContents(
+        source, std::move(new_contents), target_url, disposition, initial_rect,
+        user_gesture, was_blocked);
+    return;
+  }
+#endif
+
   chrome::AddWebContents(this, source, std::move(new_contents), target_url,
                          disposition, initial_rect, window_action);
 }
@@ -1683,6 +1744,8 @@ void Browser::LoadingStateChanged(WebContents* source,
                                   bool should_show_loading_ui) {
   ScheduleUIUpdate(source, content::INVALIDATE_TYPE_LOAD);
   UpdateWindowForLoadingStateChanged(source, should_show_loading_ui);
+
+  CALL_CEF_DELEGATE(LoadingStateChanged, source, should_show_loading_ui);
 }
 
 void Browser::CloseContents(WebContents* source) {
@@ -1710,11 +1773,24 @@ void Browser::SetContentsBounds(WebContents* source, const gfx::Rect& bounds) {
 }
 
 void Browser::UpdateTargetURL(WebContents* source, const GURL& url) {
+  CALL_CEF_DELEGATE(UpdateTargetURL, source, url);
+
   if (!GetStatusBubble())
     return;
 
   if (source == tab_strip_model_->GetActiveWebContents())
     GetStatusBubble()->SetURL(url);
+}
+
+bool Browser::DidAddMessageToConsole(
+    content::WebContents* source,
+    blink::mojom::ConsoleMessageLevel log_level,
+    const std::u16string& message,
+    int32_t line_no,
+    const std::u16string& source_id) {
+  CALL_CEF_DELEGATE_RETURN(DidAddMessageToConsole, source, log_level, message,
+                           line_no, source_id);
+  return false;
 }
 
 void Browser::ContentsMouseEvent(WebContents* source,
@@ -1739,6 +1815,19 @@ void Browser::ContentsZoomChange(bool zoom_in) {
 
 bool Browser::TakeFocus(content::WebContents* source, bool reverse) {
   return false;
+}
+
+void Browser::CanDownload(const GURL& url,
+                          const std::string& request_method,
+                          base::OnceCallback<void(bool)> callback) {
+#if BUILDFLAG(ENABLE_CEF)
+  if (cef_browser_delegate_) {
+    cef_browser_delegate_->CanDownload(url, request_method,
+                                       std::move(callback));
+    return;
+  }
+#endif
+  std::move(callback).Run(true);
 }
 
 void Browser::BeforeUnloadFired(WebContents* web_contents,
@@ -1833,6 +1922,10 @@ void Browser::WebContentsCreated(WebContents* source_contents,
 
   // Make the tab show up in the task manager.
   task_manager::WebContentsTags::CreateForTabContents(new_contents);
+
+  CALL_CEF_DELEGATE(WebContentsCreated, source_contents,
+                    opener_render_process_id, opener_render_frame_id,
+                    frame_name, target_url, new_contents);
 }
 
 void Browser::PortalWebContentsCreated(WebContents* portal_web_contents) {
@@ -1877,6 +1970,8 @@ void Browser::RendererResponsive(
 void Browser::DidNavigatePrimaryMainFramePostCommit(WebContents* web_contents) {
   if (web_contents == tab_strip_model_->GetActiveWebContents())
     UpdateBookmarkBarState(BOOKMARK_BAR_STATE_CHANGE_TAB_STATE);
+
+  CALL_CEF_DELEGATE(DidNavigatePrimaryMainFramePostCommit, web_contents);
 }
 
 content::JavaScriptDialogManager* Browser::GetJavaScriptDialogManager(
@@ -1937,11 +2032,15 @@ void Browser::EnterFullscreenModeForTab(
     const blink::mojom::FullscreenOptions& options) {
   exclusive_access_manager_->fullscreen_controller()->EnterFullscreenModeForTab(
       requesting_frame, options.display_id);
+
+  CALL_CEF_DELEGATE(EnterFullscreenModeForTab, requesting_frame, options);
 }
 
 void Browser::ExitFullscreenModeForTab(WebContents* web_contents) {
   exclusive_access_manager_->fullscreen_controller()->ExitFullscreenModeForTab(
       web_contents);
+
+  CALL_CEF_DELEGATE(ExitFullscreenModeForTab, web_contents);
 }
 
 bool Browser::IsFullscreenForTabOrPending(const WebContents* web_contents) {
@@ -2654,12 +2753,19 @@ void Browser::RemoveScheduledUpdatesFor(WebContents* contents) {
 // Browser, Getters for UI (private):
 
 StatusBubble* Browser::GetStatusBubble() {
+  bool show_by_default = true;
+
   // In kiosk and exclusive app mode we want to always hide the status bubble.
   if (chrome::IsRunningInAppMode() ||
       (base::FeatureList::IsEnabled(features::kRemoveStatusBarInWebApps) &&
        web_app::AppBrowserController::IsWebApp(this))) {
-    return nullptr;
+    show_by_default = false;
   }
+
+  bool show = show_by_default;
+  CALL_CEF_DELEGATE_RESULT(ShowStatusBubble, show, show_by_default);
+  if (!show)
+    return nullptr;
 
   return window_ ? window_->GetStatusBubble() : nullptr;
 }
@@ -2787,6 +2893,8 @@ void Browser::SetAsDelegate(WebContents* web_contents, bool set_delegate) {
     content_translate_driver->RemoveTranslationObserver(this);
     BookmarkTabHelper::FromWebContents(web_contents)->RemoveObserver(this);
   }
+
+  CALL_CEF_DELEGATE(SetAsDelegate, web_contents, set_delegate);
 }
 
 void Browser::TabDetachedAtImpl(content::WebContents* contents,

@@ -59,6 +59,10 @@ class CONTENT_EXPORT WebUIConfigMap {
   // Returns the size of the map, i.e. how many WebUIConfigs are registered.
   size_t GetSizeForTesting() { return configs_map_.size(); }
 
+  WebUIControllerFactory* controller_factory() const {
+    return webui_controller_factory_.get();
+  }
+
  private:
   void AddWebUIConfigImpl(std::unique_ptr<WebUIConfig> config);
 

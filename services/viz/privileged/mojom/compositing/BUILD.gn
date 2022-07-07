@@ -19,6 +19,7 @@ mojom("compositing") {
   ]
 
   public_deps = [
+    "//cef/libcef/browser/osr",
     "//gpu/ipc/common:interfaces",
     "//media/capture/mojom:video_capture",
     "//media/mojo/mojom",

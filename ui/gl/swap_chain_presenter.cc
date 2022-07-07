@@ -989,8 +989,7 @@ bool SwapChainPresenter::PresentToSwapChain(ui::DCRendererLayerParams& params) {
   if (image_dxgi) {
     input_texture = image_dxgi->texture();
     input_level = image_dxgi->level();
-    // Keyed mutex may not exist.
-    keyed_mutex = image_dxgi->keyed_mutex();
+    // Keyed mutex does not exist. lol
     input_color_space = image_dxgi->color_space();
   } else if (image_d3d) {
     input_texture = image_d3d->texture();

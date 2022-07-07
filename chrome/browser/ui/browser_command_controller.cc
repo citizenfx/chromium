@@ -382,8 +382,10 @@ bool BrowserCommandController::ExecuteCommandWithDisposition(
   // CommandUpdaterDelegate and CommandUpdater declare this function so we
   // choose to not implement CommandUpdaterDelegate inside this class and
   // therefore command_updater_ doesn't have the delegate set).
-  if (!SupportsCommand(id) || !IsCommandEnabled(id))
+  if (!SupportsCommand(id) || !IsCommandEnabled(id)) {
+    LOG(WARNING) << "Invalid/disabled command " << id;
     return false;
+  }
 
   // No commands are enabled if there is not yet any selected tab.
   // TODO(pkasting): It seems like we should not need this, because either
@@ -397,6 +399,13 @@ bool BrowserCommandController::ExecuteCommandWithDisposition(
 
   DCHECK(command_updater_.IsCommandEnabled(id))
       << "Invalid/disabled command " << id;
+
+#if BUILDFLAG(ENABLE_CEF)
+  if (browser_->cef_delegate() &&
+      browser_->cef_delegate()->HandleCommand(id, disposition)) {
+    return true;
+  }
+#endif
 
   // The order of commands in this switch statement must match the function
   // declaration order in browser.h!
@@ -1032,11 +1041,13 @@ void BrowserCommandController::TabRestoreServiceLoaded(
 // BrowserCommandController, private:
 
 bool BrowserCommandController::IsShowingMainUI() {
-  return browser_->SupportsWindowFeature(Browser::FEATURE_TABSTRIP);
+  return browser_->SupportsWindowFeature(Browser::FEATURE_TABSTRIP) ||
+         browser_->toolbar_overridden();
 }
 
 bool BrowserCommandController::IsShowingLocationBar() {
-  return browser_->SupportsWindowFeature(Browser::FEATURE_LOCATIONBAR);
+  return browser_->SupportsWindowFeature(Browser::FEATURE_LOCATIONBAR) ||
+         browser_->toolbar_overridden();
 }
 
 bool BrowserCommandController::IsWebAppOrCustomTab() const {

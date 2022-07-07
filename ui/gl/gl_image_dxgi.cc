@@ -23,10 +23,6 @@
 namespace gl {
 
 namespace {
-// Keys used to acquire and release the keyed mutex.  Will need to be kept in
-// sync with any other code that reads from or draws to the same DXGI handle.
-const static UINT64 KEY_BIND = 0;
-const static UINT64 KEY_RELEASE = 1;
 
 bool SupportedBindFormat(gfx::BufferFormat format) {
   switch (format) {
@@ -152,7 +148,6 @@ bool GLImageDXGI::BindTexImage(unsigned target) {
     return true;
 
   DCHECK(texture_);
-  DCHECK(keyed_mutex_);
   if (!SupportedBindFormat(buffer_format_))
     return false;
 
@@ -164,14 +159,6 @@ bool GLImageDXGI::BindTexImage(unsigned target) {
     surface_ = CreatePbuffer(texture_, buffer_format_, config, target);
     if (surface_ == EGL_NO_SURFACE)
       return false;
-  }
-
-  // We don't wait, just return immediately.
-  HRESULT hrWait = keyed_mutex_->AcquireSync(KEY_BIND, 0);
-
-  if (hrWait == WAIT_TIMEOUT || hrWait == WAIT_ABANDONED || FAILED(hrWait)) {
-    NOTREACHED();
-    return false;
   }
 
   return eglBindTexImage(
@@ -220,10 +207,18 @@ void GLImageDXGI::ReleaseTexImage(unsigned target) {
     return;
 
   DCHECK(texture_);
-  DCHECK(keyed_mutex_);
-
-  keyed_mutex_->ReleaseSync(KEY_RELEASE);
-
+  // Copy to the shared texture as a form of jank synchronization
+  if (staging_.Get() && texture_.Get()) {
+    Microsoft::WRL::ComPtr<ID3D11Device> d3d11_device;
+    staging_->GetDevice(&d3d11_device);
+    if (d3d11_device.Get()) {
+      Microsoft::WRL::ComPtr<ID3D11DeviceContext> d3d11_ctx;
+      d3d11_device->GetImmediateContext(&d3d11_ctx);
+      if (d3d11_ctx.Get()) {
+        d3d11_ctx->CopyResource(staging_.Get(), texture_.Get());
+      }
+    }
+  }
   eglReleaseTexImage(gl::GLSurfaceEGL::GetGLDisplayEGL()->GetHardwareDisplay(),
                      surface_, EGL_BACK_BUFFER);
 }
@@ -243,15 +238,20 @@ bool GLImageDXGI::InitializeHandle(base::win::ScopedHandle handle,
     return false;
 
   if (FAILED(d3d11_device1->OpenSharedResource1(handle.Get(),
-                                                IID_PPV_ARGS(&texture_)))) {
+                                                IID_PPV_ARGS(&staging_)))) {
     return false;
   }
   D3D11_TEXTURE2D_DESC desc;
-  texture_->GetDesc(&desc);
+  staging_->GetDesc(&desc);
   if (desc.ArraySize <= level_)
     return false;
-  if (FAILED(texture_.As(&keyed_mutex_)))
-    return false;
+
+  desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+  desc.MiscFlags = 0;
+
+  if (FAILED(d3d11_device1->CreateTexture2D(&desc, nullptr, &texture_))) {
+     return false;
+  }
 
   handle_ = std::move(handle);
   return true;

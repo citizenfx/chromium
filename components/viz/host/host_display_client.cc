@@ -46,9 +46,14 @@ void HostDisplayClient::OnDisplayReceivedCALayerParams(
 }
 #endif
 
-#if BUILDFLAG(IS_WIN)
+void HostDisplayClient::UseProxyOutputDevice(
+    UseProxyOutputDeviceCallback callback) {
+  std::move(callback).Run(false);
+}
+
 void HostDisplayClient::CreateLayeredWindowUpdater(
     mojo::PendingReceiver<mojom::LayeredWindowUpdater> receiver) {
+#if BUILDFLAG(IS_WIN)
   if (!NeedsToUseLayerWindow(widget_)) {
     DLOG(ERROR) << "HWND shouldn't be using a layered window";
     return;
@@ -56,9 +61,12 @@ void HostDisplayClient::CreateLayeredWindowUpdater(
 
   layered_window_updater_ =
       std::make_unique<LayeredWindowUpdaterImpl>(widget_, std::move(receiver));
-}
 #endif
+}
 
+void HostDisplayClient::CreateExternalRendererUpdater(
+    mojo::PendingReceiver<mojom::ExternalRendererUpdater> receiver) {
+}
 // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
 // of lacros-chrome is complete.
 #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)

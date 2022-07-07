@@ -221,6 +221,10 @@ viz_component("service") {
     "transitions/transferable_resource_tracker.cc",
     "transitions/transferable_resource_tracker.h",
     "viz_service_export.h",
+    "//cef/libcef/browser/osr/gl_output_surface_external.cc",
+    "//cef/libcef/browser/osr/gl_output_surface_external.h",
+    "//cef/libcef/browser/osr/software_output_device_proxy.cc",
+    "//cef/libcef/browser/osr/software_output_device_proxy.h",
   ]
 
   defines = [ "VIZ_SERVICE_IMPLEMENTATION" ]

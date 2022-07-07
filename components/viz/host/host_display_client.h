@@ -14,6 +14,7 @@
 #include "mojo/public/cpp/bindings/pending_remote.h"
 #include "mojo/public/cpp/bindings/receiver.h"
 #include "services/viz/privileged/mojom/compositing/display_private.mojom.h"
+#include "cef/libcef/browser/osr/external_renderer_updater.mojom.h"
 #include "ui/gfx/native_widget_types.h"
 
 namespace viz {
@@ -34,17 +35,20 @@ class VIZ_HOST_EXPORT HostDisplayClient : public mojom::DisplayClient {
   mojo::PendingRemote<mojom::DisplayClient> GetBoundRemote(
       scoped_refptr<base::SingleThreadTaskRunner> task_runner);
 
- private:
+ protected:
   // mojom::DisplayClient implementation:
+  void UseProxyOutputDevice(UseProxyOutputDeviceCallback callback) override;
+
 #if BUILDFLAG(IS_APPLE)
   void OnDisplayReceivedCALayerParams(
       const gfx::CALayerParams& ca_layer_params) override;
 #endif
 
-#if BUILDFLAG(IS_WIN)
   void CreateLayeredWindowUpdater(
       mojo::PendingReceiver<mojom::LayeredWindowUpdater> receiver) override;
-#endif
+
+  void CreateExternalRendererUpdater(
+      mojo::PendingReceiver<mojom::ExternalRendererUpdater> receiver) override;
 
 // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
 // of lacros-chrome is complete.

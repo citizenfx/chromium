@@ -223,12 +223,12 @@ void UpdatePrintSettingsOnIO(
     mojom::PrintManagerHost::UpdatePrintSettingsCallback callback,
     scoped_refptr<PrintQueriesQueue> queue,
     base::Value::Dict job_settings,
-    base::WeakPtr<PrintViewManagerBase> manager) {
+    base::WeakPtr<PrintViewManagerBase> manager,
+    const content::GlobalRenderFrameHostId& global_id) {
   DCHECK_CURRENTLY_ON(content::BrowserThread::IO);
   std::unique_ptr<PrinterQuery> printer_query = queue->PopPrinterQuery(cookie);
   if (!printer_query) {
-    printer_query =
-        queue->CreatePrinterQuery(content::GlobalRenderFrameHostId());
+    printer_query = queue->CreatePrinterQuery(global_id);
   }
   auto* printer_query_ptr = printer_query.get();
   printer_query_ptr->SetSettings(
@@ -698,6 +698,7 @@ void PrintViewManagerBase::UpdatePrintSettings(
       job_settings.Set(kSettingRasterizePdfDpi, value);
   }
 
+  content::RenderFrameHost* render_frame_host = GetCurrentTargetFrame();
   auto callback_wrapper =
       base::BindOnce(&PrintViewManagerBase::UpdatePrintSettingsReply,
                      weak_ptr_factory_.GetWeakPtr(), std::move(callback));
@@ -705,7 +706,8 @@ void PrintViewManagerBase::UpdatePrintSettings(
       FROM_HERE,
       base::BindOnce(&UpdatePrintSettingsOnIO, cookie,
                      std::move(callback_wrapper), queue_,
-                     std::move(job_settings), weak_ptr_factory_.GetWeakPtr()));
+                     std::move(job_settings), weak_ptr_factory_.GetWeakPtr(),
+                     render_frame_host->GetGlobalId()));
 }
 #endif  // BUILDFLAG(ENABLE_PRINT_PREVIEW)
 

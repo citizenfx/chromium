@@ -17,6 +17,8 @@
 #include "build/chromecast_buildflags.h"
 #include "build/chromeos_buildflags.h"
 #include "cc/base/switches.h"
+#include "cef/libcef/browser/osr/gl_output_surface_external.h"
+#include "cef/libcef/browser/osr/software_output_device_proxy.h"
 #include "components/viz/common/display/renderer_settings.h"
 #include "components/viz/common/frame_sinks/begin_frame_source.h"
 #include "components/viz/service/display/display_compositor_memory_and_task_controller.h"
@@ -39,6 +41,7 @@
 #include "gpu/ipc/scheduler_sequence.h"
 #include "gpu/ipc/service/gpu_channel_manager_delegate.h"
 #include "gpu/ipc/service/image_transport_surface.h"
+#include "mojo/public/cpp/bindings/sync_call_restrictions.h"
 #include "ui/base/ui_base_switches.h"
 #include "ui/gl/gl_context.h"
 #include "ui/gl/init/gl_factory.h"
@@ -209,8 +212,19 @@ std::unique_ptr<OutputSurface> OutputSurfaceProviderImpl::CreateOutputSurface(
     }
 
     if (surface_handle == gpu::kNullSurfaceHandle) {
-      output_surface = std::make_unique<GLOutputSurfaceOffscreen>(
-          std::move(context_provider));
+        mojo::ScopedAllowSyncCallForTesting allow_sync;
+        bool use_proxy_output_device = false;
+        if (display_client->UseProxyOutputDevice(&use_proxy_output_device) &&
+            use_proxy_output_device) {
+          mojo::Remote<viz::mojom::ExternalRendererUpdater> external_renderer_updater;
+          display_client->CreateExternalRendererUpdater(external_renderer_updater.BindNewPipeAndPassReceiver());
+          output_surface = std::make_unique<GLOutputSurfaceExternal>(
+            std::move(context_provider), gpu_memory_buffer_manager_.get(),
+            std::move(external_renderer_updater));
+        } else {
+          output_surface = std::make_unique<GLOutputSurfaceOffscreen>(
+            std::move(context_provider));
+        }
     } else if (context_provider->ContextCapabilities().surfaceless) {
 #if defined(USE_OZONE) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_ANDROID)
       output_surface = std::make_unique<GLOutputSurfaceBufferQueue>(
@@ -246,6 +260,20 @@ OutputSurfaceProviderImpl::CreateSoftwareOutputDeviceForPlatform(
     mojom::DisplayClient* display_client) {
   if (headless_)
     return std::make_unique<SoftwareOutputDevice>();
+
+  {
+    mojo::ScopedAllowSyncCallForTesting allow_sync;
+    DCHECK(display_client);
+    bool use_proxy_output_device = false;
+    if (display_client->UseProxyOutputDevice(&use_proxy_output_device) &&
+        use_proxy_output_device) {
+      mojo::PendingRemote<mojom::LayeredWindowUpdater> layered_window_updater;
+      display_client->CreateLayeredWindowUpdater(
+          layered_window_updater.InitWithNewPipeAndPassReceiver());
+      return std::make_unique<SoftwareOutputDeviceProxy>(
+          std::move(layered_window_updater));
+    }
+  }
 
 #if BUILDFLAG(IS_WIN)
   return CreateSoftwareOutputDeviceWin(surface_handle, &output_device_backing_,
