@@ -167,6 +167,7 @@ void SetFetchMetadataHeaders(
     const GURL* pending_redirect_url,
     const mojom::URLLoaderFactoryParams& factory_params,
     const cors::OriginAccessList& origin_access_list) {
+  return;
   DCHECK(request);
   DCHECK_NE(0u, request->url_chain().size());
 
