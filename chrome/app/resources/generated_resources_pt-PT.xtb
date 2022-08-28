@@ -3885,7 +3885,7 @@ Pretende pará-lo?</translation>
 <translation id="4742334355511750246">Sem autorização para mostrar imagens</translation>
 <translation id="4742970037960872810">Remover realce</translation>
 <translation id="4743260470722568160"><ph name="BEGIN_LINK" />Saiba como atualizar aplicações<ph name="END_LINK" /></translation>
-<translation id="4744981231093950366">{NUM_TABS,plural, =1{Reativar o som do site}other{Reativar o som dos sites}}</translation>
+<translation id="4744981231093950366">{NUM_TABS,plural, =1{Reativar som do site}other{Reativar som dos sites}}</translation>
 <translation id="474609389162964566">Aceda ao Assistente com "OK Google"</translation>
 <translation id="4746351372139058112">Mensagens</translation>
 <translation id="4748783296226936791">Normalmente, os sites estabelecem ligação a dispositivos HID para funcionalidades que utilizam teclados, comandos de jogos e outros dispositivos pouco comuns</translation>
@@ -4111,7 +4111,7 @@ Pretende pará-lo?</translation>
 <translation id="4972129977812092092">Editar impressora</translation>
 <translation id="4972164225939028131">Palavra-passe incorreta.</translation>
 <translation id="4972737347717125191">Os sites podem solicitar a utilização de dados e dispositivos de realidade virtual</translation>
-<translation id="4973325300212422370">{NUM_TABS,plural, =1{Desativar o som do site}other{Desativar o som dos sites}}</translation>
+<translation id="4973325300212422370">{NUM_TABS,plural, =1{Desativar som do site}other{Desativar som dos sites}}</translation>
 <translation id="497403230787583386">As verificações de segurança estão concluídas. O documento vai ser impresso.</translation>
 <translation id="4977882548591990850"><ph name="CHARACTER_COUNT" />/<ph name="CHARACTER_LIMIT" /></translation>
 <translation id="4977942889532008999">Confirmar acesso</translation>
@@ -6007,7 +6007,7 @@ Tem mais # palavras-passe comprometidas. O Gestor de Palavras-passe da Google re
 <translation id="686609795364435700">Baixo</translation>
 <translation id="686664946474413495">Temperatura da cor</translation>
 <translation id="6867086642466184030">Outras apps estão definidas para abrir os mesmos links que a app <ph name="APP_NAME" />. Isto irá impedir que as apps <ph name="APP_NAME_2" />, <ph name="APP_NAME_3" />, <ph name="APP_NAME_4" /> e mais <ph name="NUMBER_OF_OTHER_APPS" /> apps abram links suportados.</translation>
-<translation id="6867400383614725881">Novo separador de navegação anónima</translation>
+<translation id="6867400383614725881">Novo separador anónimo</translation>
 <translation id="6868934826811377550">Ver detalhes</translation>
 <translation id="6871644448911473373">Serviço de resposta de OCSP: <ph name="LOCATION" /></translation>
 <translation id="6872781471649843364">A palavra-passe introduzida foi rejeitada pelo servidor.</translation>
@@ -6435,7 +6435,7 @@ Tem mais # palavras-passe comprometidas. O Gestor de Palavras-passe da Google re
 <translation id="7332053360324989309">Trabalhador dedicado: <ph name="SCRIPT_URL" /></translation>
 <translation id="7334274148831027933">Ativar lupa ancorada</translation>
 <translation id="7335974957018254119">Utilizar o corretor ortográfico para</translation>
-<translation id="7336799713063880535">Notific. bloqueadas.</translation>
+<translation id="7336799713063880535">Notific. bloqueadas</translation>
 <translation id="7338630283264858612">O número de série do dispositivo é inválido.</translation>
 <translation id="7339763383339757376">PKCS #7, certificado único</translation>
 <translation id="7339785458027436441">Verificar a ortografia durante a escrita</translation>
@@ -6934,7 +6934,7 @@ Prima uma tecla ou um interruptor atribuído para remover a atribuição.</trans
 <translation id="7789963078219276159">O fundo da página de início foi alterado para <ph name="CATEGORY" />.</translation>
 <translation id="7791543448312431591">Adicionar</translation>
 <translation id="7792012425874949788">Ocorreu um erro ao iniciar sessão</translation>
-<translation id="7792388396321542707">Parar a partilha</translation>
+<translation id="7792388396321542707">Parar partilha</translation>
 <translation id="779308894558717334">Verde claro</translation>
 <translation id="7793098747275782155">Azul escuro</translation>
 <translation id="7797571222998226653">Desativado</translation>
