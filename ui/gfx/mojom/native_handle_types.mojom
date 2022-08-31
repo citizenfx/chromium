@@ -59,7 +59,7 @@ struct DXGIHandleToken {
 [EnableIf=is_win]
 struct DXGIHandle {
   // The actual buffer windows handle.
-  handle<platform> buffer_handle;
+  uint64 buffer_handle;
 
   // A unique identifier for the texture corresponding to this GMB handle. This
   // is needed because there's no other way to uniquely identify the underlying

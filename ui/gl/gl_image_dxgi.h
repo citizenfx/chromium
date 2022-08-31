@@ -47,7 +47,7 @@ class GL_EXPORT GLImageDXGI : public GLImage {
   size_t level() const { return level_; }
   Microsoft::WRL::ComPtr<ID3D11Texture2D> texture() { return texture_; }
 
-  bool InitializeHandle(base::win::ScopedHandle handle,
+  bool InitializeHandle(uint64_t handle,
                         uint32_t level,
                         gfx::BufferFormat format);
   void SetTexture(const Microsoft::WRL::ComPtr<ID3D11Texture2D>& texture,
@@ -57,7 +57,7 @@ class GL_EXPORT GLImageDXGI : public GLImage {
   ~GLImageDXGI() override;
 
   gfx::BufferFormat buffer_format_ = gfx::BufferFormat::BGRA_8888;
-  base::win::ScopedHandle handle_;
+  uint64_t handle_;
   size_t level_ = 0;
   gfx::Size size_;
   EGLSurface surface_ = nullptr;

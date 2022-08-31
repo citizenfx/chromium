@@ -64,13 +64,13 @@ class GPU_EXPORT GpuMemoryBufferImplDXGI : public GpuMemoryBufferImpl {
                           const gfx::Size& size,
                           gfx::BufferFormat format,
                           DestructionCallback callback,
-                          base::win::ScopedHandle dxgi_handle,
+                          uint64_t dxgi_handle,
                           gfx::DXGIHandleToken dxgi_token,
                           GpuMemoryBufferManager* gpu_memory_buffer_manager,
                           scoped_refptr<base::UnsafeSharedMemoryPool> pool,
                           base::span<uint8_t> premapped_memory);
 
-  base::win::ScopedHandle dxgi_handle_;
+  uint64_t dxgi_handle_;
   gfx::DXGIHandleToken dxgi_token_;
   raw_ptr<GpuMemoryBufferManager> gpu_memory_buffer_manager_;
 

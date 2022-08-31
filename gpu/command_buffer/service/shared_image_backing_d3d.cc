@@ -645,13 +645,14 @@ SharedImageBackingD3D::ProduceDawn(SharedImageManager* manager,
   // Persistently open the shared handle by caching it on this backing.
   if (!external_image_) {
     DCHECK(dxgi_shared_handle_state_);
-    const HANDLE shared_handle = dxgi_shared_handle_state_->GetSharedHandle();
-    DCHECK(base::win::HandleTraits::IsHandleValid(shared_handle));
+    const uint64_t shared_handle = dxgi_shared_handle_state_->GetSharedHandle();
+    CHECK(false);
+    //DCHECK(base::win::HandleTraits::IsHandleValid(shared_handle));
 
     dawn::native::d3d12::ExternalImageDescriptorDXGISharedHandle
         externalImageDesc;
     externalImageDesc.cTextureDescriptor = &texture_descriptor;
-    externalImageDesc.sharedHandle = shared_handle;
+    externalImageDesc.sharedHandle = (HANDLE)shared_handle;
 
     external_image_ = dawn::native::d3d12::ExternalImageDXGI::Create(
         device, &externalImageDesc);

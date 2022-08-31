@@ -16,7 +16,9 @@ namespace gpu {
 
 namespace {
 
-bool IsSameHandle(HANDLE handle, HANDLE other) {
+bool IsSameHandle(uint64_t handle, uint64_t other) {
+  return handle == other;
+#if 0
   using PFN_COMPARE_OBJECT_HANDLES =
       BOOL(WINAPI*)(HANDLE hFirstObjectHandle, HANDLE hSecondObjectHandle);
   static PFN_COMPARE_OBJECT_HANDLES compare_object_handles_fn =
@@ -39,6 +41,7 @@ bool IsSameHandle(HANDLE handle, HANDLE other) {
   // case since there's no other way to check if the handles refer to the same
   // D3D11 texture and IsSameHandle is only used as a sanity test.
   return true;
+#endif
 }
 
 }  // namespace
@@ -47,7 +50,7 @@ DXGISharedHandleState::DXGISharedHandleState(
     base::PassKey<DXGISharedHandleManager>,
     scoped_refptr<DXGISharedHandleManager> manager,
     gfx::DXGIHandleToken token,
-    base::win::ScopedHandle shared_handle,
+    uint64_t shared_handle,
     Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture)
     : base::subtle::RefCountedThreadSafeBase(kRefCountPreference),
       manager_(std::move(manager)),
@@ -158,9 +161,7 @@ DXGISharedHandleManager::~DXGISharedHandleManager() {
 scoped_refptr<DXGISharedHandleState>
 DXGISharedHandleManager::GetOrCreateSharedHandleState(
     gfx::DXGIHandleToken token,
-    base::win::ScopedHandle shared_handle) {
-  DCHECK(shared_handle.IsValid());
-
+    uint64_t shared_handle) {
   base::AutoLock auto_lock(lock_);
 
   auto it = shared_handle_state_map_.find(token);
@@ -169,7 +170,7 @@ DXGISharedHandleManager::GetOrCreateSharedHandleState(
     DCHECK(state);
     // If there's already a shared handle associated with the token, it should
     // refer to the same D3D11 texture (or kernel object).
-    if (!IsSameHandle(shared_handle.Get(), state->GetSharedHandle())) {
+    if (!IsSameHandle(shared_handle, state->GetSharedHandle())) {
       DLOG(ERROR) << "Existing shared handle for token doesn't match";
       return nullptr;
     }
@@ -185,8 +186,8 @@ DXGISharedHandleManager::GetOrCreateSharedHandleState(
   }
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
-  hr = d3d11_device1->OpenSharedResource1(shared_handle.Get(),
-                                          IID_PPV_ARGS(&d3d11_texture));
+  hr = d3d11_device_->OpenSharedResource(HANDLE(shared_handle),
+                                         IID_PPV_ARGS(&d3d11_texture));
   if (FAILED(hr)) {
     DLOG(ERROR) << "Unable to open shared resource from DXGI handle. Error: "
                 << logging::SystemErrorCodeToString(hr);
@@ -205,9 +206,9 @@ DXGISharedHandleManager::GetOrCreateSharedHandleState(
 
 scoped_refptr<DXGISharedHandleState>
 DXGISharedHandleManager::CreateAnonymousSharedHandleState(
-    base::win::ScopedHandle shared_handle,
+    uint64_t shared_handle,
     Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture) {
-  DCHECK(shared_handle.IsValid());
+  //DCHECK(shared_handle.IsValid());
   DCHECK(d3d11_texture);
 
   base::AutoLock auto_lock(lock_);

@@ -142,8 +142,8 @@ mojo::PlatformHandle GraphicsDelegateWin::GetTexture() {
   if (!gpu_memory_buffer_)
     return {};
 
-  gfx::GpuMemoryBufferHandle gpu_handle = gpu_memory_buffer_->CloneHandle();
-  return mojo::PlatformHandle(std::move(gpu_handle.dxgi_handle));
+  //gfx::GpuMemoryBufferHandle gpu_handle = gpu_memory_buffer_->CloneHandle();
+  return mojo::PlatformHandle(/*std::move(gpu_handle.dxgi_handle)*/);
 }
 
 const gpu::SyncToken& GraphicsDelegateWin::GetSyncToken() {

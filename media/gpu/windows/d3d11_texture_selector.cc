@@ -201,8 +201,7 @@ std::unique_ptr<Texture2DWrapper> CopyTextureSelector::CreateTextureWrapper(
   texture_desc.Width = size.width();
   texture_desc.Height = size.height();
   if (DoesSharedImageUseSharedHandle()) {
-    texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-                             D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+    texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
   }
 
   ComD3D11Texture2D out_texture;

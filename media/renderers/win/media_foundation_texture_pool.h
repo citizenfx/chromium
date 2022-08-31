@@ -22,7 +22,7 @@ struct MEDIA_EXPORT MediaFoundationFrameInfo {
   MediaFoundationFrameInfo();
   ~MediaFoundationFrameInfo();
   MediaFoundationFrameInfo(MediaFoundationFrameInfo&& other);
-  base::win::ScopedHandle dxgi_handle;
+  uint64_t dxgi_handle;
   base::UnguessableToken token;
 };
 

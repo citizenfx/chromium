@@ -27,6 +27,8 @@ GpuMemoryBufferFactoryDXGI::~GpuMemoryBufferFactoryDXGI() = default;
 Microsoft::WRL::ComPtr<ID3D11Device>
 GpuMemoryBufferFactoryDXGI::GetOrCreateD3D11Device() {
   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+  return gl::QueryD3D11DeviceObjectFromANGLE();
+#if 0
   if (!d3d11_device_) {
     // Use same adapter as ANGLE device.
     auto angle_d3d11_device = gl::QueryD3D11DeviceObjectFromANGLE();
@@ -80,6 +82,7 @@ GpuMemoryBufferFactoryDXGI::GetOrCreateD3D11Device() {
   }
   DCHECK(d3d11_device_);
   return d3d11_device_;
+#endif
 }
 
 gfx::GpuMemoryBufferHandle GpuMemoryBufferFactoryDXGI::CreateGpuMemoryBuffer(
@@ -129,25 +132,24 @@ gfx::GpuMemoryBufferHandle GpuMemoryBufferFactoryDXGI::CreateGpuMemoryBuffer(
       D3D11_USAGE_DEFAULT,
       D3D11_BIND_SHADER_RESOURCE,
       0,
-      D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-          D3D11_RESOURCE_MISC_SHARED};
+      D3D11_RESOURCE_MISC_SHARED};
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
 
   if (FAILED(d3d11_device->CreateTexture2D(&desc, nullptr, &d3d11_texture)))
     return handle;
 
-  Microsoft::WRL::ComPtr<IDXGIResource1> dxgi_resource;
+  Microsoft::WRL::ComPtr<IDXGIResource> dxgi_resource;
   if (FAILED(d3d11_texture.As(&dxgi_resource)))
     return handle;
 
   HANDLE texture_handle;
-  if (FAILED(dxgi_resource->CreateSharedHandle(
-          nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE,
-          nullptr, &texture_handle)))
+  if (FAILED(dxgi_resource->GetSharedHandle(
+          //nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE,
+          /*nullptr, */&texture_handle)))
     return handle;
 
-  handle.dxgi_handle.Set(texture_handle);
+  handle.dxgi_handle = uint64_t(texture_handle);
   handle.dxgi_token = gfx::DXGIHandleToken();
   handle.type = gfx::DXGI_SHARED_HANDLE;
   handle.id = id;
@@ -172,7 +174,7 @@ bool GpuMemoryBufferFactoryDXGI::FillSharedMemoryRegionWithBufferContents(
   if (!mapping.IsValid())
     return false;
 
-  return CopyDXGIBufferToShMem(buffer_handle.dxgi_handle.Get(),
+  return CopyDXGIBufferToShMem(buffer_handle.dxgi_handle,
                                mapping.GetMemoryAsSpan<uint8_t>(),
                                d3d11_device.Get(), &staging_texture_);
 }

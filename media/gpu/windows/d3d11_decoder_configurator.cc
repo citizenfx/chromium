@@ -113,8 +113,7 @@ D3D11DecoderConfigurator::CreateOutputTexture(ComD3D11Device device,
     // shouldn't be encrypted.
     DCHECK(!supports_swap_chain_);
     DCHECK(!is_encrypted_);
-    output_texture_desc_.MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-                                     D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+    output_texture_desc_.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
   } else if (supports_swap_chain_) {
     // Decode swap chains do not support shared resources.
     // TODO(sunnyps): Find a workaround for when the decoder moves to its own

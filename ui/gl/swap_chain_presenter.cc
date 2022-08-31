@@ -725,8 +725,7 @@ bool SwapChainPresenter::TryPresentToDecodeSwapChain(
     // thread and D3D device.  See https://crbug.com/911847
     bool is_shared_texture =
         texture_desc.MiscFlags &
-        (D3D11_RESOURCE_MISC_SHARED | D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX |
-         D3D11_RESOURCE_MISC_SHARED_NTHANDLE);
+        (D3D11_RESOURCE_MISC_SHARED);
 
     // DXVA decoder (or rather MFT) sometimes gives texture arrays with one
     // element, which constitutes most of decode swap chain creation failures.

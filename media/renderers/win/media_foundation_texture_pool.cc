@@ -56,8 +56,7 @@ HRESULT MediaFoundationTexturePool::Initialize(
       D3D11_USAGE_DEFAULT,
       D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
       0,
-      D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-          D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX};
+      D3D11_RESOURCE_MISC_SHARED};
 
   std::vector<MediaFoundationFrameInfo> frame_infos;
   bool callback_is_valid = !frame_pool_cb.is_null();
@@ -78,23 +77,20 @@ HRESULT MediaFoundationTexturePool::Initialize(
         device->CreateTexture2D(&desc, nullptr, &d3d11_video_frame));
     SetDebugName(d3d11_video_frame.Get(), "Media_MFFrameServerMode_Pool");
 
-    ComPtr<IDXGIResource1> d3d11_video_frame_resource;
+    ComPtr<IDXGIResource> d3d11_video_frame_resource;
     RETURN_IF_FAILED(d3d11_video_frame.As(&d3d11_video_frame_resource));
 
     HANDLE shared_texture_handle;
-    RETURN_IF_FAILED(d3d11_video_frame_resource->CreateSharedHandle(
-        nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE,
-        nullptr, &shared_texture_handle));
+    RETURN_IF_FAILED(d3d11_video_frame_resource->GetSharedHandle(
+        //nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE,
+        /*nullptr, */&shared_texture_handle));
 
-    base::win::ScopedHandle scoped_shared_texture_handle;
-    scoped_shared_texture_handle.Set(shared_texture_handle);
-    shared_texture_handle = nullptr;
     texture_pool_[texture_token].texture_ = std::move(d3d11_video_frame);
     texture_pool_[texture_token].texture_in_use_ = false;
 
     if (callback_is_valid) {
       MediaFoundationFrameInfo frame_info;
-      frame_info.dxgi_handle = std::move(scoped_shared_texture_handle);
+      frame_info.dxgi_handle = uint64_t(shared_texture_handle);
       frame_info.token = texture_token;
       frame_infos.emplace_back(std::move(frame_info));
     }

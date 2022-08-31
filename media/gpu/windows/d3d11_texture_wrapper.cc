@@ -214,7 +214,7 @@ DefaultTexture2DWrapper::GpuResources::GpuResources(
     texture->GetDesc(&desc);
     // Create shared handle for shareable output texture.
     if (desc.MiscFlags & D3D11_RESOURCE_MISC_SHARED_NTHANDLE) {
-      Microsoft::WRL::ComPtr<IDXGIResource1> dxgi_resource;
+      Microsoft::WRL::ComPtr<IDXGIResource> dxgi_resource;
       HRESULT hr = texture.As(&dxgi_resource);
       if (FAILED(hr)) {
         DLOG(ERROR) << "QueryInterface for IDXGIResource failed with error "
@@ -224,10 +224,10 @@ DefaultTexture2DWrapper::GpuResources::GpuResources(
         return;
       }
 
-      HANDLE shared_handle = nullptr;
-      hr = dxgi_resource->CreateSharedHandle(
-          nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE,
-          nullptr, &shared_handle);
+      HANDLE shared_handle = 0;
+      hr = dxgi_resource->GetSharedHandle(
+          //nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE,
+          /*nullptr, */&shared_handle);
       if (FAILED(hr)) {
         DLOG(ERROR) << "CreateSharedHandle failed with error " << std::hex
                     << hr;
@@ -239,7 +239,7 @@ DefaultTexture2DWrapper::GpuResources::GpuResources(
       dxgi_shared_handle_state =
           helper_->GetDXGISharedHandleManager()
               ->CreateAnonymousSharedHandleState(
-                  base::win::ScopedHandle(shared_handle), texture);
+                  uint64_t(shared_handle), texture);
     }
   }
 

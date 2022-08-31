@@ -392,6 +392,8 @@ void VizProcessTransportFactory::OnEstablishedGpuChannel(
       compositor_data.display_client->GetBoundRemote(resize_task_runner_);
 
   if (compositor->use_external_begin_frame_control()) {
+    compositor_data.external_begin_frame_controller = {};
+
     root_params->external_begin_frame_controller =
         compositor_data.external_begin_frame_controller
             .BindNewEndpointAndPassReceiver();

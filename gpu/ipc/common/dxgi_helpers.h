@@ -60,7 +60,7 @@ class GPU_EXPORT DXGIScopedReleaseKeyedMutex {
 // a staging texture. The texture may be recreated if it has wrong size or
 // format. Returns true if succeeded.
 GPU_EXPORT bool CopyDXGIBufferToShMem(
-    HANDLE dxgi_handle,
+    uint64_t dxgi_handle,
     base::span<uint8_t> shared_memory,
     ID3D11Device* d3d11_device,
     Microsoft::WRL::ComPtr<ID3D11Texture2D>* staging_texture);

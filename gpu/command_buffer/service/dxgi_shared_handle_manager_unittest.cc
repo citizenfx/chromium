@@ -47,7 +47,7 @@ class DXGISharedHandleManagerTest : public testing::Test {
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
     desc.CPUAccessFlags = 0;
     desc.MiscFlags =
-        D3D11_RESOURCE_MISC_SHARED_NTHANDLE | D3D11_RESOURCE_MISC_SHARED;
+        D3D11_RESOURCE_MISC_SHARED;
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
     HRESULT hr = d3d11_device_->CreateTexture2D(&desc, nullptr, &d3d11_texture);

@@ -1136,8 +1136,8 @@ HRESULT MediaFoundationVideoEncodeAccelerator::PopulateInputSampleBufferGpu(
   RETURN_ON_HR_FAILURE(hr, "Failed to query ID3D11Device1", hr);
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> input_texture;
-  hr = device1->OpenSharedResource1(buffer_handle.dxgi_handle.Get(),
-                                    IID_PPV_ARGS(&input_texture));
+  hr = d3d_device->OpenSharedResource(HANDLE(buffer_handle.dxgi_handle),
+                                   IID_PPV_ARGS(&input_texture));
   RETURN_ON_HR_FAILURE(hr, "Failed to open shared GMB D3D texture", hr);
 
   // Check if we need to scale the input texture

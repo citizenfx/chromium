@@ -107,7 +107,7 @@ scoped_refptr<DXGISharedHandleState> ValidateAndOpenSharedHandle(
     gfx::GpuMemoryBufferHandle handle,
     gfx::BufferFormat format,
     const gfx::Size& size) {
-  if (handle.type != gfx::DXGI_SHARED_HANDLE || !handle.dxgi_handle.IsValid()) {
+  if (handle.type != gfx::DXGI_SHARED_HANDLE) {
     DLOG(ERROR) << "Invalid handle with type: " << handle.type;
     return nullptr;
   }
@@ -350,8 +350,7 @@ SharedImageBackingFactoryD3D::CreateSharedImage(
     desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
   }
   desc.CPUAccessFlags = 0;
-  desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-                   D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+  desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
   HRESULT hr = d3d11_device_->CreateTexture2D(&desc, nullptr, &d3d11_texture);
   if (FAILED(hr)) {
@@ -364,7 +363,7 @@ SharedImageBackingFactoryD3D::CreateSharedImage(
   d3d11_device_->SetPrivateData(WKPDID_D3DDebugObjectName, debug_label.length(),
                                 debug_label.c_str());
 
-  Microsoft::WRL::ComPtr<IDXGIResource1> dxgi_resource;
+  Microsoft::WRL::ComPtr<IDXGIResource> dxgi_resource;
   hr = d3d11_texture.As(&dxgi_resource);
   if (FAILED(hr)) {
     DLOG(ERROR) << "QueryInterface for IDXGIResource failed with error "
@@ -373,8 +372,8 @@ SharedImageBackingFactoryD3D::CreateSharedImage(
   }
 
   HANDLE shared_handle;
-  hr = dxgi_resource->CreateSharedHandle(
-      nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, nullptr,
+  hr = dxgi_resource->GetSharedHandle(
+      //nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, nullptr,
       &shared_handle);
   if (FAILED(hr)) {
     DLOG(ERROR) << "Unable to create shared handle for DXGIResource "
@@ -384,7 +383,7 @@ SharedImageBackingFactoryD3D::CreateSharedImage(
 
   scoped_refptr<DXGISharedHandleState> dxgi_shared_handle_state =
       dxgi_shared_handle_manager_->CreateAnonymousSharedHandleState(
-          base::win::ScopedHandle(shared_handle), d3d11_texture);
+          uint64_t(shared_handle), d3d11_texture);
 
   return SharedImageBackingD3D::CreateFromDXGISharedHandle(
       mailbox, format, size, color_space, surface_origin, alpha_type, usage,

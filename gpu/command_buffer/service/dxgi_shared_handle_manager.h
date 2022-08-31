@@ -49,7 +49,7 @@ class GPU_GLES2_EXPORT DXGISharedHandleState
   DXGISharedHandleState(base::PassKey<DXGISharedHandleManager>,
                         scoped_refptr<DXGISharedHandleManager> manager,
                         gfx::DXGIHandleToken token,
-                        base::win::ScopedHandle shared_handle,
+                        uint64_t shared_handle,
                         Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture);
 
   DXGISharedHandleState(const DXGISharedHandleState&) = delete;
@@ -58,7 +58,7 @@ class GPU_GLES2_EXPORT DXGISharedHandleState
   void AddRef() const;
   void Release() const;
 
-  HANDLE GetSharedHandle() const { return shared_handle_.Get(); }
+  uint64_t GetSharedHandle() const { return shared_handle_; }
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture() const {
     return d3d11_texture_;
@@ -84,7 +84,7 @@ class GPU_GLES2_EXPORT DXGISharedHandleState
   // keyed mutex. To create the corresponding D3D12 interface, pass the handle
   // stored in |shared_handle_| to ID3D12Device::OpenSharedHandle. Only one
   // component is allowed to read/write to the texture at a time.
-  base::win::ScopedHandle shared_handle_;
+  uint64_t shared_handle_;
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture_;
   Microsoft::WRL::ComPtr<IDXGIKeyedMutex> dxgi_keyed_mutex_;
   bool acquired_for_d3d12_ = false;
@@ -103,14 +103,14 @@ class GPU_GLES2_EXPORT DXGISharedHandleManager
   // will refer to the same D3D11 texture. Returns a nullptr on error.
   scoped_refptr<DXGISharedHandleState> GetOrCreateSharedHandleState(
       gfx::DXGIHandleToken token,
-      base::win::ScopedHandle shared_handle);
+      uint64_t shared_handle);
 
   // Creates a new unique state for given |shared_handle| and |d3d11_texture|.
   // No other state will have references to the same shared handle and texture.
   // Useful when creating handles which are guaranteed to never be duplicated
   // e.g. WebGPU usage shared image that only needs a handle for Dawn interop.
   scoped_refptr<DXGISharedHandleState> CreateAnonymousSharedHandleState(
-      base::win::ScopedHandle shared_handle,
+      uint64_t shared_handle,
       Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture);
 
   size_t GetSharedHandleMapSizeForTesting() const;

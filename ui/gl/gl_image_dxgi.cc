@@ -144,7 +144,7 @@ GLImageDXGI::BindOrCopy GLImageDXGI::ShouldBindOrCopy() {
 }
 
 bool GLImageDXGI::BindTexImage(unsigned target) {
-  if (!handle_.Get())
+  if (!handle_)
     return true;
 
   DCHECK(texture_);
@@ -180,7 +180,7 @@ bool GLImageDXGI::CopyTexSubImage(unsigned target,
 void GLImageDXGI::Flush() {}
 
 unsigned GLImageDXGI::GetInternalFormat() {
-  if (!handle_.Get())
+  if (!handle_)
     return GL_BGRA_EXT;
   else
     return HasAlpha(buffer_format_) ? GL_RGBA : GL_RGB;
@@ -203,7 +203,7 @@ void GLImageDXGI::OnMemoryDump(base::trace_event::ProcessMemoryDump* pmd,
                                const std::string& dump_name) {}
 
 void GLImageDXGI::ReleaseTexImage(unsigned target) {
-  if (!handle_.Get())
+  if (!handle_)
     return;
 
   DCHECK(texture_);
@@ -223,7 +223,7 @@ void GLImageDXGI::ReleaseTexImage(unsigned target) {
                      surface_, EGL_BACK_BUFFER);
 }
 
-bool GLImageDXGI::InitializeHandle(base::win::ScopedHandle handle,
+bool GLImageDXGI::InitializeHandle(uint64_t handle,
                                    uint32_t level,
                                    gfx::BufferFormat format) {
   level_ = level;
@@ -233,12 +233,8 @@ bool GLImageDXGI::InitializeHandle(base::win::ScopedHandle handle,
   if (!d3d11_device)
     return false;
 
-  Microsoft::WRL::ComPtr<ID3D11Device1> d3d11_device1;
-  if (FAILED(d3d11_device.As(&d3d11_device1)))
-    return false;
-
-  if (FAILED(d3d11_device1->OpenSharedResource1(handle.Get(),
-                                                IID_PPV_ARGS(&staging_)))) {
+  if (FAILED(d3d11_device->OpenSharedResource(HANDLE(handle),
+                                               IID_PPV_ARGS(&staging_)))) {
     return false;
   }
   D3D11_TEXTURE2D_DESC desc;
@@ -249,7 +245,7 @@ bool GLImageDXGI::InitializeHandle(base::win::ScopedHandle handle,
   desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
   desc.MiscFlags = 0;
 
-  if (FAILED(d3d11_device1->CreateTexture2D(&desc, nullptr, &texture_))) {
+  if (FAILED(d3d11_device->CreateTexture2D(&desc, nullptr, &texture_))) {
      return false;
   }
 
@@ -265,7 +261,7 @@ void GLImageDXGI::SetTexture(
 }
 
 GLImageDXGI::~GLImageDXGI() {
-  if (handle_.Get()) {
+  if (handle_) {
     if (surface_ != EGL_NO_SURFACE) {
       eglDestroySurface(
           gl::GLSurfaceEGL::GetGLDisplayEGL()->GetHardwareDisplay(), surface_);

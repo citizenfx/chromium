@@ -52,11 +52,11 @@ gfx::mojom::GpuMemoryBufferPlatformHandlePtr StructTraits<
     }
     case gfx::DXGI_SHARED_HANDLE:
 #if BUILDFLAG(IS_WIN)
-      DCHECK(handle.dxgi_handle.IsValid());
+      //DCHECK(handle.dxgi_handle.IsValid());
       DCHECK(handle.dxgi_token.has_value());
       return gfx::mojom::GpuMemoryBufferPlatformHandle::NewDxgiHandle(
           gfx::mojom::DXGIHandle::New(
-              mojo::PlatformHandle(std::move(handle.dxgi_handle)),
+              std::move(handle.dxgi_handle),
               std::move(handle.dxgi_token.value()), std::move(handle.region)));
 #else
       break;
@@ -141,7 +141,7 @@ bool StructTraits<gfx::mojom::GpuMemoryBufferHandleDataView,
     case gfx::mojom::GpuMemoryBufferPlatformHandleDataView::Tag::kDxgiHandle: {
       out->type = gfx::DXGI_SHARED_HANDLE;
       auto dxgi_handle = std::move(platform_handle->get_dxgi_handle());
-      out->dxgi_handle = dxgi_handle->buffer_handle.TakeHandle();
+      out->dxgi_handle = dxgi_handle->buffer_handle;
       out->dxgi_token = std::move(dxgi_handle->token);
       out->region = std::move(dxgi_handle->shared_memory_handle);
       return true;

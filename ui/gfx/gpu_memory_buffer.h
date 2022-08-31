@@ -83,7 +83,7 @@ struct GFX_EXPORT GpuMemoryBufferHandle {
 #elif BUILDFLAG(IS_MAC)
   ScopedIOSurface io_surface;
 #elif BUILDFLAG(IS_WIN)
-  base::win::ScopedHandle dxgi_handle;
+  uint64_t dxgi_handle = 0;
   absl::optional<DXGIHandleToken> dxgi_token;
 #elif BUILDFLAG(IS_ANDROID)
   base::android::ScopedHardwareBufferHandle android_hardware_buffer;

@@ -21,7 +21,7 @@ namespace media {
 
 namespace {
 
-base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
+uint64_t CreateNV12Texture(ID3D11Device* d3d11_device,
                                           const gfx::Size& size) {
   const DXGI_FORMAT dxgi_format = DXGI_FORMAT_NV12;
   D3D11_TEXTURE2D_DESC desc = {
@@ -34,8 +34,7 @@ base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
       .Usage = D3D11_USAGE_DEFAULT,
       .BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET,
       .CPUAccessFlags = 0,
-      .MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-                   D3D11_RESOURCE_MISC_SHARED};
+      .MiscFlags = D3D11_RESOURCE_MISC_SHARED};
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
 
@@ -43,29 +42,29 @@ base::win::ScopedHandle CreateNV12Texture(ID3D11Device* d3d11_device,
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to create D3D11 texture: "
                 << logging::SystemErrorCodeToString(hr);
-    return base::win::ScopedHandle();
+    return uint64_t(0);
   }
   hr = SetDebugName(d3d11_texture.Get(), "Camera_MemoryBufferTracker");
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to label D3D11 texture: "
                 << logging::SystemErrorCodeToString(hr);
-    return base::win::ScopedHandle();
+    return uint64_t(0);
   }
 
-  Microsoft::WRL::ComPtr<IDXGIResource1> dxgi_resource;
+  Microsoft::WRL::ComPtr<IDXGIResource> dxgi_resource;
   hr = d3d11_texture.As(&dxgi_resource);
   CHECK(SUCCEEDED(hr));
 
   HANDLE texture_handle;
-  hr = dxgi_resource->CreateSharedHandle(
-      nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, nullptr,
+  hr = dxgi_resource->GetSharedHandle(
+      //nullptr, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, nullptr,
       &texture_handle);
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to create shared D3D11 texture handle: "
                 << logging::SystemErrorCodeToString(hr);
-    return base::win::ScopedHandle();
+    return uint64_t(0);
   }
-  return base::win::ScopedHandle(texture_handle);
+  return uint64_t(texture_handle);
 }
 
 }  // namespace
@@ -97,10 +96,10 @@ bool GpuMemoryBufferTracker::CreateBufferInternal() {
       CreateNV12Texture(d3d_device_.Get(), buffer_size_);
   buffer_handle.dxgi_token = gfx::DXGIHandleToken();
 
-  if (!buffer_handle.dxgi_handle.IsValid()) {
+  /*if (!buffer_handle.dxgi_handle.IsValid()) {
     LOG(ERROR) << "Failed to create NV12 texture";
     return false;
-  }
+  }*/
 
   buffer_ = gpu::GpuMemoryBufferImplDXGI::CreateFromHandle(
       std::move(buffer_handle), buffer_size_,
@@ -154,7 +153,7 @@ GpuMemoryBufferTracker::DuplicateAsUnsafeRegion() {
   CHECK(region_.IsValid());
   CHECK(mapping_.IsValid());
 
-  if (!gpu::CopyDXGIBufferToShMem(buffer_->GetHandle(),
+  if (!gpu::CopyDXGIBufferToShMem(uint64_t(buffer_->GetHandle()),
                                   mapping_.GetMemoryAsSpan<uint8_t>(),
                                   d3d_device_.Get(), &staging_texture_)) {
     DLOG(ERROR) << "Couldn't copy DXGI buffer to shmem";

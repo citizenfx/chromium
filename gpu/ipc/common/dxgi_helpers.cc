@@ -67,7 +67,7 @@ DXGIScopedReleaseKeyedMutex::~DXGIScopedReleaseKeyedMutex() {
 }
 
 bool CopyDXGIBufferToShMem(
-    HANDLE dxgi_handle,
+    uint64_t dxgi_handle,
     base::span<uint8_t> shared_memory,
     ID3D11Device* d3d11_device,
     Microsoft::WRL::ComPtr<ID3D11Texture2D>* staging_texture) {
@@ -84,7 +84,7 @@ bool CopyDXGIBufferToShMem(
   Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 
   // Open texture on device using shared handle
-  hr = device1->OpenSharedResource1(dxgi_handle, IID_PPV_ARGS(&texture));
+  hr = d3d11_device->OpenSharedResource(HANDLE(dxgi_handle), IID_PPV_ARGS(&texture));
   if (FAILED(hr)) {
     DLOG(ERROR) << "Failed to open shared texture. hr=" << std::hex << hr;
     return false;

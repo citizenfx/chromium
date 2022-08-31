@@ -15,19 +15,6 @@
 
 namespace gfx {
 
-#if BUILDFLAG(IS_WIN)
-namespace {
-base::win::ScopedHandle CloneDXGIHandle(HANDLE handle) {
-  HANDLE target_handle = nullptr;
-  if (!::DuplicateHandle(GetCurrentProcess(), handle, GetCurrentProcess(),
-                         &target_handle, 0, FALSE, DUPLICATE_SAME_ACCESS)) {
-    DVLOG(1) << "Error duplicating GMB DXGI handle. error=" << GetLastError();
-  }
-  return base::win::ScopedHandle(target_handle);
-}
-}  // namespace
-#endif
-
 GpuMemoryBufferHandle::GpuMemoryBufferHandle() = default;
 
 #if BUILDFLAG(IS_ANDROID)
@@ -59,7 +46,7 @@ GpuMemoryBufferHandle GpuMemoryBufferHandle::Clone() const {
 #elif BUILDFLAG(IS_MAC)
   handle.io_surface = io_surface;
 #elif BUILDFLAG(IS_WIN)
-  handle.dxgi_handle = CloneDXGIHandle(dxgi_handle.Get());
+  handle.dxgi_handle = dxgi_handle;
   handle.dxgi_token = dxgi_token;
 #elif BUILDFLAG(IS_ANDROID)
   NOTIMPLEMENTED();

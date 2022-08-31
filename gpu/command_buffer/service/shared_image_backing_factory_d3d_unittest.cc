@@ -965,7 +965,7 @@ void SharedImageBackingFactoryD3DTest::RunCreateSharedImageFromHandleTest(
   desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
   desc.CPUAccessFlags = 0;
   desc.MiscFlags =
-      D3D11_RESOURCE_MISC_SHARED_NTHANDLE | D3D11_RESOURCE_MISC_SHARED;
+      D3D11_RESOURCE_MISC_SHARED;
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
   HRESULT hr = d3d11_device->CreateTexture2D(&desc, nullptr, &d3d11_texture);
   ASSERT_EQ(hr, S_OK);
@@ -1310,8 +1310,7 @@ SharedImageBackingFactoryD3DTest::CreateVideoImages(const gfx::Size& size,
   CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_NV12, size.width(), size.height(), 1,
                              1, D3D11_BIND_SHADER_RESOURCE);
   if (use_shared_handle) {
-    desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_NTHANDLE |
-                     D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+    desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
   }
 
   Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11_texture;
