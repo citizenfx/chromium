@@ -48,10 +48,12 @@ struct CORE_EXPORT PaintInfo {
   PaintInfo(GraphicsContext& context,
             const CullRect& cull_rect,
             PaintPhase phase,
-            PaintFlags paint_flags = PaintFlag::kNoFlag)
+            PaintFlags paint_flags = PaintFlag::kNoFlag,
+            const LayoutBoxModelObject* paint_container = nullptr)
       : context(context),
         phase(phase),
         cull_rect_(cull_rect),
+        paint_container_(paint_container),
         paint_flags_(paint_flags) {}
 
   PaintInfo(GraphicsContext& new_context,
@@ -59,6 +61,7 @@ struct CORE_EXPORT PaintInfo {
       : context(new_context),
         phase(copy_other_fields_from.phase),
         cull_rect_(copy_other_fields_from.cull_rect_),
+        paint_container_(copy_other_fields_from.paint_container_),
         fragment_id_(copy_other_fields_from.fragment_id_),
         paint_flags_(copy_other_fields_from.paint_flags_) {
     // We should never pass these flags to other PaintInfo.
@@ -101,6 +104,10 @@ struct CORE_EXPORT PaintInfo {
 
   DisplayItem::Type DisplayItemTypeForClipping() const {
     return DisplayItem::PaintPhaseToClipType(phase);
+  }
+
+  const LayoutBoxModelObject* PaintContainer() const {
+    return paint_container_;
   }
 
   PaintFlags GetPaintFlags() const { return paint_flags_; }
@@ -187,6 +194,9 @@ struct CORE_EXPORT PaintInfo {
 
  private:
   CullRect cull_rect_;
+
+  // The box model object that originates the current painting.
+  const LayoutBoxModelObject* paint_container_;
 
   // The ID of the fragment that we're currently painting.
   //

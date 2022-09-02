@@ -37,7 +37,8 @@ void SVGObjectPainter::PaintResourceSubtree(GraphicsContext& context) {
 
   PaintInfo info(
       context, CullRect::Infinite(), PaintPhase::kForeground,
-      PaintFlag::kOmitCompositingInfo | PaintFlag::kPaintingResourceSubtree);
+      PaintFlag::kOmitCompositingInfo | PaintFlag::kPaintingResourceSubtree,
+      &layout_object_.PaintingLayer()->GetLayoutObject());
   layout_object_.Paint(info);
 }
 

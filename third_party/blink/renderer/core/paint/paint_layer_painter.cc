@@ -448,7 +448,8 @@ void PaintLayerPainter::PaintFragmentWithPhase(
       context.GetPaintController(), chunk_properties, paint_layer_,
       DisplayItem::PaintPhaseToDrawingType(phase));
 
-  PaintInfo paint_info(context, cull_rect, phase, paint_flags);
+  PaintInfo paint_info(context, cull_rect, phase, paint_flags,
+      &paint_layer_.GetLayoutObject());
   if (paint_layer_.GetLayoutObject().ChildPaintBlockedByDisplayLock())
     paint_info.SetDescendantPaintingBlocked(true);
 
