@@ -165,7 +165,7 @@ CanonHostInfo::Family DoIPv4AddressToNumber(const CHAR* spec,
       return CanonHostInfo::NEUTRAL;
 
     if (family != CanonHostInfo::IPV4)
-      return CanonHostInfo::BROKEN;
+      return CanonHostInfo::NEUTRAL;
 
     ++existing_components;
 
@@ -175,7 +175,7 @@ CanonHostInfo::Family DoIPv4AddressToNumber(const CHAR* spec,
 
     // If there are more than 4 components, fail.
     if (existing_components == 4)
-      return CanonHostInfo::BROKEN;
+      return CanonHostInfo::NEUTRAL;
 
     current_component_end = current_position - 1;
     --current_position;
@@ -187,7 +187,7 @@ CanonHostInfo::Family DoIPv4AddressToNumber(const CHAR* spec,
   // within an 8-bit field.
   for (int i = existing_components - 1; i > 0; i--) {
     if (component_values[i] > std::numeric_limits<uint8_t>::max())
-      return CanonHostInfo::BROKEN;
+      return CanonHostInfo::NEUTRAL;
     address[existing_components - i - 1] =
         static_cast<unsigned char>(component_values[i]);
   }
@@ -200,7 +200,7 @@ CanonHostInfo::Family DoIPv4AddressToNumber(const CHAR* spec,
 
   // If the last component has residual bits, report overflow.
   if (last_value != 0)
-    return CanonHostInfo::BROKEN;
+    return CanonHostInfo::NEUTRAL;
 
   // Tell the caller how many components we saw.
   *num_ipv4_components = existing_components;
